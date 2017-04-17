@@ -20,8 +20,8 @@
 
 (keypin/defkey
   ;; seed keys
-  seed-config       [:bract.core/config       map?         "Application config"]
-  seed-launch?      [:bract.core/launch?      kputil/bool? "Whether invoke launcher fn" {:default false}]
+  ctx-config        [:bract.core/config       map?         "Application config"]
+  ctx-launch?       [:bract.core/launch?      kputil/bool? "Whether invoke launcher fn" {:default false}]
   ;; config keys
   cfg-workers       ["bract.core.workers"     vector?      "Vector of fully qualified worker fn names"
                      {:parser kputil/any->edn}]
@@ -48,8 +48,8 @@
 (defn run-app
   [config launch?]
   (-> {}
-    (assoc (key seed-config) config)
-    (assoc (key seed-launch?) launch?)
+    (assoc (key ctx-config) config)
+    (assoc (key ctx-launch?) launch?)
     (roll (cfg-workers config))))
 
 

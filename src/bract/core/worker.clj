@@ -19,7 +19,7 @@
   "Given seed context with config under the key :bract.core/config, read the value of config key \"bract.core.exports\"
   as a vector of string config keys and export the key-value pairs for those config keys as system properties."
   [seed]
-  (let [config (config/seed-config seed)
+  (let [config (config/ctx-config seed)
         exlist (-> (config/cfg-exports config)
                  (echo/->echo "Exporting as system properties"))]
     (doseq [each exlist]
@@ -35,8 +35,8 @@
   "Given seed context with config under the key :bract.core/config, read the value of config key \"bract.core.launcher\"
   as a fully qualified launcher fn name and invoke it when the context seed key :bract.core/launch? has the value true."
   [seed]
-  (if (config/seed-launch? seed)
-    (-> (config/seed-config seed)
+  (if (config/ctx-launch? seed)
+    (-> (config/ctx-config seed)
       config/cfg-launcher
       (apply [seed]))
     seed))
