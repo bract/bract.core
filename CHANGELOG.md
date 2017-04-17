@@ -22,12 +22,12 @@
 
 - Features
   - CLI entry point
-  - Inducer fns
-- Command line
+  - Inducer functions
+- CLI commands
   - Run
   - Dry run
   - Print config
   - Clojure REPL
-- Workers
+- Inducer functions
   - Export as system properties
   - Conditional launcher invocation
