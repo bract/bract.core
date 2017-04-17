@@ -19,7 +19,7 @@ The _bract.core_ module has only few dependencies - [Keypin](https://github.com/
 [clojure/tools.cli](https://github.com/clojure/tools.cli) for CLI args. While _bract.core_ is low level and prescribes
 no style, it is possible to author opinionated Bract modules on top of it. One may even extend Bract to build a custom
 application framework. Bract is suited for various types of applications, e.g. command-line tools, web services, batch
-jobs, web applications etc.
+jobs, web applications etc. and integrates well with complex aspects e.g. sophisticated logging on the JVM.
 
 
 ## Usage
