@@ -18,11 +18,11 @@
 
 ## [WIP] 0.1.0 / [Unreleased]
 
-### Added [TODO] - change nomenclature to inducer
+### Added
 
 - Features
   - CLI entry point
-  - Workers
+  - Inducer fns
 - Command line
   - Run
   - Dry run

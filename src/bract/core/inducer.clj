@@ -7,8 +7,8 @@
 ;   You must not remove this notice, or any other, from this software.
 
 
-(ns bract.core.worker
-  "The workers exposed by Bract-core"
+(ns bract.core.inducer
+  "The inducer fns exposed by Bract-core"
   (:require
     [bract.core.config :as config]
     [bract.core.echo   :as echo]
@@ -16,10 +16,10 @@
 
 
 (defn export-as-sysprops
-  "Given seed context with config under the key :bract.core/config, read the value of config key \"bract.core.exports\"
+  "Given context with config under the key :bract.core/config, read the value of config key \"bract.core.exports\"
   as a vector of string config keys and export the key-value pairs for those config keys as system properties."
-  [seed]
-  (let [config (config/ctx-config seed)
+  [context]
+  (let [config (config/ctx-config context)
         exlist (-> (config/cfg-exports config)
                  (echo/->echo "Exporting as system properties"))]
     (doseq [each exlist]
@@ -28,15 +28,15 @@
         (util/expected (format "export property name '%s' to exist in config" each) config))
       (util/expected string? (format "value for export property name '%s' as string" each) (get config each))
       (System/setProperty each (get config each)))
-    seed))
+    context))
 
 
 (defn invoke-launcher
-  "Given seed context with config under the key :bract.core/config, read the value of config key \"bract.core.launcher\"
-  as a fully qualified launcher fn name and invoke it when the context seed key :bract.core/launch? has the value true."
-  [seed]
-  (if (config/ctx-launch? seed)
-    (-> (config/ctx-config seed)
+  "Given context with config under the key :bract.core/config, read the value of config key \"bract.core.launcher\"
+  as a fully qualified launcher fn name and invoke it when the context key :bract.core/launch? has the value true."
+  [context]
+  (if (config/ctx-launch? context)
+    (-> (config/ctx-config context)
       config/cfg-launcher
-      (apply [seed]))
-    seed))
+      (apply [context]))
+    context))

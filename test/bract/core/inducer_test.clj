@@ -7,10 +7,10 @@
 ;   You must not remove this notice, or any other, from this software.
 
 
-(ns bract.core.worker-test
+(ns bract.core.inducer-test
   (:require
     [clojure.test :refer :all]
-    [bract.core.worker :as worker]))
+    [bract.core.inducer :as inducer]))
 
 
 (deftest a-test

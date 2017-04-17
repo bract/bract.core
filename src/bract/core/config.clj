@@ -23,26 +23,26 @@
   ctx-config        [:bract.core/config       map?         "Application config"]
   ctx-launch?       [:bract.core/launch?      kputil/bool? "Whether invoke launcher fn" {:default false}]
   ;; config keys
-  cfg-workers       ["bract.core.workers"     vector?      "Vector of fully qualified worker fn names"
+  cfg-inducers      ["bract.core.inducers"    vector?      "Vector of fully qualified inducer fn names"
                      {:parser kputil/any->edn}]
   cfg-exports       ["bract.core.exports"     vector?      "Vector of config keys to export as system properties"]
   cfg-launcher      ["bract.core.launcher"    fn?          "Fully qualified launcher fn name"
                      {:parser kputil/str->var->deref}])
 
 
-(defn roll
-  "Given a collection of arity-1 worker fns and optional seed, roll the seed through each worker fn, which returns an
-  updated seed."
-  ([workers]
-    (roll {} workers))
-  ([seed workers]
-    (echo/echo "Executing Bract workers")
+(defn induce
+  "Given a collection of arity-1 inducer fns and optional seed, roll the seed through each inducer fn successively,
+  returning an updated context at every stage."
+  ([inducers]
+    (induce {} inducers))
+  ([seed inducers]
+    (echo/echo "Executing Bract inducers")
     (reduce (fn [context each-name]
-              (echo/echo (format "Looking up worker '%s'" each-name))
-              (let [f (kputil/str->var->deref (key cfg-workers) each-name)]
-                (echo/echo (format "Executing  worker '%s'" each-name))
+              (echo/echo (format "Looking up inducer '%s'" each-name))
+              (let [f (kputil/str->var->deref (key cfg-inducers) each-name)]
+                (echo/echo (format "Executing  inducer '%s'" each-name))
                 (f context)))
-      seed workers)))
+      seed inducers)))
 
 
 (defn run-app
@@ -50,7 +50,7 @@
   (-> {}
     (assoc (key ctx-config) config)
     (assoc (key ctx-launch?) launch?)
-    (roll (cfg-workers config))))
+    (induce (cfg-inducers config))))
 
 
 (defn print-config
