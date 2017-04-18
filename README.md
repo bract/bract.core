@@ -7,13 +7,13 @@ The _bract.core_ module implements the essential functionality and is a common d
 
 ### Why Bract?
 
-The Clojure community prefers libraries over frameworks. Bract respects that notion and aims to be the minimal glue to
-bind the following pieces together:
+Bract aims to be the minimal glue to bind the following pieces together:
 
-- Application entrypoint (CLI)
+- Application entry-point
 - Application configuration
-- Application initialization
-- Libraries/Frameworks (via Bract modules)
+- Application initialization and launching
+- Extensions to _bract.core_ via Bract modules
+- Integration with libraries/frameworks via Bract modules
 
 The _bract.core_ module has only few dependencies - [Keypin](https://github.com/kumarshantanu/keypin) for config and
 [clojure/tools.cli](https://github.com/clojure/tools.cli) for CLI args. While _bract.core_ is low level and prescribes
