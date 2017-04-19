@@ -7,7 +7,9 @@
 ;   You must not remove this notice, or any other, from this software.
 
 
-(ns bract.core.util)
+(ns bract.core.util
+  (:require
+    [clojure.string :as string]))
 
 
 (defn expected
@@ -46,3 +48,19 @@
   ([seed f coll]
     (reduce (fn [context inducer-candidate] (f context inducer-candidate))
       seed coll)))
+
+
+(defn shorten-name
+  "Shorten a stringable name, e.g. foo.bar.baz.qux/fred to f.b.baz.qux/fred, leaving only the last two tokens intact."
+  ([any-name]
+    (shorten-name #"\." any-name))
+  ([split-regex any-name]
+    (let [tokens (string/split (str any-name) split-regex)
+          tcount (count tokens)]
+      (string/join "."
+        (if (> tcount 2)
+          (concat (as-> (- tcount 2) $
+                    (take $ tokens)
+                    (map first $))
+            (take-last 2 tokens))
+          tokens)))))

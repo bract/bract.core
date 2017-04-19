@@ -9,7 +9,8 @@
 
 (ns bract.core.echo
   (:require
-    [clojure.string :as string])
+    [clojure.string :as string]
+    [bract.core.util :as util])
   (:import
     [bract.core Echo]))
 
@@ -24,20 +25,11 @@
   "Given an inducer name and body of code, evaluate the body of code in the context of the specified inducer name so
   that it appears in all echo messages."
   [inducer-name & body]
-  `(let [tokens# (string/split (str ~inducer-name) #"\.")
-         tcount# (count tokens#)
-         newstr# (string/join "."
-                   (if (> tcount# 2)
-                     (concat (as-> (- tcount# 2) $#
-                               (take $# tokens#)
-                               (map first $#))
-                       (take-last 2 tokens#))
-                     tokens#))
-         new-hy# (conj *inducer-hierarchy* newstr#)]
+  `(let [new-hy# (conj *inducer-hierarchy* (util/shorten-name ~inducer-name))]
      (binding [*inducer-hierarchy* new-hy#
                *inducer-prefix*    (->> new-hy#
-                                     (map #(format "[%s] " %))
-                                     (apply str))]
+                                     (map #(format "[%s]" %))
+                                     (string/join \space))]
        ~@body)))
 
 
