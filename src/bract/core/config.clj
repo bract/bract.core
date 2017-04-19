@@ -23,34 +23,33 @@
   ctx-config        [:bract.core/config       map?         "Application config"]
   ctx-launch?       [:bract.core/launch?      kputil/bool? "Whether invoke launcher fn" {:default false}]
   ;; config keys
-  cfg-inducers      ["bract.core.inducers"    vector?      "Vector of fully qualified inducer fn names"
+  cfg-inducer-names ["bract.core.inducers"    vector?      "Vector of fully qualified inducer fn names"
                      {:parser kputil/any->edn}]
   cfg-exports       ["bract.core.exports"     vector?      "Vector of config keys to export as system properties"]
   cfg-launcher      ["bract.core.launcher"    fn?          "Fully qualified launcher fn name"
                      {:parser kputil/str->var->deref}])
 
 
-(defn induce
-  "Given a collection of arity-1 inducer fns and optional seed, roll the seed through each inducer fn successively,
-  returning an updated context at every stage."
-  ([inducers]
-    (induce {} inducers))
-  ([seed inducers]
-    (echo/echo "Executing Bract inducers")
-    (reduce (fn [context each-name]
-              (echo/echo (format "Looking up inducer '%s'" each-name))
-              (let [f (kputil/str->var->deref (key cfg-inducers) each-name)]
-                (echo/echo (format "Executing  inducer '%s'" each-name))
-                (f context)))
-      seed inducers)))
+(defn apply-inducer-by-name
+  "Given a context and a fully qualified inducer fn name, load the fn and apply it to the context returning an updated
+  context."
+  ([context inducer-name]
+    (apply-inducer-by-name "inducer" (key cfg-inducer-names) context inducer-name))
+  ([inducer-type config-key context inducer-name]
+    (echo/echo (format "Looking up %s '%s'" inducer-type inducer-name))
+    (let [f (kputil/str->var->deref config-key inducer-name)]
+      (echo/echo (format "Executing  %s '%s'" inducer-type inducer-name))
+      (echo/with-inducer-name inducer-name
+        (f context)))))
 
 
 (defn run-app
   [config launch?]
+  (echo/echo "Applying Bract inducers")
   (-> {}
     (assoc (key ctx-config) config)
     (assoc (key ctx-launch?) launch?)
-    (induce (cfg-inducers config))))
+    (util/induce apply-inducer-by-name (cfg-inducer-names config))))
 
 
 (defn print-config
