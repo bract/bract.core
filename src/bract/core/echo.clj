@@ -14,6 +14,17 @@
     [bract.core Echo]))
 
 
+(def ^:dynamic *inducer-name* nil)
+
+
+(defmacro with-inducer-name
+  "Given an inducer name and body of code, evaluate the body of code in the context of the specified inducer name so
+  that it appears in all echo messages."
+  [inducer-name & body]
+  `(binding [*inducer-name* ~inducer-name]
+     ~@body))
+
+
 ;; ----- echo: diagnostics -----
 
 
@@ -22,6 +33,7 @@
   [x & more]
   (->> (cons x more)
     (string/join \space)
+    (str (when *module-name* (format "[%s] " *module-name*)))
     Echo/echo))
 
 
