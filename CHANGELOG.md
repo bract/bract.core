@@ -3,7 +3,10 @@
 ## TODO
 
 - [TODO] Support for parameterized (or prefixed/qualified) config
-- [TODO] Implicit config-reading stage: file `bract/app/.init.edn` falling back to `bract/core/.init.edn`
+- [TODO] Implicit config-reading stage: file `bract/init.edn` falling back to `bract/core/init.edn`
+  - [TODO] The implicit filename should be a volatile field in a Java class, so that Java entry-points can access
+- [TODO] Factor out CLI as a module
+  - [TODO] Allow custom permitted CLI commands and command-handlers via config
 - [TODO] CLI should only populate config filenames, a stage should load config from those config files
 - [TODO] Support for parsing `project.clj`
   - [TODO] Discover and provide application version
