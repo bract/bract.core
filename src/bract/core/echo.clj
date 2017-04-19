@@ -33,7 +33,7 @@
   [x & more]
   (->> (cons x more)
     (string/join \space)
-    (str (when *module-name* (format "[%s] " *module-name*)))
+    (str (when *inducer-name* (format "[%s] " *inducer-name*)))
     Echo/echo))
 
 
