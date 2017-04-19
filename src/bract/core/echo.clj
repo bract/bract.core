@@ -14,15 +14,31 @@
     [bract.core Echo]))
 
 
-(def ^:dynamic *inducer-name* nil)
+(def ^:dynamic *inducer-hierarchy* [])
+
+
+(def ^:dynamic *inducer-prefix* nil)
 
 
 (defmacro with-inducer-name
   "Given an inducer name and body of code, evaluate the body of code in the context of the specified inducer name so
   that it appears in all echo messages."
   [inducer-name & body]
-  `(binding [*inducer-name* ~inducer-name]
-     ~@body))
+  `(let [tokens# (string/split (str ~inducer-name) #"\.")
+         tcount# (count tokens#)
+         newstr# (string/join "."
+                   (if (> tcount# 2)
+                     (concat (as-> (- tcount# 2) $#
+                               (take $# tokens#)
+                               (map first $#))
+                       (take-last 2 tokens#))
+                     tokens#))
+         new-hy# (conj *inducer-hierarchy* newstr#)]
+     (binding [*inducer-hierarchy* new-hy#
+               *inducer-prefix*    (->> new-hy#
+                                     (map #(format "[%s] " %))
+                                     (apply str))]
+       ~@body)))
 
 
 ;; ----- echo: diagnostics -----
@@ -33,7 +49,7 @@
   [x & more]
   (->> (cons x more)
     (string/join \space)
-    (str (when *inducer-name* (format "[%s] " *inducer-name*)))
+    (str *inducer-prefix*)
     Echo/echo))
 
 
