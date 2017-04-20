@@ -25,7 +25,8 @@
   ;; config keys
   cfg-inducer-names ["bract.core.inducers"    vector?      "Vector of fully qualified inducer fn names"
                      {:parser kputil/any->edn}]
-  cfg-exports       ["bract.core.exports"     vector?      "Vector of config keys to export as system properties"]
+  cfg-exports       ["bract.core.exports"     vector?      "Vector of config keys to export as system properties"
+                     {:parser kputil/any->edn}]
   cfg-launcher      ["bract.core.launcher"    fn?          "Fully qualified launcher fn name"
                      {:parser kputil/str->var->deref}])
 
