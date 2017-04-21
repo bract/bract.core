@@ -28,8 +28,8 @@
   `(let [new-hy# (conj *inducer-hierarchy* (util/shorten-name ~inducer-name))]
      (binding [*inducer-hierarchy* new-hy#
                *inducer-prefix*    (->> new-hy#
-                                     (map #(format "[%s]" %))
-                                     (string/join \space))]
+                                     (map #(format "[%s] " %))
+                                     (string/join ""))]
        ~@body)))
 
 
