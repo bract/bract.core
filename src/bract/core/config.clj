@@ -18,16 +18,21 @@
     [keypin ConfigIO PropertyConfigIO]))
 
 
-(keypin/defkey
-  ;; seed keys
-  ctx-config        [:bract.core/config       map?         "Application config"]
-  ctx-launch?       [:bract.core/launch?      kputil/bool? "Whether invoke launcher fn" {:default false}]
-  ;; config keys
-  cfg-inducer-names ["bract.core.inducers"    vector?      "Vector of fully qualified inducer fn names"
+(keypin/defkey  ; context keys
+  ctx-config        [:bract.core/config  map?         "Application config"]
+  ctx-launch?       [:bract.core/launch? kputil/bool? "Whether invoke launcher fn" {:default false}])
+
+
+(keypin/defkey  ; config keys
+  cfg-inducer-names ["bract.core.inducers"     vector? "Vector of fully qualified inducer fn names"
                      {:parser kputil/any->edn}]
-  cfg-exports       ["bract.core.exports"     vector?      "Vector of config keys to export as system properties"
+  cfg-context-hook  ["bract.core.context-hook" fn?     "Fully qualified config hook fn name"
+                     {:parser kputil/str->var->deref}]
+  cfg-config-hook   ["bract.core.config-hook"  fn?     "Fully qualified config hook fn name"
+                     {:parser kputil/str->var->deref}]
+  cfg-exports       ["bract.core.exports"      vector? "Vector of config keys to export as system properties"
                      {:parser kputil/any->edn}]
-  cfg-launcher      ["bract.core.launcher"    fn?          "Fully qualified launcher fn name"
+  cfg-launcher      ["bract.core.launcher"     fn?     "Fully qualified launcher fn name"
                      {:parser kputil/str->var->deref}])
 
 

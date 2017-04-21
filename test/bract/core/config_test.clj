@@ -30,29 +30,43 @@
 
 (deftest config-test
   (testing "happy tests"
-    (doseq [good-context [{"bract.core.inducers" ["foo.bar.baz.qux/fred"
-                                                  "mary.had.a.little/lamb"]
-                           "bract.core.exports" ["foo"
-                                                 "bar"]
-                           "bract.core.launcher" "bract.core.config/apply-inducer-by-name"}
-                          {"bract.core.inducers" "[\"foo.bar.baz.qux/fred\"
+    (doseq [good-config [{"bract.core.inducers" ["foo.bar.baz.qux/fred"
+                                                 "mary.had.a.little/lamb"]
+                          "bract.core.context-hook" 'bract.core.config/apply-inducer-by-name
+                          "bract.core.config-hook"  'bract.core.config/apply-inducer-by-name
+                          "bract.core.exports" ["foo"
+                                                "bar"]
+                          "bract.core.launcher" 'bract.core.config/apply-inducer-by-name}
+                         {"bract.core.inducers" "[\"foo.bar.baz.qux/fred\"
                                                    \"mary.had.a.little/lamb\"]"
-                           "bract.core.exports"  "[\"foo\"
+                          "bract.core.context-hook" "bract.core.config/apply-inducer-by-name"
+                          "bract.core.config-hook"  "bract.core.config/apply-inducer-by-name"
+                          "bract.core.exports"  "[\"foo\"
                                                    \"bar\"]"
-                           "bract.core.launcher" "bract.core.config/apply-inducer-by-name"}]]
+                          "bract.core.launcher" "bract.core.config/apply-inducer-by-name"}]]
       (is (= ["foo.bar.baz.qux/fred"
               "mary.had.a.little/lamb"]
-            (config/cfg-inducer-names good-context)))
-      (is (= ["foo" "bar"]
-            (config/cfg-exports good-context)))
+            (config/cfg-inducer-names good-config)))
       (is (some?
-            (config/cfg-launcher good-context)))))
+            (config/cfg-context-hook good-config)))
+      (is (some?
+            (config/cfg-config-hook good-config)))
+      (is (= ["foo" "bar"]
+            (config/cfg-exports good-config)))
+      (is (some?
+            (config/cfg-launcher good-config)))))
   (testing "missing/bad context keys"
     (let [bad-context {"bract.core.inducers" {:foo :bar}
+                       "bract.core.context-hook" 10
+                       "bract.core.config-hook"  15
                        "bract.core.exports"  20
                        "bract.core.launcher" false}]
       (is (thrown? IllegalArgumentException (config/cfg-inducer-names bad-context)))
       (is (thrown? IllegalArgumentException (config/cfg-inducer-names {})) "missing key")
+      (is (thrown? IllegalArgumentException (config/cfg-context-hook  bad-context)))
+      (is (thrown? IllegalArgumentException (config/cfg-context-hook  {})) "missing key")
+      (is (thrown? IllegalArgumentException (config/cfg-config-hook   bad-context)))
+      (is (thrown? IllegalArgumentException (config/cfg-config-hook   {})) "missing key")
       (is (thrown? IllegalArgumentException (config/cfg-exports       bad-context)))
       (is (thrown? IllegalArgumentException (config/cfg-exports       {})) "missing key")
       (is (thrown? IllegalArgumentException (config/cfg-launcher      bad-context)))

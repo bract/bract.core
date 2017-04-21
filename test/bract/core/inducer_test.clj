@@ -14,6 +14,31 @@
     [bract.core.inducer :as inducer]))
 
 
+(def volatile-holder (volatile! nil))
+
+
+(defn update-volatile-holder
+  [x]
+  (vreset! volatile-holder x))
+
+
+(deftest test-context-hook!
+  (let [context {:bract.core/config {"bract.core.context-hook.enabled" true
+                                     "bract.core.context-hook" "bract.core.inducer-test/update-volatile-holder"}}]
+    (vreset! volatile-holder nil)
+    (inducer/context-hook! context)
+    (is (= context @volatile-holder))))
+
+
+(deftest test-config-hook!
+  (let [config {"bract.core.config-hook.enabled" true
+                "bract.core.config-hook" "bract.core.inducer-test/update-volatile-holder"}
+        context {:bract.core/config config}]
+    (vreset! volatile-holder nil)
+    (inducer/config-hook! context)
+    (is (= config @volatile-holder))))
+
+
 (deftest test-export-as-sysprops
   (is (nil? (System/getProperty "foo")))
   (is (nil? (System/getProperty "bar")))

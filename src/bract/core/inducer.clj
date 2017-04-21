@@ -15,6 +15,24 @@
     [bract.core.util   :as util]))
 
 
+(defn context-hook!
+  "Given context with config, read the fully qualified context-hook fn name and invoke it as (fn [context])."
+  [context]
+  (let [config (config/ctx-config context)]
+    (-> (config/cfg-context-hook config)
+      (apply [context]))
+    context))
+
+
+(defn config-hook!
+  "Given context with config, read the fully qualified config-hook fn name and invoke it as (fn [config])."
+  [context]
+  (let [config (config/ctx-config context)]
+    (-> (config/cfg-config-hook config)
+      (apply [config]))
+    context))
+
+
 (defn export-as-sysprops
   "Given context with config under the key :bract.core/config, read the value of config key \"bract.core.exports\"
   as a vector of string config keys and export the key-value pairs for those config keys as system properties."
