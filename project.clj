@@ -1,6 +1,6 @@
 (defproject bract/bract.core "0.1.0-SNAPSHOT"
   :description "Multi-purpose, modular Clojure application framework"
-  :url "https://github.com/bract"
+  :url "https://github.com/bract/bract.core"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :global-vars {*warn-on-reflection* true
