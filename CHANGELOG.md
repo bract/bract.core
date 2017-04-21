@@ -2,8 +2,6 @@
 
 ## TODO
 
-- [TODO] Support for integration tests (post process a config map)
-- [TODO] Support for Leiningen/Boot plugins - Bract initialization ahead of build task
 - [TODO] Support for parameterized (or prefixed/qualified) config
 - [TODO] Implicit config-reading stage: file `bract/init.edn` falling back to `bract/core/init.edn`
   - [TODO] The implicit filename should be a volatile field in a Java class, so that Java entry-points can access
@@ -28,11 +26,14 @@
 - Features
   - CLI entry point
   - Inducer functions
+  - Development/test support
 - CLI commands
   - Run
   - Dry run
   - Print config
   - Clojure REPL
 - Inducer functions
+  - Context hook
+  - Config hook
   - Export as system properties
-  - Conditional launcher invocation
+  - Launcher invocation (conditional)

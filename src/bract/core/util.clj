@@ -64,3 +64,14 @@
                     (map first $))
             (take-last 2 tokens))
           tokens)))))
+
+
+(defmacro exec-once!
+  "Given a redefinable var e.g. (defonce a-var nil) having logical false value, set it to `true` and evaluate the body."
+  [a-var & body]
+  `(let [var# ~a-var
+         old# (volatile! true)]
+     (expected var? "a redefinable var e.g. (defonce a-var nil)" var#)
+     (alter-var-root var# (fn [old-val#] (or old-val# (do (vreset! old# old-val#) true))))
+     (when-not @old#
+       ~@body)))
