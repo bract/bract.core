@@ -52,19 +52,19 @@ public class Echo {
 
     public static void echo(String msg) {
         if (verbose) {
-            System.err.printf("[Echo %dms] %s\n", System.currentTimeMillis() - echoStartMillis, msg);
+            System.err.printf("[bract %dms] %s\n", System.currentTimeMillis() - echoStartMillis, msg);
         }
     }
 
     public static <T> T echo(String msg, T value) {
         if (verbose) {
-            System.err.printf("[Echo %dms] %s\n", System.currentTimeMillis() - echoStartMillis, msg + " : " + value);
+            System.err.printf("[bract %dms] %s\n", System.currentTimeMillis() - echoStartMillis, msg + " : " + value);
         }
         return value;
     }
 
     public static void abort(String msg) {
-        System.err.printf("[Abort %dms] %s\n", System.currentTimeMillis() - echoStartMillis, msg);
+        System.err.printf("[bract:ABORT %dms] %s\n", System.currentTimeMillis() - echoStartMillis, msg);
         System.exit(1);
     }
 

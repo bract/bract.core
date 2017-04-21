@@ -23,9 +23,9 @@
   "Initialize app in DEV mode."
   []
   (try
+    (Echo/setVerbose true)
     (echo/echo "Initializing app in DEV mode")
     (let [start (System/currentTimeMillis)]
-      (Echo/setVerbose true)
       (let [result (as-> default-config-filename $
                      (config/resolve-config-filenames nil $)
                      (config/resolve-config $)
