@@ -40,15 +40,21 @@
 
 
 (deftest test-export-as-sysprops
-  (is (nil? (System/getProperty "foo")))
-  (is (nil? (System/getProperty "bar")))
-  (inducer/export-as-sysprops {:bract.core/config {"bract.core.exports" ["foo"
-                                                                         "bar"]
-                                                   "foo" "foo10"
-                                                   "bar" "bar20"
-                                                   "baz" "baz30"}})
-  (is (= "foo10" (System/getProperty "foo")))
-  (is (= "bar20" (System/getProperty "bar"))))
+  (let [context {:bract.core/config {"bract.core.exports" ["foo"
+                                                           "bar"]
+                                     "foo" "foo10"
+                                     "bar" "bar20"
+                                     "baz" "baz30"}}]
+    (testing "export"
+      (is (nil? (System/getProperty "foo")))
+      (is (nil? (System/getProperty "bar")))
+      (inducer/export-as-sysprops context)
+      (is (= "foo10" (System/getProperty "foo")))
+      (is (= "bar20" (System/getProperty "bar"))))
+    (testing "unexport"
+      (inducer/unexport-sysprops context)
+      (is (nil? (System/getProperty "foo")))
+      (is (nil? (System/getProperty "bar"))))))
 
 
 (def launcher-store (volatile! 0))

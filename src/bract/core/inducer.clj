@@ -34,8 +34,8 @@
 
 
 (defn export-as-sysprops
-  "Given context with config under the key :bract.core/config, read the value of config key \"bract.core.exports\"
-  as a vector of string config keys and export the key-value pairs for those config keys as system properties."
+  "Given context with config, read the value of config key \"bract.core.exports\" as a vector of string config keys and
+  export the key-value pairs for those config keys as system properties."
   [context]
   (let [config (config/ctx-config context)
         exlist (-> (config/cfg-exports config)
@@ -49,9 +49,25 @@
     context))
 
 
+(defn unexport-sysprops
+  "Given context with config, read the value of config key \"bract.core.exports\" as a vector of string config keys and
+  remove them from system properties."
+  [context]
+  (let [config (config/ctx-config context)
+        exlist (-> (config/cfg-exports config)
+                 (echo/->echo "Un-exporting (removing) system properties"))]
+    (doseq [each exlist]
+      (util/expected string? "export property name as string" each)
+      (when-not (contains? config each)
+        (util/expected (format "export property name '%s' to exist in config" each) config))
+      (util/expected string? (format "value for export property name '%s' as string" each) (get config each))
+      (System/clearProperty each))
+    context))
+
+
 (defn invoke-launcher
-  "Given context with config under the key :bract.core/config, read the value of config key \"bract.core.launcher\"
-  as a fully qualified launcher fn name and invoke it when the context key :bract.core/launch? has the value true."
+  "Given context with config, read the value of config key \"bract.core.launcher\" as a fully qualified launcher fn
+  name and invoke it as (fn [context]) when the context key :bract.core/launch? has the value true."
   [context]
   (if (config/ctx-launch? context)
     (-> (config/ctx-config context)
