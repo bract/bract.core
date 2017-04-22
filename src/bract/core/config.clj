@@ -26,7 +26,7 @@
 (keypin/defkey  ; config keys
   cfg-inducer-names ["bract.core.inducers"     vector? "Vector of fully qualified inducer fn names"
                      {:parser kputil/any->edn}]
-  cfg-context-hook  ["bract.core.context-hook" fn?     "Fully qualified config hook fn name"
+  cfg-context-hook  ["bract.core.context-hook" fn?     "Fully qualified context hook fn name"
                      {:parser kputil/str->var->deref}]
   cfg-config-hook   ["bract.core.config-hook"  fn?     "Fully qualified config hook fn name"
                      {:parser kputil/str->var->deref}]
