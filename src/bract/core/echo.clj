@@ -8,6 +8,7 @@
 
 
 (ns bract.core.echo
+  "Verbose echo utility functions."
   (:require
     [clojure.string :as string]
     [bract.core.util :as util])

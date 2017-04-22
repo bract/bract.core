@@ -8,6 +8,7 @@
 
 
 (ns bract.core.dev
+  "Development and test support."
   (:require
     [bract.core.config :as config]
     [bract.core.echo   :as echo]

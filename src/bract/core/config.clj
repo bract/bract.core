@@ -8,6 +8,7 @@
 
 
 (ns bract.core.config
+  "Context and configuration keys used by bract.core and functinos associated with config."
   (:require
     [clojure.string :as string]
     [keypin.core :as keypin]

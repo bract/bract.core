@@ -8,6 +8,7 @@
 
 
 (ns bract.core.cli
+  "Command-line argument parsing and processing support."
   (:require
     [clojure.string    :as string]
     [clojure.tools.cli :as cli]

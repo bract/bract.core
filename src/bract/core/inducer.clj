@@ -8,7 +8,7 @@
 
 
 (ns bract.core.inducer
-  "The inducer fns exposed by Bract-core"
+  "The inducer fns exposed by Bract-core."
   (:require
     [bract.core.config :as config]
     [bract.core.echo   :as echo]

@@ -8,6 +8,7 @@
 
 
 (ns bract.core.util
+  "Standalone utility functions."
   (:require
     [clojure.string :as string]))
 

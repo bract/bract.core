@@ -8,6 +8,7 @@
 
 
 (ns bract.core.main
+  "Main entry-point for Bract applications."
   (:require
     [bract.core.cli :as cli])
   (:gen-class))
