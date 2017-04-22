@@ -51,6 +51,7 @@
 
 
 (defn run-app
+  "Given the parsed config and launch flag run the app."
   [config launch?]
   (echo/echo "Applying Bract inducers")
   (-> {}
@@ -60,6 +61,7 @@
 
 
 (defn print-config
+  "Print the given config using the format determined from the supplied config file names."
   [config config-filenames]
   (let [^ConfigIO configIO (if (some (comp #(.endsWith ^String % ".edn")
                                        string/trim

@@ -47,6 +47,7 @@
 
 
 (defn echof
+  "Like clojure.core/format for echo messages."
   [fmt & args]
   (-> (apply format (str fmt) args)
     echo))
@@ -69,6 +70,7 @@
 
 
 (defmacro echo-section
+  "Start an echo section within which the body of code is evaluated and the echo messages are emitted."
   [description & body]
   `(let [description# (str "(Clojure) " ~description)
          section# (Echo/echoSection description#)]
@@ -79,5 +81,6 @@
 
 
 (defn abort
+  "Print the abort echo message and exit the JVM."
   [message]
   (Echo/abort message))

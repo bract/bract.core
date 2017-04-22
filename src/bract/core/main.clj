@@ -15,5 +15,6 @@
 
 
 (defn -main
+  "This function becomes the Java main() method entry point."
   [& args]
   (apply cli/start args))

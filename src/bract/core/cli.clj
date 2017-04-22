@@ -30,6 +30,7 @@
 
 
 (defn process-command
+  "Process CLI command."
   [command config-filenames]
   (let [config (-> config-filenames
                  keypin/read-config
