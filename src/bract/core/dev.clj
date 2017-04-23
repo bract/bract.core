@@ -25,14 +25,11 @@
   []
   (try
     (Echo/setVerbose true)
-    (echo/echo "Initializing app in DEV mode")
-    (let [start (System/currentTimeMillis)
-          result (as-> default-config-filename $
-                   (config/resolve-config-filenames nil $)
-                   (config/resolve-config $)
-                   (config/run-app $ false))]
-      (echo/echo (format "Initialized app in DEV mode in %dms" (- (System/currentTimeMillis) start)))
-      result)
+    (echo/with-latency-capture "Initializing app in DEV mode"
+      (as-> default-config-filename $
+        (config/resolve-config-filenames nil $)
+        (config/resolve-config $)
+        (config/run-app $ false)))
     (catch Throwable e
       (.printStackTrace e)
       (echo/abort (.getMessage e)))))
@@ -50,11 +47,40 @@
     (init))))
 
 
-(defonce ^:redef deinit (config/ctx-deinit {}))
+(defonce ^:redef app-context nil)
 
 
-(defn record-deinit!
-  "Given a context, extract the deinit fn (fn []) returned by the app and bind it with the bract.core.dev/deinit var."
+(defn record-context!
+  "Rebind var bract.core.dev/record-context! to the given context."
   [context]
-  (alter-var-root #'deinit (fn [_] (config/ctx-deinit context)))
+  (alter-var-root #'app-context (constantly context))
   context)
+
+
+(defn deinit
+  "De-initialize application. Throw error if app-context is not initialized."
+  []
+  (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
+  (let [f (config/ctx-deinit app-context)]
+    (echo/with-latency-capture "De-initializing application"
+      (f))))
+
+
+(defn start
+  "Launch application. Throw error if app-context is not initialized."
+  []
+  (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
+  (echo/with-latency-capture "Launching application"
+    (-> (config/ctx-config app-context)
+      config/cfg-launcher
+      (apply [(assoc app-context
+                (key config/ctx-launch?) true)])
+      record-context!)))
+
+
+(defn stop
+  "Stop the started application."
+  []
+  (let [stopper (config/ctx-stopper app-context)]
+    (echo/with-latency-capture "Stopping the started application"
+      (stopper))))
