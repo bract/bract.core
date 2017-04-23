@@ -21,6 +21,8 @@
 
 (keypin/defkey  ; context keys
   ctx-config        [:bract.core/config  map?         "Application config"]
+  ctx-deinit        [:bract.core/deinit  fn?          "De-initialization function (fn []) for the app"
+                     {:default #(echo/echo "Application de-init is not configured, skipping de-initialization")}]
   ctx-launch?       [:bract.core/launch? kputil/bool? "Whether invoke launcher fn" {:default false}])
 
 

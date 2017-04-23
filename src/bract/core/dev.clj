@@ -26,13 +26,13 @@
   (try
     (Echo/setVerbose true)
     (echo/echo "Initializing app in DEV mode")
-    (let [start (System/currentTimeMillis)]
-      (let [result (as-> default-config-filename $
-                     (config/resolve-config-filenames nil $)
-                     (config/resolve-config $)
-                     (config/run-app $ false))]
-        (echo/echo (format "Initialized app in DEV mode in %dms" (- (System/currentTimeMillis) start)))
-        result))
+    (let [start (System/currentTimeMillis)
+          result (as-> default-config-filename $
+                   (config/resolve-config-filenames nil $)
+                   (config/resolve-config $)
+                   (config/run-app $ false))]
+      (echo/echo (format "Initialized app in DEV mode in %dms" (- (System/currentTimeMillis) start)))
+      result)
     (catch Throwable e
       (.printStackTrace e)
       (echo/abort (.getMessage e)))))
@@ -48,3 +48,13 @@
   ([a-var]
   (util/exec-once! a-var
     (init))))
+
+
+(defonce ^:redef deinit (config/ctx-deinit {}))
+
+
+(defn record-deinit!
+  "Given a context, extract the deinit fn (fn []) returned by the app and bind it with the bract.core.dev/deinit var."
+  [context]
+  (alter-var-root #'deinit (fn [_] (config/ctx-deinit context)))
+  context)
