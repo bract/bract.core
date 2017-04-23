@@ -57,18 +57,21 @@
       (is (nil? (System/getProperty "bar"))))))
 
 
-(def launcher-store (volatile! 0))
-
-
 (defn launcher-inc
   [context]
-  (vswap! launcher-store #(inc ^long %)))
+  (vswap! volatile-holder #(inc ^long %)))
 
 
 (deftest test-invoke-launcher
-  (vreset! launcher-store 0)
+  (vreset! volatile-holder 0)
   (inducer/invoke-launcher {:bract.core/launch? false})
-  (is (zero? @launcher-store))
+  (is (zero? @volatile-holder))
   (inducer/invoke-launcher {:bract.core/launch? true
                             :bract.core/config {"bract.core.launcher" "bract.core.inducer-test/launcher-inc"}})
-  (is (= 1 @launcher-store)))
+  (is (= 1 @volatile-holder)))
+
+
+(deftest test-deinit
+  (vreset! volatile-holder 0)
+  (inducer/deinit {:bract.core/deinit (fn [] (vreset! volatile-holder 10))})
+  (is (= 10 @volatile-holder)))

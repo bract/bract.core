@@ -74,3 +74,11 @@
       config/cfg-launcher
       (apply [context]))
     context))
+
+
+(defn deinit
+  "Given context with :bract.core/deinit key and corresponding (fn []) de-init fn for the app, invoke it."
+  [context]
+  (let [f (config/ctx-deinit context)]
+    (f))
+  context)

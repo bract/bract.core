@@ -41,3 +41,4 @@
   - Export as system properties
   - Un-export system properties
   - Launcher invocation (conditional)
+  - De-initialization
