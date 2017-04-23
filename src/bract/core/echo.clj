@@ -84,3 +84,14 @@
   "Print the abort echo message and exit the JVM."
   [message]
   (Echo/abort message))
+
+
+(defmacro with-latency-capture
+  [message & body]
+  `(let [start# (System/currentTimeMillis)
+         messg# ~message]
+     (echof "Starting '%s'" messg#)
+     (try
+       ~@body
+       (finally
+         (echof "Finished '%s' in %dms" messg# (- (System/currentTimeMillis) start#))))))
