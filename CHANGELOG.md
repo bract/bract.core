@@ -2,6 +2,7 @@
 
 ## TODO
 
+- [TODO] Some inducers may accept additional arguments and argument-sets, to be specified via config files
 - [TODO] Support for parameterized (or prefixed/qualified) config
 - [TODO] Implicit config-reading stage: file `bract/init.edn` falling back to `bract/core/init.edn`
   - [TODO] The implicit filename should be a volatile field in a Java class, so that Java entry-points can access
