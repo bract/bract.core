@@ -1,4 +1,4 @@
-(defproject bract/bract.core "0.1.0-SNAPSHOT"
+(defproject bract/bract.core "0.1.0"
   :description "Multi-purpose, modular Clojure application framework"
   :url "https://github.com/bract/bract.core"
   :license {:name "Eclipse Public License"
@@ -11,6 +11,7 @@
   :dependencies [[keypin "0.5.0"]
                  [org.clojure/tools.cli "0.3.5"]]
   :java-source-paths ["src-java"]
+  :javac-options ["-target" "1.7" "-source" "1.7" "-Xlint:-options"]
   :profiles {:provided {:dependencies [[org.clojure/clojure "1.7.0"]]}
              :c17 {:dependencies [[org.clojure/clojure "1.7.0"]]}
              :c18 {:dependencies [[org.clojure/clojure "1.8.0"]]}

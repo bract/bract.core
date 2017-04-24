@@ -4,8 +4,12 @@ Bract is a multi-purpose, modular Clojure application framework.
 
 The _bract.core_ module implements the essential functionality and is a common dependency for all modules.
 
+**Currently in ALPHA. Expect breaking changes!**
 
-### Why Bract?
+_**Requires Clojure 1.7 or higher, Java 7 or higher.**_
+
+
+### What is Bract?
 
 Bract aims to be the minimal glue to bind the following pieces together:
 
@@ -24,7 +28,7 @@ jobs, web applications etc. and integrates well with complex aspects e.g. sophis
 
 ## Usage
 
-Leiningen coordinates: `[bract/bract.core "0.1.0-SNAPSHOT"]`
+Leiningen coordinates: `[bract/bract.core "0.1.0"]`
 
 For documentation refer demo applications.
 
