@@ -47,11 +47,11 @@
   ([context inducer-name]
     (apply-inducer-by-name "inducer" (key cfg-inducer-names) context inducer-name))
   ([inducer-type config-key context inducer-name]
-    (echo/echo (format "Looking up %s '%s'" inducer-type inducer-name))
+    (echo/echo (format "Looking up %s `%s`" inducer-type inducer-name))
     (let [f (kputil/str->var->deref config-key inducer-name)]
-      (echo/echo (format "Executing  %s '%s'" inducer-type inducer-name))
-      (echo/with-inducer-name inducer-name
-        (f context)))))
+      (echo/with-latency-capture (format "Executing  %s `%s`" inducer-type inducer-name)
+        (echo/with-inducer-name inducer-name
+          (f context))))))
 
 
 (defn run-app
