@@ -3,6 +3,7 @@
 ## TODO
 
 - [TODO] Some inducers may accept additional arguments and argument-sets, to be specified via config files
+  - [TODO] Example: A dev-mode inducer specifies a config key, which points to [] in prod and [...] in dev/testing
 - [TODO] Support for parameterized (or prefixed/qualified) config
 - [TODO] Implicit config-reading stage: file `bract/init.edn` falling back to `bract/core/init.edn`
   - [TODO] The implicit filename should be a volatile field in a Java class, so that Java entry-points can access
