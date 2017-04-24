@@ -15,7 +15,7 @@
     [bract.core.util   :as util]))
 
 
-(defn context-hook!
+(defn context-hook
   "Given context with config, read the fully qualified context-hook fn name and invoke it as (fn [context])."
   [context]
   (let [config (config/ctx-config context)]
@@ -24,7 +24,7 @@
     context))
 
 
-(defn config-hook!
+(defn config-hook
   "Given context with config, read the fully qualified config-hook fn name and invoke it as (fn [config])."
   [context]
   (let [config (config/ctx-config context)]
