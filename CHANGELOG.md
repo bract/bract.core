@@ -2,6 +2,11 @@
 
 ## TODO
 
+- [TODO] Dev triggers should accept an optional param
+  - Init a sub-system
+  - De-init a sub-system
+  - Launch a sub-system
+  - etc.
 - [TODO] Some inducers may accept additional arguments and argument-sets, to be specified via config files
   - [TODO] Example: A dev-mode inducer specifies a config key, which points to [] in prod and [...] in dev/testing
 - [TODO] Support for parameterized (or prefixed/qualified) config
