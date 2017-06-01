@@ -8,8 +8,7 @@
                 *unchecked-math* :warn-on-boxed}
   :min-lein-version "2.7.1"
   :pedantic? :abort
-  :dependencies [[keypin "0.5.0"]
-                 [org.clojure/tools.cli "0.3.5"]]
+  :dependencies [[keypin "0.5.0"]]
   :java-source-paths ["src-java"]
   :javac-options ["-target" "1.7" "-source" "1.7" "-Xlint:-options"]
   :profiles {:provided {:dependencies [[org.clojure/clojure "1.7.0"]]}

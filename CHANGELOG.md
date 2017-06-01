@@ -23,8 +23,9 @@
 
 ## [WIP] 0.2.0 / 2017-June-??
 
-- [TODO - BREAKING CHANGE] Drop `bract.core.cli` namespace (Moved to module `bract.cli`)
-- [TODO - BREAKING CHANGE] Drop `bract.core.main` namespace (Moved to module `bract.cli`)
+- Factor out CLI handling to module `bract.cli`
+  - [BREAKING CHANGE] Drop `bract.core.cli` namespace
+  - [BREAKING CHANGE] Drop `bract.core.main` namespace
 - [TODO - BREAKING CHANGE] Drop `bract.core.dev` namespace (Moved to module `bract.dev`)
 
 
