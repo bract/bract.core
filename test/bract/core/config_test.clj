@@ -15,11 +15,20 @@
 
 (deftest context-test
   (testing "happy cases"
-    (let [good-context {:bract.core/config {"foo" "bar"}
+    (let [good-context {:bract.core/verbose? false
+                        :bract.core/config-files ["foo.edn" "bar.properties"]
+                        :bract.core/cli-args ["-c" "run"]
+                        :bract.core/config {"foo" "bar"}
                         :bract.core/launch? true}]
+      (is (false? (config/ctx-verbose? good-context)))
+      (is (= ["foo.edn" "bar.properties"] (config/ctx-config-files good-context)))
+      (is (= ["-c" "run"] (config/ctx-cli-args good-context)))
       (is (= {"foo" "bar"} (config/ctx-config good-context)))
       (is (= true (config/ctx-launch? good-context)))
       (is (false? (config/ctx-launch? {})) "missing/default value")))
+  (testing "default values"
+    (is (true? (config/ctx-verbose? {})))
+    (is (= [] (config/ctx-config-files {}))))
   (testing "missing/bad context keys"
     (let [bad-context {:bract.core/config "foobar"
                         :bract.core/launch? 10}]
@@ -46,7 +55,7 @@
                           "bract.core.launcher" "bract.core.config/apply-inducer-by-name"}]]
       (is (= ["foo.bar.baz.qux/fred"
               "mary.had.a.little/lamb"]
-            (config/cfg-inducer-names good-config)))
+            (config/cfg-inducers good-config)))
       (is (some?
             (config/cfg-context-hook good-config)))
       (is (some?
@@ -61,8 +70,8 @@
                        "bract.core.config-hook"  15
                        "bract.core.exports"  20
                        "bract.core.launcher" false}]
-      (is (thrown? IllegalArgumentException (config/cfg-inducer-names bad-context)))
-      (is (thrown? IllegalArgumentException (config/cfg-inducer-names {})) "missing key")
+      (is (thrown? IllegalArgumentException (config/cfg-inducers      bad-context)))
+      (is (thrown? IllegalArgumentException (config/cfg-inducers      {})) "missing key")
       (is (thrown? IllegalArgumentException (config/cfg-context-hook  bad-context)))
       (is (thrown? IllegalArgumentException (config/cfg-context-hook  {})) "missing key")
       (is (thrown? IllegalArgumentException (config/cfg-config-hook   bad-context)))
