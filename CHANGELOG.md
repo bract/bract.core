@@ -21,17 +21,11 @@
   - As a mandatory/optional configured fn
 
 
-## [WIP] 0.2.0 / 2017-May-??
+## [WIP] 0.2.0 / 2017-June-??
 
-- [TODO] Implicit config-reading stage: file `bract/init.edn` falling back to `bract/core/init.edn`
-  - [TODO] The implicit filename should be a volatile field in a Java class, so that Java entry-points can access
-  - [TODO] Parent key in config files should be overridable from this implicit config file
-  - [TODO] Modules to define standard keys that may be overridden e.g. `b.c.keyname.inducer=bract.core.inducers`
-- [TODO] Factor out CLI as a module `bract.cli`
-  - [TODO] The existing `main` entry point should only insert the command-line args into the context
-  - [TODO] The CLI module should read command-line args from the context, then read config and merge into context
-  - [TODO] Allow custom permitted CLI commands and command-handlers via config
-- [TODO] Factor out dev as a module `bract.dev`
+- [TODO - BREAKING CHANGE] Drop `bract.core.cli` namespace (Moved to module `bract.cli`)
+- [TODO - BREAKING CHANGE] Drop `bract.core.main` namespace (Moved to module `bract.cli`)
+- [TODO - BREAKING CHANGE] Drop `bract.core.dev` namespace (Moved to module `bract.dev`)
 
 
 ## 0.1.0 / 2017-April-25
