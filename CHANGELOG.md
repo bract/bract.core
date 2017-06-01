@@ -34,6 +34,9 @@
   - Add `set-verbosity`
   - Add `read-config`
   - Add `run-inducers`
+- Keypin
+  - Upgrade to Keypin `0.6.0`
+    - [TODO] Upgrade to the GA version before release
 - [TODO - BREAKING CHANGE] Drop `bract.core.dev` namespace (Moved to module `bract.dev`)
 
 
