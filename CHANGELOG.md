@@ -31,9 +31,9 @@
   - Add `bract.core.config/apply-inducer`
   - Drop `bract.core.config/resolve-config-filenames`
 - Inducers (namespace `bract.core.inducer`)
-  - [TODO] `set-verbosity`
-  - [TODO] `read-config`
-  - [TODO] `run-inducers`
+  - Add `set-verbosity`
+  - Add `read-config`
+  - Add `run-inducers`
 - [TODO - BREAKING CHANGE] Drop `bract.core.dev` namespace (Moved to module `bract.dev`)
 
 
