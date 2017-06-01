@@ -23,9 +23,17 @@
 
 ## [WIP] 0.2.0 / 2017-June-??
 
-- Factor out CLI handling to module `bract.cli`
+- Factor out CLI handling into module `bract.cli`
   - [BREAKING CHANGE] Drop `bract.core.cli` namespace
   - [BREAKING CHANGE] Drop `bract.core.main` namespace
+- Overhaul config
+  - Add config keys `ctx-verbose?`, `ctx-config-files`, `ctx-cli-args` in `bract.core.config` namespace
+  - Add `bract.core.config/apply-inducer`
+  - Drop `bract.core.config/resolve-config-filenames`
+- Inducers (namespace `bract.core.inducer`)
+  - [TODO] `set-verbosity`
+  - [TODO] `read-config`
+  - [TODO] `run-inducers`
 - [TODO - BREAKING CHANGE] Drop `bract.core.dev` namespace (Moved to module `bract.dev`)
 
 

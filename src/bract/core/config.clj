@@ -31,11 +31,11 @@
                                                                                   :envvar  "APP_CONFIG"
                                                                                   :sysprop "app.config"}]
   ctx-cli-args      [:bract.core/cli-args      coll?   "Collection of CLI arguments"]
-  ctx-config        [:bract.core/config  map?         "Application config"]
-  ctx-deinit        [:bract.core/deinit  fn?          "De-initialization function (fn []) for the app"
+  ctx-config        [:bract.core/config        map?    "Application config"]
+  ctx-deinit        [:bract.core/deinit        fn?     "De-initialization function (fn []) for the app"
                      {:default #(echo/echo "Application de-init is not configured, skipping de-initialization.")}]
-  ctx-launch?       [:bract.core/launch? kputil/bool? "Whether invoke launcher fn" {:default false}]
-  ctx-stopper       [:bract.core/stopper fn?          "Function (fn []) to stop the started application"
+  ctx-launch?       [:bract.core/launch?  kputil/bool? "Whether invoke launcher fn" {:default false}]
+  ctx-stopper       [:bract.core/stopper       fn?     "Function (fn []) to stop the started application"
                      {:default #(echo/echo "Application stopper is not configured, skipping stop.")}])
 
 
