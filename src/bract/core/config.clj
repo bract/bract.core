@@ -79,16 +79,6 @@
       (apply-inducer-by-name inducer-or-name))))
 
 
-(defn run-app
-  "Given the parsed config and launch flag run the app."
-  [config launch?]
-  (echo/echo "Applying Bract inducers")
-  (-> {}
-    (assoc (key ctx-config) config)
-    (assoc (key ctx-launch?) launch?)
-    (util/induce apply-inducer-by-name (cfg-inducers config))))
-
-
 (defn print-config
   "Print the given config using the format determined from the supplied config file names."
   [config config-filenames]

@@ -30,6 +30,7 @@
   - Add config keys `ctx-verbose?`, `ctx-config-files`, `ctx-cli-args` in `bract.core.config` namespace
   - Add `bract.core.config/apply-inducer`
   - [BREAKING CHANGE] Drop `bract.core.config/resolve-config-filenames`
+  - [BREAKING CHANGE] Drop `bract.core.config/run-app`
   - Use own logger when reading config using Keypin
   - [BREAKING CHANGE] Use config parent key `"parent.config.filenames"` when reading config
 - Inducers (namespace `bract.core.inducer`)
