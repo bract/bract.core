@@ -18,19 +18,22 @@
     [bract.core Echo]))
 
 
-(def default-dev-context {(key config/ctx-config-files) ["config.dev.edn"]
-                          (key config/ctx-launch?)      false})
+(def default-root-context {(key config/ctx-config-files) ["config.dev.edn"]
+                           (key config/ctx-launch?)      false})
+
+
+(def default-root-inducers [inducer/set-verbosity
+                            inducer/read-config
+                            inducer/run-inducers])
 
 
 (defn init
   "Initialize app in DEV mode."
   []
   (try
-    (inducer/set-verbosity default-dev-context)
+    (inducer/set-verbosity default-root-context)
     (echo/with-latency-capture "Initializing app in DEV mode"
-      (util/induce default-dev-context [inducer/set-verbosity
-                                        inducer/read-config
-                                        inducer/run-inducers]))
+      (util/induce default-root-context default-root-inducers))
     (catch Throwable e
       (.printStackTrace e)
       (echo/abort (.getMessage e)))))
