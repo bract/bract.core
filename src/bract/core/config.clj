@@ -104,14 +104,17 @@
 (defn resolve-config
   "Given a collection of config filenames, read and resolve config as a map and return it."
   [context config-filenames]
-  (if (contains? context ctx-config)
-    (let [pre-config (ctx-config context)]
-      (as-> config-filenames <>
-        (keypin/read-config <> {:realize? false})  ; read config, but do not relalize (i.e. evaluate variables)
-        (kputil/clojurize-data <>)
-        (merge pre-config <>)                      ; merge config onto the pre-existing config
-        (keypin/realize-config <>)
-        (kputil/clojurize-data <>)))
-    (-> config-filenames
-      keypin/read-config
-      kputil/clojurize-data)))
+  (let [keypin-opts {:info-logger  #(echo/echo "[keypin] [info]" %)
+                     :error-logger #(echo/echo "[keypin] [error]" %)}]
+    (if (contains? context ctx-config)
+      (let [pre-config (ctx-config context)]
+        (as-> config-filenames <>
+          (keypin/read-config <> (assoc keypin-opts
+                                   :realize? false)) ; read config, but do not relalize (i.e. evaluate variables)
+          (kputil/clojurize-data <>)
+          (merge pre-config <>)                      ; merge config onto the pre-existing config
+          (keypin/realize-config <> keypin-opts)
+          (kputil/clojurize-data <>)))
+      (-> config-filenames
+        (keypin/read-config keypin-opts)
+        kputil/clojurize-data))))
