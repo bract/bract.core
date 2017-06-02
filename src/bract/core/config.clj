@@ -24,8 +24,8 @@
 (keypin/defkey  ; context keys
   ctx-verbose?      [:bract.core/verbose? kputil/bool? "Verbose initialization?" {:parser  kputil/any->bool
                                                                                   :default true
-                                                                                  :envvar  "BRACT_VERBOSE"
-                                                                                  :sysprop "bract.verbose"}]
+                                                                                  :envvar  "APP_VERBOSE"
+                                                                                  :sysprop "app.verbose"}]
   ctx-config-files  [:bract.core/config-files  vector? "Config file names"       {:parser  kputil/any->vec
                                                                                   :default []
                                                                                   :envvar  "APP_CONFIG"
