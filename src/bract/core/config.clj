@@ -104,7 +104,8 @@
 (defn resolve-config
   "Given a collection of config filenames, read and resolve config as a map and return it."
   [context config-filenames]
-  (let [keypin-opts {:info-logger  #(echo/echo "[keypin] [info]" %)
+  (let [keypin-opts {:parent-key   "parent.config.filenames"
+                     :info-logger  #(echo/echo "[keypin] [info]" %)
                      :error-logger #(echo/echo "[keypin] [error]" %)}]
     (if (contains? context ctx-config)
       (let [pre-config (ctx-config context)]

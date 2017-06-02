@@ -29,7 +29,9 @@
 - Overhaul config
   - Add config keys `ctx-verbose?`, `ctx-config-files`, `ctx-cli-args` in `bract.core.config` namespace
   - Add `bract.core.config/apply-inducer`
-  - Drop `bract.core.config/resolve-config-filenames`
+  - [BREAKING CHANGE] Drop `bract.core.config/resolve-config-filenames`
+  - Use own logger when reading config using Keypin
+  - [BREAKING CHANGE] Use config parent key `"parent.config.filenames"` when reading config
 - Inducers (namespace `bract.core.inducer`)
   - Add `set-verbosity`
   - Add `read-config`
