@@ -37,7 +37,6 @@
 - Keypin
   - Upgrade to Keypin `0.6.0`
     - [TODO] Upgrade to the GA version before release
-- [TODO - BREAKING CHANGE] Drop `bract.core.dev` namespace (Moved to module `bract.dev`)
 
 
 ## 0.1.0 / 2017-April-25

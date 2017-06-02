@@ -10,26 +10,27 @@
 (ns bract.core.dev
   "Development and test support."
   (:require
-    [bract.core.config :as config]
-    [bract.core.echo   :as echo]
-    [bract.core.util   :as util])
+    [bract.core.config  :as config]
+    [bract.core.echo    :as echo]
+    [bract.core.inducer :as inducer]
+    [bract.core.util    :as util])
   (:import
     [bract.core Echo]))
 
 
-(def default-config-filename "config.dev.edn")
+(def default-dev-context {(key config/ctx-config-files) ["config.dev.edn"]
+                          (key config/ctx-launch?)      false})
 
 
 (defn init
   "Initialize app in DEV mode."
   []
   (try
-    (Echo/setVerbose true)
+    (inducer/set-verbosity default-dev-context)
     (echo/with-latency-capture "Initializing app in DEV mode"
-      (as-> default-config-filename $
-        (config/resolve-config-filenames nil $)
-        (config/resolve-config $)
-        (config/run-app $ false)))
+      (util/induce default-dev-context [inducer/set-verbosity
+                                        inducer/read-config
+                                        inducer/run-inducers]))
     (catch Throwable e
       (.printStackTrace e)
       (echo/abort (.getMessage e)))))
