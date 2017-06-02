@@ -40,7 +40,6 @@
   - Add `run-inducers`
 - Keypin
   - Upgrade to Keypin `0.6.0`
-    - [TODO] Upgrade to the GA version before release
 
 
 ## 0.1.0 / 2017-April-25
