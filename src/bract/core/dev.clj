@@ -51,7 +51,17 @@
     (init))))
 
 
-(defonce ^:redef app-context nil)
+(defonce ^:redef app-context (format "Var %s/app-context not initialized" *ns*))
+
+
+(defn ensure-init
+  "Ensure that app-context is initialized."
+  []
+  (when (string? app-context)
+    (init))
+  (when (string? app-context)
+    (throw (ex-info "Failed to ensure initialization. Add `bract.core.dev/record-context!` to your inducer list."
+             {}))))
 
 
 (defn record-context!
@@ -64,6 +74,7 @@
 (defn deinit
   "De-initialize application. Throw error if app-context is not initialized."
   []
+  (ensure-init)
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
   (let [f (config/ctx-deinit app-context)]
     (echo/with-latency-capture "De-initializing application"
@@ -73,6 +84,7 @@
 (defn start
   "Launch application. Throw error if app-context is not initialized."
   []
+  (ensure-init)
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
   (echo/with-latency-capture "Launching application"
     (-> (config/ctx-config app-context)
@@ -85,6 +97,7 @@
 (defn stop
   "Stop the started application."
   []
+  (ensure-init)
   (let [stopper (config/ctx-stopper app-context)]
     (echo/with-latency-capture "Stopping the started application"
       (stopper))))
