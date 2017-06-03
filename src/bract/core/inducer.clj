@@ -20,7 +20,12 @@
 (defn set-verbosity
   "Set Bract verbosity flag and return context."
   [context]
-  (Echo/setVerbose (config/ctx-verbose? context))
+  (let [pre-verbose?  (Echo/isVerbose)
+        post-verbose? (config/ctx-verbose? context)]
+    (Echo/setVerbose post-verbose?)
+    (when (and (not pre-verbose?) post-verbose?)
+      (echo/echo
+        "Verbose mode enabled - override with env var APP_VERBOSE or system property app.verbose: value true/false")))
   context)
 
 
