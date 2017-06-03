@@ -106,7 +106,9 @@
     (-> (config/ctx-config context)
       config/cfg-launcher
       (apply [context]))
-    context))
+    (do
+      (echo/echo "Launch not enabled, skipping launch.")
+      context)))
 
 
 (defn deinit
