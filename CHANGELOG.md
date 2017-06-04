@@ -21,7 +21,7 @@
   - As a mandatory/optional configured fn
 
 
-## [WIP] 0.2.0 / 2017-June-??
+## 0.2.0 / 2017-June-04
 
 - Factor out CLI handling into module `bract.cli`
   - [BREAKING CHANGE] Drop `bract.core.cli` namespace
