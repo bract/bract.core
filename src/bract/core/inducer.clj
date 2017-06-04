@@ -12,7 +12,40 @@
   (:require
     [bract.core.config :as config]
     [bract.core.echo   :as echo]
-    [bract.core.util   :as util]))
+    [bract.core.util   :as util])
+  (:import
+    [bract.core Echo]))
+
+
+(defn set-verbosity
+  "Set Bract verbosity flag and return context."
+  [context]
+  (let [pre-verbose?  (Echo/isVerbose)
+        post-verbose? (config/ctx-verbose? context)]
+    (Echo/setVerbose post-verbose?)
+    (when (and (not pre-verbose?) post-verbose?)
+      (echo/echo
+        "Verbose mode enabled - override with env var APP_VERBOSE or system property app.verbose: value true/false")))
+  context)
+
+
+(defn read-config
+  "Use config filenames in the context to read and resolve config, and populate the context with it."
+  [context]
+  (let [config-files (config/ctx-config-files context)]
+    (if (seq config-files)
+      (->> config-files
+        (config/resolve-config context)
+        (assoc context (key config/ctx-config)))
+      context)))
+
+
+(defn run-inducers
+  "Run the inducers specified in the application config."
+  [context]
+  (->> (config/ctx-config context)
+    config/cfg-inducers
+    (util/induce context config/apply-inducer-by-name)))
 
 
 (defn context-hook
@@ -73,7 +106,9 @@
     (-> (config/ctx-config context)
       config/cfg-launcher
       (apply [context]))
-    context))
+    (do
+      (echo/echo "Launch not enabled, skipping launch.")
+      context)))
 
 
 (defn deinit

@@ -9,9 +9,42 @@
 
 (ns bract.core.inducer-test
   (:require
+    [clojure.edn     :as edn]
+    [clojure.java.io :as io]
     [clojure.test :refer :all]
     [bract.core.config  :as config]
-    [bract.core.inducer :as inducer]))
+    [bract.core.inducer :as inducer])
+  (:import
+    [bract.core Echo]))
+
+
+(deftest test-set-verbosity
+  (let [verbosity? (Echo/isVerbose)]
+    (try
+      (Echo/setVerbose false)
+      (inducer/set-verbosity {:bract.core/verbose? true})
+      (is (true? (Echo/isVerbose)) "Verbosity should be enabled after configuring it as true")
+      (finally
+        (Echo/setVerbose verbosity?)))))
+
+
+(deftest test-read-config
+  (let [context {:bract.core/config-files "sample.edn"}]
+    (is (= (assoc context
+             :bract.core/config (-> "sample.edn" io/resource slurp edn/read-string))
+          (inducer/read-config context)))))
+
+
+(deftest test-run-inducers
+  (let [verbosity? (Echo/isVerbose)
+        context {:bract.core/verbose? true
+                 :bract.core/config {"bract.core.inducers" ['bract.core.inducer/set-verbosity]}}]
+    (try
+      (Echo/setVerbose false)
+      (inducer/run-inducers context)
+      (is (true? (Echo/isVerbose)) "Verbosity should be enabled after configuring it as true")
+      (finally
+        (Echo/setVerbose verbosity?)))))
 
 
 (def volatile-holder (volatile! nil))

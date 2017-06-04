@@ -15,7 +15,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Echo {
 
     private static final long echoStartMillis = System.currentTimeMillis();
+    private static final AtomicInteger SECTION_COUNTER = new AtomicInteger();
+
     private static volatile boolean verbose = false;
+    private static volatile String labelToken = "bract";
+
+
+    // ----- getters and setters -----
 
     public static boolean isVerbose() {
         return verbose;
@@ -25,7 +31,16 @@ public class Echo {
         verbose = isVerbose;
     }
 
-    private static final AtomicInteger SECTION_COUNTER = new AtomicInteger();
+    public static String getLabelToken() {
+        return labelToken;
+    }
+
+    public static void setLabelToken(String newLabelToken) {
+        Echo.labelToken = newLabelToken;
+    }
+
+
+    // ----- utility methods -----
 
     private static int nextSectionIndex() {
         return SECTION_COUNTER.incrementAndGet();
@@ -58,13 +73,15 @@ public class Echo {
 
     public static <T> T echo(String msg, T value) {
         if (verbose) {
-            System.err.printf("[bract %dms] %s\n", System.currentTimeMillis() - echoStartMillis, msg + " : " + value);
+            System.err.printf("[%s %dms] %s\n",
+                    labelToken, System.currentTimeMillis() - echoStartMillis, msg + " : " + value);
         }
         return value;
     }
 
     public static void abort(String msg) {
-        System.err.printf("[bract:ABORT %dms] %s\n", System.currentTimeMillis() - echoStartMillis, msg);
+        System.err.printf("[%s:ABORT %dms] %s\n",
+                labelToken, System.currentTimeMillis() - echoStartMillis, msg);
         System.exit(1);
     }
 
