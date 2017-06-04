@@ -28,6 +28,7 @@
   - [BREAKING CHANGE] Drop `bract.core.main` namespace
 - Overhaul config
   - Verbosity may be now be overridden with environment variable `APP_VERBOSE` or system property `app.verbose`
+  - Verbosity is disabled by default
   - Add config keys `ctx-verbose?`, `ctx-config-files`, `ctx-cli-args` in `bract.core.config` namespace
   - Add `bract.core.config/apply-inducer`
   - [BREAKING CHANGE] Drop `bract.core.config/resolve-config-filenames`
