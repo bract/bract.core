@@ -47,7 +47,7 @@
     (util/induce context config/apply-inducer)))
 
 
-(defn run-inducers
+(defn run-config-inducers
   "Run the inducers specified in the application config."
   [context]
   (->> (config/ctx-config context)

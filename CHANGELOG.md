@@ -16,9 +16,9 @@
 
 - [TODO] Some inducers may accept additional arguments and argument-sets, to be specified via config files
   - [TODO] Example: A dev-mode inducer specifies a config key, which points to [] in prod and [...] in dev/testing
-- [TODO] Rename `bract.core.inducer/run-inducers` to `run-config-inducers`
-- [TODO] Introduce `bract.core.inducer/run-context-inducers` to run inducers from context
-  - [TODO] Context key definition `:bract.core/inducers`
+- [BREAKING CHANGE] Rename `bract.core.inducer/run-inducers` to `run-config-inducers`
+- Introduce `bract.core.inducer/run-context-inducers` to run inducers from context
+  - Context key definition `:bract.core/inducers`
 - [TODO] Support for application shutdown (hook) cleanup
   - As a mandatory/optional callback
   - As a mandatory/optional configured fn
