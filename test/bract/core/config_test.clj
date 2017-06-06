@@ -27,7 +27,7 @@
       (is (= true (config/ctx-launch? good-context)))
       (is (false? (config/ctx-launch? {})) "missing/default value")))
   (testing "default values"
-    (is (true? (config/ctx-verbose? {})))
+    (is (false? (config/ctx-verbose? {})))
     (is (= [] (config/ctx-config-files {}))))
   (testing "missing/bad context keys"
     (let [bad-context {:bract.core/config "foobar"
