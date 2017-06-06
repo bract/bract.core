@@ -40,6 +40,13 @@
       context)))
 
 
+(defn run-context-inducers
+  "Run the inducers specified in the context."
+  [context]
+  (->> (config/ctx-inducers context)
+    (util/induce context config/apply-inducer)))
+
+
 (defn run-inducers
   "Run the inducers specified in the application config."
   [context]

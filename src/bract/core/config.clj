@@ -32,6 +32,7 @@
                                                                                   :sysprop "app.config"}]
   ctx-cli-args      [:bract.core/cli-args      coll?   "Collection of CLI arguments"]
   ctx-config        [:bract.core/config        map?    "Application config"]
+  ctx-inducers      [:bract.core/inducers      vector? "Vector of inducer fns or their fully qualified names"]
   ctx-deinit        [:bract.core/deinit        fn?     "De-initialization function (fn []) for the app"
                      {:default #(echo/echo "Application de-init is not configured, skipping de-initialization.")}]
   ctx-launch?       [:bract.core/launch?  kputil/bool? "Whether invoke launcher fn" {:default false}]
@@ -72,11 +73,11 @@
   ([context inducer-or-name]
     (apply-inducer context "inducer" inducer-or-name))
   ([context inducer-type inducer-or-name]
-    (if (ifn? inducer-or-name)
+    (if (or (var? inducer-or-name) (fn? inducer-or-name))
       (echo/with-latency-capture (format "Executing %s `%s`" inducer-type inducer-or-name)
         (echo/with-inducer-name inducer-or-name
           (inducer-or-name context)))
-      (apply-inducer-by-name inducer-or-name))))
+      (apply-inducer-by-name context inducer-or-name))))
 
 
 (defn print-config
