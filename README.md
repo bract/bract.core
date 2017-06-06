@@ -1,12 +1,19 @@
 # bract.core
 
-Bract is a multi-purpose, modular Clojure application framework.
+Bract is a multi-purpose, modular Clojure application initialization framework.
 
 The _bract.core_ module implements the essential functionality and is a common dependency for all modules.
 
-**Currently in ALPHA. Expect breaking changes!**
+**Early days. Expect breaking changes!**
 
 _**Requires Clojure 1.7 or higher, Java 7 or higher.**_
+
+
+### Rationale
+
+Application development could be a blissful experience if we only have to focus on the application logic, and not worry
+about configuration, initialization and the sundry development and maintenance tasks applications frequently need. This
+should be a solved problem.
 
 
 ### What is Bract?
@@ -28,7 +35,7 @@ relevant aspects such as configurable JVM logging.
 
 ## Usage
 
-Leiningen coordinates: `[bract/bract.core "0.2.0"]`
+Leiningen coordinates: `[bract/bract.core "0.3.0-SNAPSHOT"]`
 
 For documentation refer demo applications.
 
