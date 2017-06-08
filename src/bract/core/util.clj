@@ -76,3 +76,11 @@
      (alter-var-root var# (fn [old-val#] (or old-val# (do (vreset! old# old-val#) true))))
      (when-not @old#
        ~@body)))
+
+
+(defn as-vec
+  "Turn argument into a vector if it is a collection, else wrap the argument into a single-item vector."
+  [x]
+  (if (coll? x)
+    (vec x)
+    [x]))
