@@ -22,23 +22,23 @@
   AFn
   (ifunc
     ([this] this)
-    ([this context config-key] this))
+    ([this config-key] this))
   (iname [this] (str this))
   (iargs [this] [])
   String
   (ifunc
-    ([this] (throw (UnsupportedOperationException. (str "Cannot determine inducer without context: " this))))
-    ([this context config-key] (do
-                                 (echo/echo (format "Looking up inducer `%s`" this))
-                                 (kputil/str->var->deref config-key this))))
+    ([this] (throw (UnsupportedOperationException. (str "Cannot determine inducer without the key: " this))))
+    ([this config-key] (do
+                         (echo/echo (format "Looking up inducer `%s`" this))
+                         (kputil/str->var->deref config-key this))))
   (iname [this] this)
   (iargs [this] [])
   Symbol
   (ifunc
-    ([this] (throw (UnsupportedOperationException. (str "Cannot determine inducer without context: " this))))
-    ([this context config-key] (do
-                                 (echo/echo (format "Looking up inducer `%s`" this))
-                                 (kputil/str->var->deref config-key this))))
+    ([this] (throw (UnsupportedOperationException. (str "Cannot determine inducer without the key: " this))))
+    ([this config-key] (do
+                         (echo/echo (format "Looking up inducer `%s`" this))
+                         (kputil/str->var->deref config-key this))))
   (iname [this] (name this))
   (iargs [this] [] [])
   List
@@ -46,10 +46,9 @@
     ([this] (do
              (util/expected seq "non-empty collection" this)
              (type/ifunc (first this))))
-    ([this context config-key] (do
-                                 (util/expected seq "non-empty collection" this)
-                                 (-> (first this)
-                                   (type/ifunc context config-key)))))
+    ([this config-key] (do
+                         (util/expected seq "non-empty collection" this)
+                         (type/ifunc (first this) config-key))))
   (iname [this] (type/iname (first this)))
   (iargs [this] (vec (rest this)))
   Map
@@ -57,15 +56,14 @@
     ([this] (do
               (util/expected #(contains? % :inducer) "map with :inducer key" this)
               (type/ifunc (get this :inducer))))
-    ([this context config-key] (do
-                                 (util/expected #(contains? % :inducer) "map with :inducer key" this)
-                                 (-> (get this :inducer)
-                                   (type/ifunc context config-key)))))
+    ([this config-key] (do
+                         (util/expected #(contains? % :inducer) "map with :inducer key" this)
+                         (type/ifunc (get this :inducer) config-key))))
   (iname [this] (or (:name this) (type/iname (get this :inducer))))
   (iargs [this] (vec (get this :args)))
   Var
   (ifunc
     ([this] this)
-    ([this context config-key] this))
+    ([this config-key] this))
   (iname [this] (str this))
   (iargs [this] []))

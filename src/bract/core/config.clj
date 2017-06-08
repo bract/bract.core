@@ -78,7 +78,7 @@
     (apply-inducer-by-key the-key context inducer {}))
   ([the-key context inducer {:keys [inducer-type]
                             :or {inducer-type "inducer"}}]
-    (let [f (type/ifunc inducer context the-key)
+    (let [f (type/ifunc inducer the-key)
           n (type/iname inducer)
           a (type/iargs inducer)]
       (echo/with-latency-capture (format "Executing %s `%s`" inducer-type n)

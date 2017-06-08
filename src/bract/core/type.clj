@@ -11,7 +11,7 @@
 
 
 (defprotocol Inducer
-  (ifunc [this] [this context config-key] "Return the inducer function to be invoked")
+  (ifunc [this] [this config-key] "Return the inducer function to be invoked")
   (iname [this] "Return the name (or derived name) of the inducer")
   (iargs [this] "Return the additional arguments to be passed to the inducer function"))
 
