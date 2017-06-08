@@ -14,8 +14,11 @@
 
 ## [WIP] 0.3.0 / 2017-June-??
 
-- [TODO] Some inducers may accept additional arguments and argument-sets, to be specified via config files
-  - [TODO] Example: A dev-mode inducer specifies a config key, which points to [] in prod and [...] in dev/testing
+- Allow inducers to accept additional arguments other than context
+  - Supported inducer spec: string, symbol, vector, map, var
+  - [BREAKING CHANGE] Rewrite `bract.core.config/apply-inducer`
+  - [BREAKING CHANGE] Remove `bract.core.config/apply-inducer-by-name`
+  - Add `bract.core.config/apply-inducer-by-key`
 - [BREAKING CHANGE] Rename `bract.core.inducer/run-inducers` to `run-config-inducers`
 - Introduce `bract.core.inducer/run-context-inducers` to run inducers from context
   - Context key definition `:bract.core/inducers`

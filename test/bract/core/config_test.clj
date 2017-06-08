@@ -41,18 +41,18 @@
   (testing "happy tests"
     (doseq [good-config [{"bract.core.inducers" ["foo.bar.baz.qux/fred"
                                                  "mary.had.a.little/lamb"]
-                          "bract.core.context-hook" 'bract.core.config/apply-inducer-by-name
-                          "bract.core.config-hook"  'bract.core.config/apply-inducer-by-name
+                          "bract.core.context-hook" 'bract.core.config/apply-inducer
+                          "bract.core.config-hook"  'bract.core.config/apply-inducer
                           "bract.core.exports" ["foo"
                                                 "bar"]
-                          "bract.core.launcher" 'bract.core.config/apply-inducer-by-name}
+                          "bract.core.launcher" 'bract.core.config/apply-inducer}
                          {"bract.core.inducers" "[\"foo.bar.baz.qux/fred\"
                                                    \"mary.had.a.little/lamb\"]"
-                          "bract.core.context-hook" "bract.core.config/apply-inducer-by-name"
-                          "bract.core.config-hook"  "bract.core.config/apply-inducer-by-name"
+                          "bract.core.context-hook" "bract.core.config/apply-inducer"
+                          "bract.core.config-hook"  "bract.core.config/apply-inducer"
                           "bract.core.exports"  "[\"foo\"
                                                    \"bar\"]"
-                          "bract.core.launcher" "bract.core.config/apply-inducer-by-name"}]]
+                          "bract.core.launcher" "bract.core.config/apply-inducer"}]]
       (is (= ["foo.bar.baz.qux/fred"
               "mary.had.a.little/lamb"]
             (config/cfg-inducers good-config)))

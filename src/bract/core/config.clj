@@ -14,6 +14,8 @@
     [keypin.core :as keypin]
     [keypin.util :as kputil]
     [bract.core.echo :as echo]
+    [bract.core.impl :as impl]
+    [bract.core.type :as type]
     [bract.core.util :as util])
   (:import
     [java.io OutputStream Writer]
@@ -55,29 +57,33 @@
 ;; ----- utility fns -----
 
 
-(defn apply-inducer-by-name
-  "Given a context and a fully qualified inducer fn name, load the fn and apply it to the context returning an updated
-  context."
-  ([context inducer-name]
-    (apply-inducer-by-name "inducer" (key cfg-inducers) context inducer-name))
-  ([inducer-type config-key context inducer-name]
-    (echo/echo (format "Looking up %s `%s`" inducer-type inducer-name))
-    (let [f (kputil/str->var->deref config-key inducer-name)]
-      (echo/with-latency-capture (format "Executing %s `%s`" inducer-type inducer-name)
-        (echo/with-inducer-name inducer-name
-          (f context))))))
-
-
 (defn apply-inducer
-  "Given a context and inducer (either a fn or inducer-name), apply it to the context."
-  ([context inducer-or-name]
-    (apply-inducer context "inducer" inducer-or-name))
-  ([context inducer-type inducer-or-name]
-    (if (or (var? inducer-or-name) (fn? inducer-or-name))
-      (echo/with-latency-capture (format "Executing %s `%s`" inducer-type inducer-or-name)
-        (echo/with-inducer-name inducer-or-name
-          (inducer-or-name context)))
-      (apply-inducer-by-name context inducer-or-name))))
+  "Given a context and inducer-spec, apply the inducer to the context (and args if any) returning updated context."
+  ([context inducer]
+    (apply-inducer context inducer {}))
+  ([context inducer {:keys [inducer-type]
+                     :or {inducer-type "inducer"}}]
+    (let [f (type/ifunc inducer)
+          n (type/iname inducer)
+          a (type/iargs inducer)]
+      (echo/with-latency-capture (format "Executing %s `%s`" inducer-type n)
+        (echo/with-inducer-name n
+          (apply f context a))))))
+
+
+(defn apply-inducer-by-key
+  "Given a context and inducer-spec under a key (in context, or config or wherever), apply the inducer to the context
+  (and args if any) returning updated context."
+  ([the-key context inducer]
+    (apply-inducer-by-key the-key context inducer {}))
+  ([the-key context inducer {:keys [inducer-type]
+                            :or {inducer-type "inducer"}}]
+    (let [f (type/ifunc inducer context the-key)
+          n (type/iname inducer)
+          a (type/iargs inducer)]
+      (echo/with-latency-capture (format "Executing %s `%s`" inducer-type n)
+        (echo/with-inducer-name n
+          (apply f context a))))))
 
 
 (defn print-config
