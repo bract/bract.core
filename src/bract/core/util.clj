@@ -31,22 +31,12 @@
     (apply println x more)))
 
 
-(defn apply-inducer
-  "Given a context and an inducer function `(fn [context]) -> context`, apply the inducer to the context returning
-  an updated context."
-  [context inducer]
-  (inducer context))
-
-
 (defn induce
-  "Given a seed context (optional, {} by default), a reducing function `(fn [context inducer-candidate]) -> context`
-  (optional, `bract.core.util/apply-inducer` by default) and a collection of inducer candidates, roll the seed context
-  through each inducer function successively, returning an updated context."
-  ([coll]
-    (induce {} apply-inducer coll))
-  ([seed coll]
-    (induce seed apply-inducer coll))
-  ([seed f coll]
+  "Given a reducing function `(fn [context inducer-spec]) -> context`, a collection of inducer-specs and an optional
+  seed context (default: {}), roll the seed context through each inducer successively, returning updated context."
+  ([f coll]
+    (induce f {} coll))
+  ([f seed coll]
     (reduce (fn [context inducer-candidate] (f context inducer-candidate))
       seed coll)))
 

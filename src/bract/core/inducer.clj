@@ -44,7 +44,8 @@
   "Run the inducers specified in the context."
   [context]
   (->> (config/ctx-inducers context)
-    (util/induce context (partial config/apply-inducer-by-key (key config/ctx-inducers)))))
+    (util/induce (partial config/apply-inducer-by-key (key config/ctx-inducers))
+      context)))
 
 
 (defn run-config-inducers
@@ -52,7 +53,8 @@
   [context]
   (->> (config/ctx-config context)
     config/cfg-inducers
-    (util/induce context (partial config/apply-inducer-by-key (key config/cfg-inducers)))))
+    (util/induce (partial config/apply-inducer-by-key (key config/cfg-inducers))
+      context)))
 
 
 (defn context-hook

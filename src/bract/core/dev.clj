@@ -33,7 +33,7 @@
   (try
     (inducer/set-verbosity default-root-context)
     (echo/with-latency-capture "Initializing app in DEV mode"
-      (util/induce default-root-context default-root-inducers))
+      (util/induce config/apply-inducer default-root-context default-root-inducers))
     (catch Throwable e
       (.printStackTrace e)
       (echo/abort (.getMessage e)))))
