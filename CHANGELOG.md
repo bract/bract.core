@@ -20,7 +20,7 @@
   - [BREAKING CHANGE] Remove `bract.core.config/apply-inducer-by-name`
   - Add `bract.core.config/apply-inducer-by-key`
 - Overhaul induce function
-  - Drop function `bract.core.util/apply-inducer`
+  - [BREAKING CHANGE] Drop function `bract.core.util/apply-inducer`
   - Refactor `bract.core.util/induce` to swap arity - now it looks like `clojure.core/reduce`
 - [TODO] Replace default dev config file `config.dev.edn` with `config/dev.edn`
 - [BREAKING CHANGE] Rename `bract.core.inducer/run-inducers` to `run-config-inducers`
