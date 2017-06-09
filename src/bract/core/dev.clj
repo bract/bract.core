@@ -24,7 +24,7 @@
 
 (def default-root-inducers [inducer/set-verbosity
                             inducer/read-config
-                            inducer/run-inducers])
+                            inducer/run-config-inducers])
 
 
 (defn init
@@ -33,7 +33,7 @@
   (try
     (inducer/set-verbosity default-root-context)
     (echo/with-latency-capture "Initializing app in DEV mode"
-      (util/induce config/apply-inducer default-root-context default-root-inducers))
+      (inducer/induce config/apply-inducer default-root-context default-root-inducers))
     (catch Throwable e
       (.printStackTrace e)
       (echo/abort (.getMessage e)))))
