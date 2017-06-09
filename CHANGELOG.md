@@ -25,7 +25,6 @@
     - `bract.core.util/induce`
   - Introduce functions in the `bract.core.inducer` namespace to apply inducers
     - `bract.core.inducer/apply-inducer` for functions (for direct internal calls to induce)
-    - `bract.core.inducer/apply-inducer-by-key` for named inducers (fully qualified fn names)
     - `bract.core.inducer/induce` for applying a collection of inducers
 - [BREAKING CHANGE] Change of arity in inducers `context-hook` and `config-hook`
   - Inducer `bract.core.inducer/context-hook` no more supports arity-1, accepts function as second argument

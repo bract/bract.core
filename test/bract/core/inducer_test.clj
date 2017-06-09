@@ -26,24 +26,23 @@
 (deftest test-apply-inducer
   (is (= {:foo 10} (inducer/apply-inducer {} assoc-foo-10)))
   (is (= {:foo 10} (inducer/apply-inducer "random inducer" {} assoc-foo-10)))
-  (is (thrown? UnsupportedOperationException
+  (is (thrown? IllegalArgumentException
         (inducer/apply-inducer {} 'foo/bar)))
-  (is (thrown? UnsupportedOperationException
+  (is (thrown? IllegalArgumentException
         (inducer/apply-inducer {} "foo/bar"))))
 
 
 (deftest test-apply-inducer-by-key
-  (is (= {:foo 10} (inducer/apply-inducer-by-key "no key" {} 'bract.core.inducer-test/assoc-foo-10)))
-  (is (= {:foo 10} (inducer/apply-inducer-by-key "random inducer" "no key" {} 'bract.core.inducer-test/assoc-foo-10)))
-  (is (= {:foo 10} (inducer/apply-inducer-by-key "no key" {} assoc-foo-10)))
-  (is (= {:foo 10} (inducer/apply-inducer-by-key "random inducer" "no key" {} assoc-foo-10))))
+  (is (= {:foo 10} (inducer/apply-inducer {} 'bract.core.inducer-test/assoc-foo-10)))
+  (is (= {:foo 10} (inducer/apply-inducer "random inducer" {} 'bract.core.inducer-test/assoc-foo-10)))
+  (is (= {:foo 10} (inducer/apply-inducer {} assoc-foo-10)))
+  (is (= {:foo 10} (inducer/apply-inducer "random inducer" {} assoc-foo-10))))
 
 
 (deftest test-induce
   (is (= {:foo 10 :bar 20} (inducer/induce {} [(fn [m] (assoc m :bar 20)) assoc-foo-10])))
   (is (= {:bar 20} (inducer/induce {} [(fn [m] (reduced (assoc m :bar 20))) assoc-foo-10])))
-  (is (= {:foo 10} (inducer/induce (partial inducer/apply-inducer-by-key "no key")
-                     {} ['bract.core.inducer-test/assoc-foo-10]))))
+  (is (= {:foo 10} (inducer/induce {} ['bract.core.inducer-test/assoc-foo-10]))))
 
 
 (deftest test-set-verbosity

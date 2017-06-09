@@ -18,52 +18,45 @@
     [clojure.lang AFn Symbol Keyword Var]))
 
 
+(def ^:dynamic *lookup-key* "no-key")
+
+
+(defmacro with-lookup-key
+  [lookup-key & body]
+  `(binding [*lookup-key* ~lookup-key]
+     ~@body))
+
+
 (extend-protocol type/IFunction
   AFn
-  (ifunc
-    ([this] this)
-    ([this config-key] this))
+  (ifunc [this] this)
   (iname [this] (str this))
   (iargs [this] [])
   String
-  (ifunc
-    ([this] (throw (UnsupportedOperationException. (str "Cannot determine inducer without the key: " this))))
-    ([this config-key] (do
-                         (echo/echo (format "Looking up inducer `%s`" this))
-                         (kputil/str->var->deref config-key this))))
+  (ifunc [this] (do
+                  (echo/echo (format "Looking up inducer `%s`" this))
+                  (kputil/str->var->deref *lookup-key* this)))
   (iname [this] this)
   (iargs [this] [])
   Symbol
-  (ifunc
-    ([this] (throw (UnsupportedOperationException. (str "Cannot determine inducer without the key: " this))))
-    ([this config-key] (do
-                         (echo/echo (format "Looking up inducer `%s`" this))
-                         (kputil/str->var->deref config-key this))))
+  (ifunc [this] (do
+                  (echo/echo (format "Looking up inducer `%s`" this))
+                  (kputil/str->var->deref *lookup-key* this)))
   (iname [this] (name this))
   (iargs [this] [] [])
   List
-  (ifunc
-    ([this] (do
-             (util/expected seq "non-empty collection" this)
-             (type/ifunc (first this))))
-    ([this config-key] (do
-                         (util/expected seq "non-empty collection" this)
-                         (type/ifunc (first this) config-key))))
+  (ifunc [this] (do
+                  (util/expected seq "non-empty collection" this)
+                  (type/ifunc (first this))))
   (iname [this] (type/iname (first this)))
   (iargs [this] (vec (rest this)))
   Map
-  (ifunc
-    ([this] (do
-              (util/expected #(contains? % :inducer) "map with :inducer key" this)
-              (type/ifunc (get this :inducer))))
-    ([this config-key] (do
-                         (util/expected #(contains? % :inducer) "map with :inducer key" this)
-                         (type/ifunc (get this :inducer) config-key))))
+  (ifunc [this] (do
+                  (util/expected #(contains? % :inducer) "map with :inducer key" this)
+                  (type/ifunc (get this :inducer))))
   (iname [this] (or (:name this) (type/iname (get this :inducer))))
   (iargs [this] (vec (get this :args)))
   Var
-  (ifunc
-    ([this] this)
-    ([this config-key] this))
+  (ifunc [this] this)
   (iname [this] (str (.-ns ^Var this) \/ (.-sym ^Var this)))
   (iargs [this] []))

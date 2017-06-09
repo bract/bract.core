@@ -36,20 +36,6 @@
           (apply f context a))))))
 
 
-(defn apply-inducer-by-key
-  "Given a context and inducer-spec under a key (in context, or config or wherever), apply the inducer to the context
-  (and args if any) returning updated context."
-  ([the-key context inducer]
-    (apply-inducer-by-key "inducer" the-key context inducer))
-  ([inducer-type the-key context inducer]
-    (let [f (type/ifunc inducer the-key)
-          n (type/iname inducer)
-          a (type/iargs inducer)]
-      (echo/with-latency-capture (format "Executing %s `%s`" inducer-type n)
-        (echo/with-inducer-name n
-          (apply f context a))))))
-
-
 (defn induce
   "Given a reducing function `(fn [context inducer-spec]) -> context` and a collection of inducer-specs, roll the seed
   context through each inducer successively, returning updated context. The chain may be broken by an inducer returning
@@ -90,24 +76,24 @@
 (defn run-context-inducers
   "Run the inducers specified in the context."
   [context]
-  (->> (config/ctx-inducers context)
-    (induce (partial apply-inducer-by-key (key config/ctx-inducers))
-      context)))
+  (impl/with-lookup-key (key config/ctx-inducers)
+    (->> (config/ctx-inducers context)
+      (induce context))))
 
 
 (defn run-config-inducers
   "Run the inducers specified in the application config."
   [context]
-  (->> (config/ctx-config context)
-    config/cfg-inducers
-    (induce (partial apply-inducer-by-key (key config/cfg-inducers))
-      context)))
+  (impl/with-lookup-key (key config/cfg-inducers)
+    (->> (config/ctx-config context)
+      config/cfg-inducers
+      (induce context))))
 
 
 (defn context-hook
   "Given context with config, invoke the context-hook fn with context as argument."
   [context function]
-  (let [f (type/ifunc function "no-key")]
+  (let [f (type/ifunc function)]
     (util/expected fn? (format "%s to be a function" function) f)
     (f context)
     context))
@@ -117,7 +103,7 @@
   "Given context with config, invoke the config-hook fn with config as argument."
   [context function]
   (let [config (config/ctx-config context)
-        f (type/ifunc function "no-key")]
+        f (type/ifunc function)]
     (util/expected fn? (format "%s to be a function" function) f)
     (f config)
     context))
