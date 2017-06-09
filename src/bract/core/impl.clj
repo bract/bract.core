@@ -18,7 +18,7 @@
     [clojure.lang AFn Symbol Keyword Var]))
 
 
-(extend-protocol type/Inducer
+(extend-protocol type/IFunction
   AFn
   (ifunc
     ([this] this)

@@ -16,7 +16,7 @@
 
 - Allow inducers to accept additional arguments other than context
   - Supported inducer spec: string, symbol, vector, map, var
-  - Inducers are now backed by `bract.core.type/Inducer` protocol
+  - Inducers are now backed by `bract.core.type/IFunction` protocol
   - [BREAKING CHANGE] Remove inducer related functions from the `bract.core.config` namespace
     - `bract.core.config/apply-inducer`
     - `bract.core.config/apply-inducer-by-name`
