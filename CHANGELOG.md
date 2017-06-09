@@ -16,12 +16,17 @@
 
 - Allow inducers to accept additional arguments other than context
   - Supported inducer spec: string, symbol, vector, map, var
-  - [BREAKING CHANGE] Rewrite `bract.core.config/apply-inducer`
-  - [BREAKING CHANGE] Remove `bract.core.config/apply-inducer-by-name`
-  - Add `bract.core.config/apply-inducer-by-key`
-- Overhaul induce function
-  - [BREAKING CHANGE] Drop function `bract.core.util/apply-inducer`
-  - Refactor `bract.core.util/induce` to swap arity - now it looks like `clojure.core/reduce`
+  - Inducers are now backed by `bract.core.type/Inducer` protocol
+  - [BREAKING CHANGE] Remove inducer related functions from the `bract.core.config` namespace
+    - `bract.core.config/apply-inducer`
+    - `bract.core.config/apply-inducer-by-name`
+  - [BREAKING CHANGE] Remove inducer related functions from the `bract.core.util` namespace
+    - `bract.core.util/apply-inducer`
+    - `bract.core.util/induce`
+  - Introduce functions in the `bract.core.inducer` namespace to apply inducers
+    - `bract.core.inducer/apply-inducer` for functions (for direct internal calls to induce)
+    - `bract.core.inducer/apply-inducer-by-key` for named inducers (fully qualified fn names)
+    - `bract.core.inducer/induce` for applying a collection of inducers
 - [TODO] Replace default dev config file `config.dev.edn` with `config/dev.edn`
 - [BREAKING CHANGE] Rename `bract.core.inducer/run-inducers` to `run-config-inducers`
 - Introduce `bract.core.inducer/run-context-inducers` to run inducers from context

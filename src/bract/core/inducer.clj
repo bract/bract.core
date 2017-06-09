@@ -12,11 +12,55 @@
   (:require
     [bract.core.config :as config]
     [bract.core.echo   :as echo]
+    [bract.core.impl   :as impl]
+    [bract.core.type   :as type]
     [bract.core.util   :as util])
   (:import
     [bract.core Echo]))
 
 
+;; ----- utility for applying inducers -----
+
+
+(defn apply-inducer
+  "Given a context and inducer-spec, apply the inducer to the context (and args if any) returning updated context."
+  ([context inducer]
+    (apply-inducer "inducer" context inducer))
+  ([inducer-type context inducer]
+    (let [f (type/ifunc inducer)
+          n (type/iname inducer)
+          a (type/iargs inducer)]
+      (echo/with-latency-capture (format "Executing %s `%s`" inducer-type n)
+        (echo/with-inducer-name n
+          (apply f context a))))))
+
+
+(defn apply-inducer-by-key
+  "Given a context and inducer-spec under a key (in context, or config or wherever), apply the inducer to the context
+  (and args if any) returning updated context."
+  ([the-key context inducer]
+    (apply-inducer-by-key "inducer" the-key context inducer))
+  ([inducer-type the-key context inducer]
+    (let [f (type/ifunc inducer the-key)
+          n (type/iname inducer)
+          a (type/iargs inducer)]
+      (echo/with-latency-capture (format "Executing %s `%s`" inducer-type n)
+        (echo/with-inducer-name n
+          (apply f context a))))))
+
+
+(defn induce
+  "Given a reducing function `(fn [context inducer-spec]) -> context` and a collection of inducer-specs, roll the seed
+  context through each inducer successively, returning updated context. The chain may be broken by an inducer returning
+  a reduced context, i.e. `(reduced context)`."
+  ([context coll]
+    (induce apply-inducer context coll))
+  ([f context coll]
+    (reduce (fn [context inducer-candidate] (f context inducer-candidate))
+      context coll)))
+
+
+;; ----- inducers -----
 (defn set-verbosity
   "Set Bract verbosity flag and return context."
   [context]
@@ -44,7 +88,7 @@
   "Run the inducers specified in the context."
   [context]
   (->> (config/ctx-inducers context)
-    (util/induce (partial config/apply-inducer-by-key (key config/ctx-inducers))
+    (induce (partial apply-inducer-by-key (key config/ctx-inducers))
       context)))
 
 
@@ -53,7 +97,7 @@
   [context]
   (->> (config/ctx-config context)
     config/cfg-inducers
-    (util/induce (partial config/apply-inducer-by-key (key config/cfg-inducers))
+    (induce (partial apply-inducer-by-key (key config/cfg-inducers))
       context)))
 
 

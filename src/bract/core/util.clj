@@ -31,16 +31,6 @@
     (apply println x more)))
 
 
-(defn induce
-  "Given a reducing function `(fn [context inducer-spec]) -> context`, a collection of inducer-specs and an optional
-  seed context (default: {}), roll the seed context through each inducer successively, returning updated context."
-  ([f coll]
-    (induce f {} coll))
-  ([f seed coll]
-    (reduce (fn [context inducer-candidate] (f context inducer-candidate))
-      seed coll)))
-
-
 (defn shorten-name
   "Shorten a stringable name, e.g. foo.bar.baz.qux/fred to f.b.baz.qux/fred, leaving only the last two tokens intact."
   ([any-name]
