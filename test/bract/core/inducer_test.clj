@@ -97,15 +97,11 @@
 
 (deftest test-context-hook
   (let [context {:bract.core/config {"bract.core.context-hook" "bract.core.inducer-test/update-volatile-holder"}}]
-    (testing "context-hook arity 0"
-      (vreset! volatile-holder nil)
-      (inducer/context-hook context)
-      (is (= context @volatile-holder)))
-    (testing "context-hook arity 1, fqvn"
+    (testing "context-hook, fqvn"
       (vreset! volatile-holder nil)
       (is (= {:foo 10} (inducer/context-hook {:foo 10} "bract.core.inducer-test/update-volatile-holder")))
       (is (= {:foo 10} @volatile-holder)))
-    (testing "context-hook arity 1, fn"
+    (testing "context-hook, fn"
       (vreset! volatile-holder nil)
       (is (= {:foo 10} (inducer/context-hook {:foo 10} update-volatile-holder)))
       (is (= {:foo 10} @volatile-holder)))))
@@ -114,15 +110,11 @@
 (deftest test-config-hook
   (let [config {"bract.core.config-hook" "bract.core.inducer-test/update-volatile-holder"}
         context {:bract.core/config config}]
-    (testing "config-hook arity 0"
-      (vreset! volatile-holder nil)
-      (inducer/config-hook context)
-      (is (= config @volatile-holder)))
-    (testing "config-hook arity 1, fqvn"
+    (testing "config-hook, fqvn"
       (vreset! volatile-holder nil)
       (inducer/config-hook context "bract.core.inducer-test/update-volatile-holder")
       (is (= config @volatile-holder)))
-    (testing "config-hook arity 1, fn"
+    (testing "config-hook, fn"
       (vreset! volatile-holder nil)
       (inducer/config-hook context update-volatile-holder)
       (is (= config @volatile-holder)))))

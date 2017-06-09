@@ -106,31 +106,21 @@
 
 (defn context-hook
   "Given context with config, invoke the context-hook fn with context as argument."
-  ([context]
-    (let [config (config/ctx-config context)]
-      (-> (config/cfg-context-hook config)
-        (apply [context]))
-      context))
-  ([context function]
-    (let [f (type/ifunc function "no-key")]
-      (util/expected fn? (format "%s to be a function" function) f)
-      (f context)
-      context)))
+  [context function]
+  (let [f (type/ifunc function "no-key")]
+    (util/expected fn? (format "%s to be a function" function) f)
+    (f context)
+    context))
 
 
 (defn config-hook
   "Given context with config, invoke the config-hook fn with config as argument."
-  ([context]
-    (let [config (config/ctx-config context)]
-      (-> (config/cfg-config-hook config)
-        (apply [config]))
-      context))
-  ([context function]
-    (let [config (config/ctx-config context)
-          f (type/ifunc function "no-key")]
-      (util/expected fn? (format "%s to be a function" function) f)
-      (f config)
-      context)))
+  [context function]
+  (let [config (config/ctx-config context)
+        f (type/ifunc function "no-key")]
+    (util/expected fn? (format "%s to be a function" function) f)
+    (f config)
+    context))
 
 
 (defn export-as-sysprops

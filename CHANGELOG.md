@@ -15,7 +15,7 @@
 ## [WIP] 0.3.0 / 2017-June-??
 
 - Allow inducers to accept additional arguments other than context
-  - Supported inducer spec: string, symbol, vector, map, var
+  - Supported inducer spec: function, string, symbol, vector, map, var
   - Inducers are now backed by `bract.core.type/IFunction` protocol
   - [BREAKING CHANGE] Remove inducer related functions from the `bract.core.config` namespace
     - `bract.core.config/apply-inducer`
@@ -27,6 +27,11 @@
     - `bract.core.inducer/apply-inducer` for functions (for direct internal calls to induce)
     - `bract.core.inducer/apply-inducer-by-key` for named inducers (fully qualified fn names)
     - `bract.core.inducer/induce` for applying a collection of inducers
+- [BREAKING CHANGE] Change of arity in inducers `context-hook` and `config-hook`
+  - Inducer `bract.core.inducer/context-hook` no more supports arity-1, accepts function as second argument
+  - Inducer `bract.core.inducer/config-hook` no more supports arity-1, accepts function as second argument
+  - Config definition for "bract.core.context-hook" is removed
+  - Config definition for "bract.core.config-hook" is removed
 - Replace default dev config file `config.dev.edn` with `config/config.dev.edn`
 - [BREAKING CHANGE] Rename `bract.core.inducer/run-inducers` to `run-config-inducers`
 - Introduce `bract.core.inducer/run-context-inducers` to run inducers from context

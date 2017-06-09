@@ -41,25 +41,17 @@
   (testing "happy tests"
     (doseq [good-config [{"bract.core.inducers" ["foo.bar.baz.qux/fred"
                                                  "mary.had.a.little/lamb"]
-                          "bract.core.context-hook" 'bract.core.inducer/apply-inducer
-                          "bract.core.config-hook"  'bract.core.inducer/apply-inducer
                           "bract.core.exports" ["foo"
                                                 "bar"]
                           "bract.core.launcher" 'bract.core.inducer/apply-inducer}
                          {"bract.core.inducers" "[\"foo.bar.baz.qux/fred\"
                                                    \"mary.had.a.little/lamb\"]"
-                          "bract.core.context-hook" "bract.core.inducer/apply-inducer"
-                          "bract.core.config-hook"  "bract.core.inducer/apply-inducer"
                           "bract.core.exports"  "[\"foo\"
                                                    \"bar\"]"
                           "bract.core.launcher" "bract.core.inducer/apply-inducer"}]]
       (is (= ["foo.bar.baz.qux/fred"
               "mary.had.a.little/lamb"]
             (config/cfg-inducers good-config)))
-      (is (some?
-            (config/cfg-context-hook good-config)))
-      (is (some?
-            (config/cfg-config-hook good-config)))
       (is (= ["foo" "bar"]
             (config/cfg-exports good-config)))
       (is (some?
@@ -72,10 +64,6 @@
                        "bract.core.launcher" false}]
       (is (thrown? IllegalArgumentException (config/cfg-inducers      bad-context)))
       (is (thrown? IllegalArgumentException (config/cfg-inducers      {})) "missing key")
-      (is (thrown? IllegalArgumentException (config/cfg-context-hook  bad-context)))
-      (is (thrown? IllegalArgumentException (config/cfg-context-hook  {})) "missing key")
-      (is (thrown? IllegalArgumentException (config/cfg-config-hook   bad-context)))
-      (is (thrown? IllegalArgumentException (config/cfg-config-hook   {})) "missing key")
       (is (thrown? IllegalArgumentException (config/cfg-exports       bad-context)))
       (is (thrown? IllegalArgumentException (config/cfg-exports       {})) "missing key")
       (is (thrown? IllegalArgumentException (config/cfg-launcher      bad-context)))

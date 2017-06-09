@@ -45,10 +45,6 @@
 (keypin/defkey  ; config keys
   cfg-inducers      ["bract.core.inducers"     vector? "Vector of fully qualified inducer fn names"
                      {:parser kputil/any->edn}]
-  cfg-context-hook  ["bract.core.context-hook" fn?     "Fully qualified context hook fn name"
-                     {:parser kputil/str->var->deref}]
-  cfg-config-hook   ["bract.core.config-hook"  fn?     "Fully qualified config hook fn name"
-                     {:parser kputil/str->var->deref}]
   cfg-exports       ["bract.core.exports"      vector? "Vector of config keys to export as system properties"
                      {:parser kputil/any->edn}]
   cfg-launcher      ["bract.core.launcher"     fn?     "Fully qualified launcher fn name"
