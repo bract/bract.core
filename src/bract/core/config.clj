@@ -57,35 +57,6 @@
 ;; ----- utility fns -----
 
 
-(defn apply-inducer
-  "Given a context and inducer-spec, apply the inducer to the context (and args if any) returning updated context."
-  ([context inducer]
-    (apply-inducer context inducer {}))
-  ([context inducer {:keys [inducer-type]
-                     :or {inducer-type "inducer"}}]
-    (let [f (type/ifunc inducer)
-          n (type/iname inducer)
-          a (type/iargs inducer)]
-      (echo/with-latency-capture (format "Executing %s `%s`" inducer-type n)
-        (echo/with-inducer-name n
-          (apply f context a))))))
-
-
-(defn apply-inducer-by-key
-  "Given a context and inducer-spec under a key (in context, or config or wherever), apply the inducer to the context
-  (and args if any) returning updated context."
-  ([the-key context inducer]
-    (apply-inducer-by-key the-key context inducer {}))
-  ([the-key context inducer {:keys [inducer-type]
-                            :or {inducer-type "inducer"}}]
-    (let [f (type/ifunc inducer the-key)
-          n (type/iname inducer)
-          a (type/iargs inducer)]
-      (echo/with-latency-capture (format "Executing %s `%s`" inducer-type n)
-        (echo/with-inducer-name n
-          (apply f context a))))))
-
-
 (defn print-config
   "Print the given config using the format determined from the supplied config file names."
   [config config-filenames]
