@@ -18,7 +18,7 @@
     [bract.core Echo]))
 
 
-(def default-root-context {(key config/ctx-config-files) ["config.dev.edn"]
+(def default-root-context {(key config/ctx-config-files) ["config/config.dev.edn"]
                            (key config/ctx-launch?)      false})
 
 

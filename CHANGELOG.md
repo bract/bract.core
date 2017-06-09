@@ -1,4 +1,4 @@
-# TODO and Change Log
+# bract.core TODO and Change Log
 
 ## Ideas and TODO
 
@@ -27,7 +27,7 @@
     - `bract.core.inducer/apply-inducer` for functions (for direct internal calls to induce)
     - `bract.core.inducer/apply-inducer-by-key` for named inducers (fully qualified fn names)
     - `bract.core.inducer/induce` for applying a collection of inducers
-- [TODO] Replace default dev config file `config.dev.edn` with `config/dev.edn`
+- Replace default dev config file `config.dev.edn` with `config/config.dev.edn`
 - [BREAKING CHANGE] Rename `bract.core.inducer/run-inducers` to `run-config-inducers`
 - Introduce `bract.core.inducer/run-context-inducers` to run inducers from context
   - Context key definition `:bract.core/inducers`
