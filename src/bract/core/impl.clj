@@ -65,5 +65,5 @@
   (ifunc
     ([this] this)
     ([this config-key] this))
-  (iname [this] (str this))
+  (iname [this] (str (.-ns ^Var this) \/ (.-sym ^Var this)))
   (iargs [this] []))
