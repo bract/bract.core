@@ -10,6 +10,7 @@
 (ns bract.core.inducer
   "The inducer fns exposed by Bract-core."
   (:require
+    [keypin.util       :as kputil]
     [bract.core.config :as config]
     [bract.core.echo   :as echo]
     [bract.core.impl   :as impl]
@@ -104,21 +105,32 @@
 
 
 (defn context-hook
-  "Given context with config, read the fully qualified context-hook fn name and invoke it as (fn [context])."
-  [context]
-  (let [config (config/ctx-config context)]
-    (-> (config/cfg-context-hook config)
-      (apply [context]))
-    context))
+  "Given context with config, invoke the context-hook fn with context as argument."
+  ([context]
+    (let [config (config/ctx-config context)]
+      (-> (config/cfg-context-hook config)
+        (apply [context]))
+      context))
+  ([context function]
+    (let [f (type/ifunc function "no-key")]
+      (util/expected fn? (format "%s to be a function" function) f)
+      (f context)
+      context)))
 
 
 (defn config-hook
-  "Given context with config, read the fully qualified config-hook fn name and invoke it as (fn [config])."
-  [context]
-  (let [config (config/ctx-config context)]
-    (-> (config/cfg-config-hook config)
-      (apply [config]))
-    context))
+  "Given context with config, invoke the config-hook fn with config as argument."
+  ([context]
+    (let [config (config/ctx-config context)]
+      (-> (config/cfg-config-hook config)
+        (apply [config]))
+      context))
+  ([context function]
+    (let [config (config/ctx-config context)
+          f (type/ifunc function "no-key")]
+      (util/expected fn? (format "%s to be a function" function) f)
+      (f config)
+      context)))
 
 
 (defn export-as-sysprops
