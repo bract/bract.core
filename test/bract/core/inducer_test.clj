@@ -63,27 +63,49 @@
 
 
 (deftest test-run-context-inducers
-  (let [verbosity? (Echo/isVerbose)
-        context {:bract.core/verbose? true
-                 :bract.core/inducers ['bract.core.inducer/set-verbosity]}]
-    (try
-      (Echo/setVerbose false)
-      (inducer/run-context-inducers context)
-      (is (true? (Echo/isVerbose)) "Verbosity should be enabled after configuring it as true")
-      (finally
-        (Echo/setVerbose verbosity?)))))
+  (testing "arity 1"
+    (let [verbosity? (Echo/isVerbose)
+          context {:bract.core/verbose? true
+                   :bract.core/inducers ['bract.core.inducer/set-verbosity]}]
+      (try
+        (Echo/setVerbose false)
+        (inducer/run-context-inducers context)
+        (is (true? (Echo/isVerbose)) "Verbosity should be enabled after configuring it as true")
+        (finally
+          (Echo/setVerbose verbosity?)))))
+  (testing "arity 2"
+    (let [verbosity? (Echo/isVerbose)
+          context {:bract.core/verbose? true
+                   :bract.core/delegate ['bract.core.inducer/set-verbosity]}]
+      (try
+        (Echo/setVerbose false)
+        (inducer/run-context-inducers context :bract.core/delegate)
+        (is (true? (Echo/isVerbose)) "Verbosity should be enabled after configuring it as true")
+        (finally
+          (Echo/setVerbose verbosity?))))))
 
 
 (deftest test-run-config-inducers
-  (let [verbosity? (Echo/isVerbose)
-        context {:bract.core/verbose? true
-                 :bract.core/config {"bract.core.inducers" ['bract.core.inducer/set-verbosity]}}]
-    (try
-      (Echo/setVerbose false)
-      (inducer/run-config-inducers context)
-      (is (true? (Echo/isVerbose)) "Verbosity should be enabled after configuring it as true")
-      (finally
-        (Echo/setVerbose verbosity?)))))
+  (testing "arity 1"
+    (let [verbosity? (Echo/isVerbose)
+          context {:bract.core/verbose? true
+                   :bract.core/config {"bract.core.inducers" ['bract.core.inducer/set-verbosity]}}]
+      (try
+        (Echo/setVerbose false)
+        (inducer/run-config-inducers context)
+        (is (true? (Echo/isVerbose)) "Verbosity should be enabled after configuring it as true")
+        (finally
+          (Echo/setVerbose verbosity?)))))
+  (testing "arity 2"
+    (let [verbosity? (Echo/isVerbose)
+          context {:bract.core/verbose? true
+                   :bract.core/config {"bract.core.delegate" ['bract.core.inducer/set-verbosity]}}]
+      (try
+        (Echo/setVerbose false)
+        (inducer/run-config-inducers context "bract.core.delegate")
+        (is (true? (Echo/isVerbose)) "Verbosity should be enabled after configuring it as true")
+        (finally
+          (Echo/setVerbose verbosity?))))))
 
 
 (def volatile-holder (volatile! nil))

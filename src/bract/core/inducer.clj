@@ -10,6 +10,7 @@
 (ns bract.core.inducer
   "The inducer fns exposed by Bract-core."
   (:require
+    [keypin.core       :as keypin]
     [keypin.util       :as kputil]
     [bract.core.config :as config]
     [bract.core.echo   :as echo]
@@ -75,19 +76,29 @@
 
 (defn run-context-inducers
   "Run the inducers specified in the context."
-  [context]
-  (impl/with-lookup-key (key config/ctx-inducers)
-    (->> (config/ctx-inducers context)
-      (induce context))))
+  ([context]
+    (impl/with-lookup-key (key config/ctx-inducers)
+      (->> (config/ctx-inducers context)
+        (induce context))))
+  ([context lookup-key]
+    (impl/with-lookup-key lookup-key
+      (as-> (keypin/make-key lookup-key vector? "Vector of inducer fns or their fully qualified names" {}) <>
+        (<> context)
+        (induce context <>)))))
 
 
 (defn run-config-inducers
   "Run the inducers specified in the application config."
-  [context]
-  (impl/with-lookup-key (key config/cfg-inducers)
-    (->> (config/ctx-config context)
-      config/cfg-inducers
-      (induce context))))
+  ([context]
+    (impl/with-lookup-key (key config/cfg-inducers)
+      (->> (config/ctx-config context)
+        config/cfg-inducers
+        (induce context))))
+  ([context lookup-key]
+    (impl/with-lookup-key lookup-key
+      (->> (config/ctx-config context)
+        ((keypin/make-key lookup-key vector? "Vector of inducer fns or their fully qualified names" {}))
+        (induce context)))))
 
 
 (defn context-hook

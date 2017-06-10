@@ -32,9 +32,12 @@
   - Config definition for "bract.core.context-hook" is removed
   - Config definition for "bract.core.config-hook" is removed
 - Replace default dev config file `config.dev.edn` with `config/config.dev.edn`
-- [BREAKING CHANGE] Rename `bract.core.inducer/run-inducers` to `run-config-inducers`
-- Introduce `bract.core.inducer/run-context-inducers` to run inducers from context
-  - Context key definition `:bract.core/inducers`
+- Inducers for running other inducers
+  - [BREAKING CHANGE] Rename `bract.core.inducer/run-inducers` to `run-config-inducers`
+  - Add arity-2 to `run-config-inducers` to run inducers specified by a config lookup key
+  - Add `bract.core.inducer/run-context-inducers` to run inducers from context
+    - Context key definition `:bract.core/inducers`
+    - Add arity-2 to `run-context-inducers` to run inducers specified by a context lookup key
 - [TODO] Support for application shutdown (hook) cleanup
   - As a mandatory/optional callback
   - As a mandatory/optional configured fn
