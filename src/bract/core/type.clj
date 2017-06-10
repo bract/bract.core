@@ -16,6 +16,13 @@
   (iargs [this] "Return the additional arguments to be passed to the function"))
 
 
+(defrecord Function [func name args]
+  IFunction
+  (ifunc [this] func)
+  (iname [this] name)
+  (iargs [this] args))
+
+
 (defn function?
   [x]
   (satisfies? IFunction x))
