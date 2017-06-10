@@ -17,6 +17,9 @@
 - [TODO] Support for uncaught exception handler
   - As a mandatory/optional callback
   - As a mandatory/optional configured fn
+- [TODO - Dev] Several tasks should accept an optional env key, e.g. `(start :qa)` that looks up env from context
+  - Requires env key/alias definition
+  - Env key/alias should switch the config file(s)
 
 
 ## [WIP] 0.3.0 / 2017-June-??
@@ -52,6 +55,8 @@
 - Development mode helpers
   - `bract.core.dev/verbose` to get/set verbosity level
   - `bract.core.dev/config` to get/set config file override
+  - Functions `(config)` and `(verbose)` return current setting
+  - Functions `config` and `verbose` warn when environment variable will prevent any override
 
 
 ## 0.2.0 / 2017-June-04
