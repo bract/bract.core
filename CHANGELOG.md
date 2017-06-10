@@ -49,6 +49,9 @@
   - Add `bract.core.inducer/run-context-inducers` to run inducers from context
     - Context key definition `:bract.core/inducers`
     - Add arity-2 to `run-context-inducers` to run inducers specified by a context lookup key
+- Development mode helpers
+  - `bract.core.dev/verbose` to get/set verbosity level
+  - `bract.core.dev/config` to get/set config file override
 
 
 ## 0.2.0 / 2017-June-04
