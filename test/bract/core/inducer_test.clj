@@ -42,7 +42,13 @@
 (deftest test-induce
   (is (= {:foo 10 :bar 20} (inducer/induce {} [(fn [m] (assoc m :bar 20)) assoc-foo-10])))
   (is (= {:bar 20} (inducer/induce {} [(fn [m] (reduced (assoc m :bar 20))) assoc-foo-10])))
-  (is (= {:foo 10} (inducer/induce {} ['bract.core.inducer-test/assoc-foo-10]))))
+  (is (= {:foo 10} (inducer/induce {} ['bract.core.inducer-test/assoc-foo-10])))
+  (is (= {:bract.core/exit? true}
+        (inducer/induce {} [(fn [m] (assoc m :bract.core/exit? true)) assoc-foo-10])))
+  (is (= {:qux 30 :bract.core/exit? true}
+        (inducer/induce {:qux 30} [(fn [m] (inducer/induce m [(fn [mm] (assoc mm :bract.core/exit? true))
+                                                              (fn [x] (assoc x :bar 20))]))
+                                   assoc-foo-10]))))
 
 
 (deftest test-set-verbosity

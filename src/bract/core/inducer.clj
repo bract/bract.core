@@ -44,7 +44,10 @@
   ([context coll]
     (induce apply-inducer context coll))
   ([f context coll]
-    (reduce (fn [context inducer-candidate] (f context inducer-candidate))
+    (reduce (fn [context inducer-candidate]
+              (if (config/ctx-exit? context)
+                (reduced context)
+                (f context inducer-candidate)))
       context coll)))
 
 

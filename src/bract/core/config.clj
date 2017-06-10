@@ -32,6 +32,7 @@
                                                                                   :default []
                                                                                   :envvar  "APP_CONFIG"
                                                                                   :sysprop "app.config"}]
+  ctx-exit?         [:bract.core/exit?     kputil/any? "Whether break out of all inducer levels" {:default false}]
   ctx-cli-args      [:bract.core/cli-args      coll?   "Collection of CLI arguments"]
   ctx-config        [:bract.core/config        map?    "Application config"]
   ctx-inducers      [:bract.core/inducers      vector? "Vector of inducer fns or their fully qualified names"]

@@ -17,18 +17,21 @@
   (testing "happy cases"
     (let [good-context {:bract.core/verbose? false
                         :bract.core/config-files ["foo.edn" "bar.properties"]
+                        :bract.core/exit? :yes
                         :bract.core/cli-args ["-c" "run"]
                         :bract.core/config {"foo" "bar"}
                         :bract.core/launch? true}]
       (is (false? (config/ctx-verbose? good-context)))
       (is (= ["foo.edn" "bar.properties"] (config/ctx-config-files good-context)))
+      (is (= :yes (config/ctx-exit? good-context)))
       (is (= ["-c" "run"] (config/ctx-cli-args good-context)))
       (is (= {"foo" "bar"} (config/ctx-config good-context)))
       (is (= true (config/ctx-launch? good-context)))
       (is (false? (config/ctx-launch? {})) "missing/default value")))
   (testing "default values"
     (is (false? (config/ctx-verbose? {})))
-    (is (= [] (config/ctx-config-files {}))))
+    (is (= [] (config/ctx-config-files {})))
+    (is (false? (config/ctx-exit? {}))))
   (testing "missing/bad context keys"
     (let [bad-context {:bract.core/config "foobar"
                         :bract.core/launch? 10}]

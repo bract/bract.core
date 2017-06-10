@@ -11,9 +11,19 @@
 - [TODO] Support for parsing `project.clj`
   - [TODO] Discover and provide application version
   - [TODO] Discover and provide Bract (core and modules) version
+- [TODO] Support for application shutdown (hook) cleanup
+  - As a mandatory/optional callback
+  - As a mandatory/optional configured fn
+- [TODO] Support for uncaught exception handler
+  - As a mandatory/optional callback
+  - As a mandatory/optional configured fn
+
 
 ## [WIP] 0.3.0 / 2017-June-??
 
+- Inducer short-circuit (escape hatch) mechanism
+  - Break out of the current batch of inducers upon encountering reduced context
+  - Break out of all levels of inducers upon encountering context attribute `:bract.core/exit?` true
 - Allow inducers to accept additional arguments other than context
   - Supported inducer spec: function, string, symbol, vector, map, var
   - Inducers are now backed by `bract.core.type/IFunction` protocol
@@ -34,16 +44,11 @@
 - Replace default dev config file `config.dev.edn` with `config/config.dev.edn`
 - Inducers for running other inducers
   - [BREAKING CHANGE] Rename `bract.core.inducer/run-inducers` to `run-config-inducers`
-  - Add arity-2 to `run-config-inducers` to run inducers specified by a config lookup key
+    - Config key definition `bract.core.inducers`
+    - Add arity-2 to `run-config-inducers` to run inducers specified by a config lookup key
   - Add `bract.core.inducer/run-context-inducers` to run inducers from context
     - Context key definition `:bract.core/inducers`
     - Add arity-2 to `run-context-inducers` to run inducers specified by a context lookup key
-- [TODO] Support for application shutdown (hook) cleanup
-  - As a mandatory/optional callback
-  - As a mandatory/optional configured fn
-- [TODO] Support for uncaught exception handler
-  - As a mandatory/optional callback
-  - As a mandatory/optional configured fn
 
 
 ## 0.2.0 / 2017-June-04
