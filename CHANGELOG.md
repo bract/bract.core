@@ -27,16 +27,17 @@
 - Inducer short-circuit (escape hatch) mechanism
   - Break out of the current batch of inducers upon encountering reduced context
   - Break out of all levels of inducers upon encountering context attribute `:bract.core/exit?` true
-- Allow inducers to accept additional arguments other than context
-  - Supported inducer spec: function, string, symbol, vector, map, var
+- Inducer implementation detail
   - Inducers are now backed by `bract.core.type/IFunction` protocol
+  - Supported inducer spec: function, string, symbol, vector, map, var
+- Allow inducers to accept additional arguments other than context
   - [BREAKING CHANGE] Remove inducer related functions from the `bract.core.config` namespace
     - `bract.core.config/apply-inducer`
     - `bract.core.config/apply-inducer-by-name`
   - [BREAKING CHANGE] Remove inducer related functions from the `bract.core.util` namespace
     - `bract.core.util/apply-inducer`
     - `bract.core.util/induce`
-  - Introduce functions in the `bract.core.inducer` namespace to apply inducers
+  - Add functions in the `bract.core.inducer` namespace to apply inducers
     - `bract.core.inducer/apply-inducer` for functions (for direct internal calls to induce)
     - `bract.core.inducer/induce` for applying a collection of inducers
 - [BREAKING CHANGE] Change of arity in inducers `context-hook` and `config-hook`
