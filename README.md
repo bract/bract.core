@@ -29,7 +29,7 @@ Bract aims to bind the following pieces together:
 Bract does not aim to:
 
 - Prescribe what environments (Dev/QA/Prod etc.) you may have
-- Limit your application initialization to a rigid set of choices
+- Decide which libraries you should use (except Keypin for configuration)
 - Make you use dependency injection, let alone any particular DI library
 - Discourage you from using dependency injection
 
