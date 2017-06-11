@@ -41,7 +41,7 @@ relevant aspects such as configurable JVM logging.
 
 ## Usage
 
-Leiningen coordinates: `[bract/bract.core "0.3.0-SNAPSHOT"]`
+Leiningen coordinates: `[bract/bract.core "0.3.0"]`
 
 For documentation refer demo applications.
 

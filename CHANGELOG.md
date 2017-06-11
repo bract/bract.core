@@ -22,7 +22,7 @@
   - Env key/alias should switch the config file(s)
 
 
-## [WIP] 0.3.0 / 2017-June-??
+## 0.3.0 / 2017-June-11
 
 - Inducer short-circuit (escape hatch) mechanism
   - Break out of the current batch of inducers upon encountering reduced context
