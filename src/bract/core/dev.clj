@@ -18,13 +18,56 @@
     [bract.core Echo]))
 
 
-(def default-root-context {(key config/ctx-config-files) ["config.dev.edn"]
+;; ----- overrides -----
+
+
+(defn verbose
+  "Set verbose mode to specified status (unless environment variable APP_VERBOSE is set):
+  true  - enable verbose mode
+  false - disable verbose mode
+  nil   - clear verbose mode override"
+  ([]
+    (when-let [verbose (System/getenv "APP_VERBOSE")]
+      (util/err-println (format "Environment variable APP_VERBOSE='%s' overrides verbosity" verbose)))
+    (System/getProperty "app.verbose"))
+  ([status?]
+    (if-let [verbose (System/getenv "APP_VERBOSE")]
+      (util/err-println (format "Override failed due to environment variable APP_VERBOSE='%s'" verbose))
+      (case status?
+        nil   (System/clearProperty "app.verbose")
+        true  (do (System/setProperty "app.verbose" "true")  (Echo/setVerbose true))
+        false (do (System/setProperty "app.verbose" "false") (Echo/setVerbose false))
+        (throw (ex-info (str "Expected argument to be true, false or nil but found " (pr-str status?)) {}))))))
+
+
+(defn config
+  "Set config files to specified argument (unless environment variable APP_CONFIG is set):
+  string - set config files as override
+  nil    - clear config file override"
+  ([]
+    (when-let [config-file (System/getenv "APP_CONFIG")]
+      (util/err-println (format "Environment variable APP_CONFIG='%s' overrides config file" config-file)))
+    (System/getProperty "app.config"))
+  ([config]
+    (if-let [config-file (System/getenv "APP_CONFIG")]
+      (util/err-println (format "Override failed due to environment variable APP_CONFIG='%s'" config-file))
+      (cond
+        (nil? config)    (System/clearProperty "app.config")
+        (string? config) (System/setProperty "app.config" config)
+        :otherwise       (throw (ex-info (str "Expected argument to be string or nil but found " (pr-str config))
+                                  {}))))))
+
+
+;; ----- default -----
+
+
+(def default-root-context {(key config/ctx-config-files) ["config/config.dev.edn"]
                            (key config/ctx-launch?)      false})
 
 
 (def default-root-inducers [inducer/set-verbosity
                             inducer/read-config
-                            inducer/run-inducers])
+                            inducer/run-config-inducers])
 
 
 (defn init
@@ -33,7 +76,7 @@
   (try
     (inducer/set-verbosity default-root-context)
     (echo/with-latency-capture "Initializing app in DEV mode"
-      (util/induce default-root-context default-root-inducers))
+      (inducer/induce inducer/apply-inducer default-root-context default-root-inducers))
     (catch Throwable e
       (.printStackTrace e)
       (echo/abort (.getMessage e)))))

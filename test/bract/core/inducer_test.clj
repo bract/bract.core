@@ -18,6 +18,39 @@
     [bract.core Echo]))
 
 
+(defn assoc-foo-10
+  [m]
+  (assoc m :foo 10))
+
+
+(deftest test-apply-inducer
+  (is (= {:foo 10} (inducer/apply-inducer {} assoc-foo-10)))
+  (is (= {:foo 10} (inducer/apply-inducer "random inducer" {} assoc-foo-10)))
+  (is (thrown? IllegalArgumentException
+        (inducer/apply-inducer {} 'foo/bar)))
+  (is (thrown? IllegalArgumentException
+        (inducer/apply-inducer {} "foo/bar"))))
+
+
+(deftest test-apply-inducer-by-key
+  (is (= {:foo 10} (inducer/apply-inducer {} 'bract.core.inducer-test/assoc-foo-10)))
+  (is (= {:foo 10} (inducer/apply-inducer "random inducer" {} 'bract.core.inducer-test/assoc-foo-10)))
+  (is (= {:foo 10} (inducer/apply-inducer {} assoc-foo-10)))
+  (is (= {:foo 10} (inducer/apply-inducer "random inducer" {} assoc-foo-10))))
+
+
+(deftest test-induce
+  (is (= {:foo 10 :bar 20} (inducer/induce {} [(fn [m] (assoc m :bar 20)) assoc-foo-10])))
+  (is (= {:bar 20} (inducer/induce {} [(fn [m] (reduced (assoc m :bar 20))) assoc-foo-10])))
+  (is (= {:foo 10} (inducer/induce {} ['bract.core.inducer-test/assoc-foo-10])))
+  (is (= {:bract.core/exit? true}
+        (inducer/induce {} [(fn [m] (assoc m :bract.core/exit? true)) assoc-foo-10])))
+  (is (= {:qux 30 :bract.core/exit? true}
+        (inducer/induce {:qux 30} [(fn [m] (inducer/induce m [(fn [mm] (assoc mm :bract.core/exit? true))
+                                                              (fn [x] (assoc x :bar 20))]))
+                                   assoc-foo-10]))))
+
+
 (deftest test-set-verbosity
   (let [verbosity? (Echo/isVerbose)]
     (try
@@ -35,16 +68,50 @@
           (inducer/read-config context)))))
 
 
-(deftest test-run-inducers
-  (let [verbosity? (Echo/isVerbose)
-        context {:bract.core/verbose? true
-                 :bract.core/config {"bract.core.inducers" ['bract.core.inducer/set-verbosity]}}]
-    (try
-      (Echo/setVerbose false)
-      (inducer/run-inducers context)
-      (is (true? (Echo/isVerbose)) "Verbosity should be enabled after configuring it as true")
-      (finally
-        (Echo/setVerbose verbosity?)))))
+(deftest test-run-context-inducers
+  (testing "arity 1"
+    (let [verbosity? (Echo/isVerbose)
+          context {:bract.core/verbose? true
+                   :bract.core/inducers ['bract.core.inducer/set-verbosity]}]
+      (try
+        (Echo/setVerbose false)
+        (inducer/run-context-inducers context)
+        (is (true? (Echo/isVerbose)) "Verbosity should be enabled after configuring it as true")
+        (finally
+          (Echo/setVerbose verbosity?)))))
+  (testing "arity 2"
+    (let [verbosity? (Echo/isVerbose)
+          context {:bract.core/verbose? true
+                   :bract.core/delegate ['bract.core.inducer/set-verbosity]}]
+      (try
+        (Echo/setVerbose false)
+        (inducer/run-context-inducers context :bract.core/delegate)
+        (is (true? (Echo/isVerbose)) "Verbosity should be enabled after configuring it as true")
+        (finally
+          (Echo/setVerbose verbosity?))))))
+
+
+(deftest test-run-config-inducers
+  (testing "arity 1"
+    (let [verbosity? (Echo/isVerbose)
+          context {:bract.core/verbose? true
+                   :bract.core/config {"bract.core.inducers" ['bract.core.inducer/set-verbosity]}}]
+      (try
+        (Echo/setVerbose false)
+        (inducer/run-config-inducers context)
+        (is (true? (Echo/isVerbose)) "Verbosity should be enabled after configuring it as true")
+        (finally
+          (Echo/setVerbose verbosity?)))))
+  (testing "arity 2"
+    (let [verbosity? (Echo/isVerbose)
+          context {:bract.core/verbose? true
+                   :bract.core/config {"bract.core.delegate" ['bract.core.inducer/set-verbosity]}}]
+      (try
+        (Echo/setVerbose false)
+        (inducer/run-config-inducers context "bract.core.delegate")
+        (is (true? (Echo/isVerbose)) "Verbosity should be enabled after configuring it as true")
+        (finally
+          (Echo/setVerbose verbosity?))))))
 
 
 (def volatile-holder (volatile! nil))
@@ -56,20 +123,28 @@
 
 
 (deftest test-context-hook
-  (let [context {:bract.core/config {"bract.core.context-hook.enabled" true
-                                     "bract.core.context-hook" "bract.core.inducer-test/update-volatile-holder"}}]
-    (vreset! volatile-holder nil)
-    (inducer/context-hook context)
-    (is (= context @volatile-holder))))
+  (let [context {:bract.core/config {"bract.core.context-hook" "bract.core.inducer-test/update-volatile-holder"}}]
+    (testing "context-hook, fqvn"
+      (vreset! volatile-holder nil)
+      (is (= {:foo 10} (inducer/context-hook {:foo 10} "bract.core.inducer-test/update-volatile-holder")))
+      (is (= {:foo 10} @volatile-holder)))
+    (testing "context-hook, fn"
+      (vreset! volatile-holder nil)
+      (is (= {:foo 10} (inducer/context-hook {:foo 10} update-volatile-holder)))
+      (is (= {:foo 10} @volatile-holder)))))
 
 
 (deftest test-config-hook
-  (let [config {"bract.core.config-hook.enabled" true
-                "bract.core.config-hook" "bract.core.inducer-test/update-volatile-holder"}
+  (let [config {"bract.core.config-hook" "bract.core.inducer-test/update-volatile-holder"}
         context {:bract.core/config config}]
-    (vreset! volatile-holder nil)
-    (inducer/config-hook context)
-    (is (= config @volatile-holder))))
+    (testing "config-hook, fqvn"
+      (vreset! volatile-holder nil)
+      (inducer/config-hook context "bract.core.inducer-test/update-volatile-holder")
+      (is (= config @volatile-holder)))
+    (testing "config-hook, fn"
+      (vreset! volatile-holder nil)
+      (inducer/config-hook context update-volatile-holder)
+      (is (= config @volatile-holder)))))
 
 
 (deftest test-export-as-sysprops

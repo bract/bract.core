@@ -1,25 +1,38 @@
 # bract.core
 
-Bract is a multi-purpose, modular Clojure application framework.
+Bract is a multi-purpose, modular Clojure application initialization framework.
 
 The _bract.core_ module implements the essential functionality and is a common dependency for all modules.
 
-**Currently in ALPHA. Expect breaking changes!**
+**Early days. Expect breaking changes!**
 
 _**Requires Clojure 1.7 or higher, Java 7 or higher.**_
 
 
+## Rationale
+
+Application development could be a wonderful experience if we only have to focus on the application logic without
+worrying about configuration, initialization and the sundry development/maintenance tasks that applications frequently
+need. This should be a solved problem.
+
+
 ### What is Bract?
 
-Bract aims to be the minimal glue to bind the following pieces together:
+Bract aims to bind the following pieces together:
 
 - Application entry-point
 - Application configuration
-- Application initialization and launching
+- Steps to initialize and launch application
 - Extensions to _bract.core_ via Bract modules
 - Integration with libraries/frameworks via Bract modules
 
-[Keypin](https://github.com/kumarshantanu/keypin) is the only _bract.core_ dependency, for config support. While
+Bract does not aim to:
+
+- Prescribe what environments (Dev/QA/Prod etc.) you may have
+- Make you use dependency injection, let alone any particular DI library
+
+
+[Keypin](https://github.com/kumarshantanu/keypin) is the only _bract.core_ dependency for config support. While
 _bract.core_ is low level and prescribes no style, it is possible to author opinionated Bract modules on top of it.
 One may even extend Bract to build a custom application framework. Bract is suited for various types of applications,
 e.g. command-line tools, web services, batch jobs, web applications etc. and integrates well with tangential, yet
@@ -28,7 +41,7 @@ relevant aspects such as configurable JVM logging.
 
 ## Usage
 
-Leiningen coordinates: `[bract/bract.core "0.2.0"]`
+Leiningen coordinates: `[bract/bract.core "0.3.0-SNAPSHOT"]`
 
 For documentation refer demo applications.
 

@@ -10,11 +10,48 @@
 (ns bract.core.inducer
   "The inducer fns exposed by Bract-core."
   (:require
+    [keypin.core       :as keypin]
+    [keypin.util       :as kputil]
     [bract.core.config :as config]
     [bract.core.echo   :as echo]
+    [bract.core.impl   :as impl]
+    [bract.core.type   :as type]
     [bract.core.util   :as util])
   (:import
     [bract.core Echo]))
+
+
+;; ----- utility for applying inducers -----
+
+
+(defn apply-inducer
+  "Given a context and inducer-spec, apply the inducer to the context (and args if any) returning updated context."
+  ([context inducer]
+    (apply-inducer "inducer" context inducer))
+  ([inducer-type context inducer]
+    (let [f (type/ifunc inducer)
+          n (type/iname inducer)
+          a (type/iargs inducer)]
+      (echo/with-latency-capture (format "Executing %s `%s`" inducer-type n)
+        (echo/with-inducer-name n
+          (apply f context a))))))
+
+
+(defn induce
+  "Given a reducing function `(fn [context inducer-spec]) -> context` and a collection of inducer-specs, roll the seed
+  context through each inducer successively, returning updated context. The chain may be broken by an inducer returning
+  a reduced context, i.e. `(reduced context)`."
+  ([context coll]
+    (induce apply-inducer context coll))
+  ([f context coll]
+    (reduce (fn [context inducer-candidate]
+              (if (config/ctx-exit? context)
+                (reduced context)
+                (f context inducer-candidate)))
+      context coll)))
+
+
+;; ----- inducers -----
 
 
 (defn set-verbosity
@@ -40,29 +77,49 @@
       context)))
 
 
-(defn run-inducers
+(defn run-context-inducers
+  "Run the inducers specified in the context."
+  ([context]
+    (impl/with-lookup-key (key config/ctx-inducers)
+      (->> (config/ctx-inducers context)
+        (induce context))))
+  ([context lookup-key]
+    (impl/with-lookup-key lookup-key
+      (as-> (keypin/make-key lookup-key vector? "Vector of inducer fns or their fully qualified names" {}) <>
+        (<> context)
+        (induce context <>)))))
+
+
+(defn run-config-inducers
   "Run the inducers specified in the application config."
-  [context]
-  (->> (config/ctx-config context)
-    config/cfg-inducers
-    (util/induce context config/apply-inducer-by-name)))
+  ([context]
+    (impl/with-lookup-key (key config/cfg-inducers)
+      (->> (config/ctx-config context)
+        config/cfg-inducers
+        (induce context))))
+  ([context lookup-key]
+    (impl/with-lookup-key lookup-key
+      (->> (config/ctx-config context)
+        ((keypin/make-key lookup-key vector? "Vector of inducer fns or their fully qualified names" {}))
+        (induce context)))))
 
 
 (defn context-hook
-  "Given context with config, read the fully qualified context-hook fn name and invoke it as (fn [context])."
-  [context]
-  (let [config (config/ctx-config context)]
-    (-> (config/cfg-context-hook config)
-      (apply [context]))
+  "Given context with config, invoke the context-hook fn with context as argument."
+  [context function]
+  (let [f (type/ifunc function)]
+    (util/expected fn? (format "%s to be a function" function) f)
+    (f context)
     context))
 
 
 (defn config-hook
-  "Given context with config, read the fully qualified config-hook fn name and invoke it as (fn [config])."
-  [context]
-  (let [config (config/ctx-config context)]
-    (-> (config/cfg-config-hook config)
-      (apply [config]))
+  "Given context with config, invoke the config-hook fn with config as argument."
+  [context function]
+  (let [config (config/ctx-config context)
+        f (type/ifunc function)]
+    (util/expected fn? (format "%s to be a function" function) f)
+    (f config)
     context))
 
 

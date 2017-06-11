@@ -14,6 +14,8 @@
     [keypin.core :as keypin]
     [keypin.util :as kputil]
     [bract.core.echo :as echo]
+    [bract.core.impl :as impl]
+    [bract.core.type :as type]
     [bract.core.util :as util])
   (:import
     [java.io OutputStream Writer]
@@ -30,8 +32,10 @@
                                                                                   :default []
                                                                                   :envvar  "APP_CONFIG"
                                                                                   :sysprop "app.config"}]
+  ctx-exit?         [:bract.core/exit?     kputil/any? "Whether break out of all inducer levels" {:default false}]
   ctx-cli-args      [:bract.core/cli-args      coll?   "Collection of CLI arguments"]
   ctx-config        [:bract.core/config        map?    "Application config"]
+  ctx-inducers      [:bract.core/inducers      vector? "Vector of inducer fns or their fully qualified names"]
   ctx-deinit        [:bract.core/deinit        fn?     "De-initialization function (fn []) for the app"
                      {:default #(echo/echo "Application de-init is not configured, skipping de-initialization.")}]
   ctx-launch?       [:bract.core/launch?  kputil/bool? "Whether invoke launcher fn" {:default false}]
@@ -42,41 +46,12 @@
 (keypin/defkey  ; config keys
   cfg-inducers      ["bract.core.inducers"     vector? "Vector of fully qualified inducer fn names"
                      {:parser kputil/any->edn}]
-  cfg-context-hook  ["bract.core.context-hook" fn?     "Fully qualified context hook fn name"
-                     {:parser kputil/str->var->deref}]
-  cfg-config-hook   ["bract.core.config-hook"  fn?     "Fully qualified config hook fn name"
-                     {:parser kputil/str->var->deref}]
   cfg-exports       ["bract.core.exports"      vector? "Vector of config keys to export as system properties"
                      {:parser kputil/any->edn}]
   cfg-launcher      ["bract.core.launcher"     fn?     "Fully qualified launcher fn name"
                      {:parser kputil/str->var->deref}])
 
 ;; ----- utility fns -----
-
-
-(defn apply-inducer-by-name
-  "Given a context and a fully qualified inducer fn name, load the fn and apply it to the context returning an updated
-  context."
-  ([context inducer-name]
-    (apply-inducer-by-name "inducer" (key cfg-inducers) context inducer-name))
-  ([inducer-type config-key context inducer-name]
-    (echo/echo (format "Looking up %s `%s`" inducer-type inducer-name))
-    (let [f (kputil/str->var->deref config-key inducer-name)]
-      (echo/with-latency-capture (format "Executing %s `%s`" inducer-type inducer-name)
-        (echo/with-inducer-name inducer-name
-          (f context))))))
-
-
-(defn apply-inducer
-  "Given a context and inducer (either a fn or inducer-name), apply it to the context."
-  ([context inducer-or-name]
-    (apply-inducer context "inducer" inducer-or-name))
-  ([context inducer-type inducer-or-name]
-    (if (ifn? inducer-or-name)
-      (echo/with-latency-capture (format "Executing %s `%s`" inducer-type inducer-or-name)
-        (echo/with-inducer-name inducer-or-name
-          (inducer-or-name context)))
-      (apply-inducer-by-name inducer-or-name))))
 
 
 (defn print-config
