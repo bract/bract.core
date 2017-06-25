@@ -24,7 +24,7 @@
 
 ## [WIP] 0.3.1 / 2017-June-??
 
-- [TODO] Do not abort on inducer exception in dev mode, just rethrow (useful for REPL/reload workflow)
+- Do not abort on inducer exception in dev mode, just rethrow (useful for REPL/reload workflow)
 - [TODO] Add `uuid-str` utility function - unique ID for various purposes
 - [TODO] Move generic Bract text from README to the external project page
 - [TODO] Add documentation for Github pages
