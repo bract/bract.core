@@ -1,4 +1,4 @@
-# bract.core TODO and Change Log
+# bract.core Change Log
 
 ## Ideas and TODO
 
@@ -20,6 +20,14 @@
 - [TODO - Dev] Several tasks should accept an optional env key, e.g. `(start :qa)` that looks up env from context
   - Requires env key/alias definition
   - Env key/alias should switch the config file(s)
+
+
+## [WIP] 0.3.1 / 2017-June-??
+
+- [TODO] Do not abort on inducer exception in dev mode, just rethrow (useful for REPL/reload workflow)
+- [TODO] Add `uuid-str` utility function - unique ID for various purposes
+- [TODO] Move generic Bract text from README to the external project page
+- [TODO] Add documentation for Github pages
 
 
 ## 0.3.0 / 2017-June-11
