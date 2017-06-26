@@ -2,8 +2,10 @@
 
 ## Ideas and TODO
 
-- [TODO] In dev mode the `default-root-context` should be loaded from `bract/context.dev.edn` if available
-  - [TODO] `context.dev.edn` may define root inducers
+- [TODO] Root context may be optionally defined in `bract/context.dev.edn` or `bract/context.edn`
+  - [TODO] An inducer that specifically does the cascading read
+  - [TOOD] Root context may specify root inducers
+  - [TODO] In dev mode `default-root-context` should be loaded from root context
 - [TODO - BREAKING CHANGE] Rename inducer `deinit` to `invoke-deinit` for consistency with other inducers
 - [TODO] Dev triggers should accept an optional param
   - Init a sub-system
