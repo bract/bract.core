@@ -104,7 +104,7 @@
 
 
 (defn record-context!
-  "Rebind var bract.core.dev/record-context! to the given context."
+  "Rebind var bract.core.dev/app-context to the given context."
   [context]
   (alter-var-root #'app-context (constantly context))
   context)
@@ -115,9 +115,8 @@
   []
   (ensure-init)
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
-  (let [f (config/ctx-deinit app-context)]
-    (echo/with-latency-capture "De-initializing application"
-      (f))))
+  (echo/with-latency-capture "De-initializing application"
+    (inducer/deinit app-context)))
 
 
 (defn start
@@ -126,10 +125,9 @@
   (ensure-init)
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
   (echo/with-latency-capture "Launching application"
-    (-> (config/ctx-config app-context)
-      config/cfg-launcher
-      (apply [(assoc app-context
-                (key config/ctx-launch?) true)])
+    (-> app-context
+      (assoc (key config/ctx-launch?) true)
+      inducer/invoke-launcher
       record-context!)))
 
 
@@ -138,6 +136,5 @@
   []
   (ensure-init)
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
-  (let [stopper (config/ctx-stopper app-context)]
-    (echo/with-latency-capture "Stopping the started application"
-      (stopper))))
+  (echo/with-latency-capture "Stopping the started application"
+    (inducer/invoke-stopper app-context)))

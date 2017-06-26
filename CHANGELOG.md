@@ -4,6 +4,7 @@
 
 - [TODO] In dev mode the `default-root-context` should be loaded from `bract/context.dev.edn` if available
   - [TODO] `context.dev.edn` may define root inducers
+- [TODO - BREAKING CHANGE] Rename inducer `deinit` to `invoke-deinit` for consistency with other inducers
 - [TODO] Dev triggers should accept an optional param
   - Init a sub-system
   - De-init a sub-system
@@ -30,7 +31,7 @@
 - Add `uuid-str` utility function - unique ID for various purposes
 - Move generic Bract text from README to the external documentation
 - Add `invoke-stopper` inducer to stop a running application
-- [TODO] Use inducers from `bract.core.dev` namespace instead of reimplementing
+- Use inducers from `bract.core.dev` namespace instead of reimplementing functionality
 - [TODO] Add documentation for Github pages
 
 
