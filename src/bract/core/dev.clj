@@ -137,6 +137,7 @@
   "Stop the started application."
   []
   (ensure-init)
+  (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
   (let [stopper (config/ctx-stopper app-context)]
     (echo/with-latency-capture "Stopping the started application"
       (stopper))))
