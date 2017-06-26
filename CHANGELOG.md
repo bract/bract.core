@@ -2,6 +2,8 @@
 
 ## Ideas and TODO
 
+- [TODO] In dev mode the `default-root-context` should be loaded from `bract/context.dev.edn` if available
+  - [TODO] `context.dev.edn` may define root inducers
 - [TODO] Dev triggers should accept an optional param
   - Init a sub-system
   - De-init a sub-system
