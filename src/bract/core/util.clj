@@ -10,7 +10,9 @@
 (ns bract.core.util
   "Standalone utility functions."
   (:require
-    [clojure.string :as string]))
+    [clojure.string :as string])
+  (:import
+    [java.util UUID]))
 
 
 (defn expected
@@ -64,3 +66,10 @@
   (if (coll? x)
     (vec x)
     [x]))
+
+
+(defn uuid-str
+  "Return a random UUID string."
+  ^String
+  []
+  (.toString (UUID/randomUUID)))
