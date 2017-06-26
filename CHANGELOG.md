@@ -27,6 +27,8 @@
 - Do not abort on inducer exception in dev mode, just rethrow (useful for REPL/reload workflow)
 - Add `uuid-str` utility function - unique ID for various purposes
 - Move generic Bract text from README to the external documentation
+- Add `invoke-stopper` inducer to stop a running application
+- [TODO] Use inducers from `bract.core.dev` namespace instead of reimplementing
 - [TODO] Add documentation for Github pages
 
 

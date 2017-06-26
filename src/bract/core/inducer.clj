@@ -174,3 +174,11 @@
   (let [f (config/ctx-deinit context)]
     (f))
   context)
+
+
+(defn invoke-stopper
+  "Given context with :bract.core/stopper key and corresponding (fn []) stopper fn for the app, invoke it."
+  [context]
+  (let [f (config/ctx-stopper context)]
+    (f))
+  context)
