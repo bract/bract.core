@@ -32,7 +32,7 @@
 - Move generic Bract text from README to the external documentation
 - Add `invoke-stopper` inducer to stop a running application
 - Use inducers from `bract.core.dev` namespace instead of reimplementing functionality
-- [TODO] Add documentation for Github pages
+- Add documentation for Github pages
 
 
 ## 0.3.0 / 2017-June-11
