@@ -1,7 +1,10 @@
-# bract.core documentation
+# bract.core
 
-This page is about _bract.core_ only. Refer [Bract documentation](https://bract.github.io/about.html#how-it-works)
-for the fundamental concepts in Bract.
+This documentation is for the _bract.core_ module. Refer [Bract documentation](https://bract.github.io/about.html)
+for overall Bract documentation.
+
+Leiningen coordinates: `[bract/bract.core "0.3.1"]`
+
 
 ## Keys
 
@@ -36,7 +39,7 @@ The application config is placed under the context key `:bract.core/config` (see
 
 ## Inducers
 
-All inducers exposed by _bract.core_ as in the namespace `bract.core.inducer`. A summary is below. Input context key
+All inducers exposed by _bract.core_ are in the namespace `bract.core.inducer`. A summary is below. Input context key
 `:bract.core/config` has been omitted where input config key is specified.
 
 | Inducer function       | Input context keys         | Input config keys       | Output context keys  | Description |
@@ -52,3 +55,8 @@ All inducers exposed by _bract.core_ as in the namespace `bract.core.inducer`. A
 | `invoke-launcher`      | `:bract.core/launch?`      | `"bract.core.launcher"` |                      | Launch application         |
 | `deinit`               | `:bract.core/deinit`       |                         |                      | De-initialize application  |
 | `invoke-stopper`       | `:bract.core/stopper`      |                         |                      | Stop running application   |
+
+
+## Entry points
+
+There are no entry points provided by _bract.core_.
