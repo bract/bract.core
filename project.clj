@@ -15,5 +15,5 @@
                    :pedantic? :abort}
              :c17 {:dependencies [[org.clojure/clojure "1.7.0"]]}
              :c18 {:dependencies [[org.clojure/clojure "1.8.0"]]}
-             :c19 {:dependencies [[org.clojure/clojure "1.9.0-alpha15"]]}
+             :c19 {:dependencies [[org.clojure/clojure "1.9.0-alpha17"]]}
              :dln {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]}})
