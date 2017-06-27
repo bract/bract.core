@@ -62,7 +62,7 @@ All inducers exposed by _bract.core_ are in the namespace `bract.core.inducer`. 
 This module provides several functions as entry point for REPL based interactive development. These functions are
 available in the `bract.core.dev` namespace:
 
-| Function            | Description |
+| Function call       | Description |
 |---------------------|-------------|
 | `(verbose)`         | Return the verbosity override status |
 | `(verbose status?)` | Set verbosity override (boolean) for subsequent operations (`nil` clears override) |
