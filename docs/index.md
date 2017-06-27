@@ -59,4 +59,18 @@ All inducers exposed by _bract.core_ are in the namespace `bract.core.inducer`. 
 
 ## Entry points
 
-There are no entry points provided by _bract.core_.
+This module provides several functions as entry point for REPL based interactive development. These functions are
+available in the `bract.core.dev` namespace:
+
+| Function            | Description |
+|---------------------|-------------|
+| `(verbose)`         | Return the verbosity override status |
+| `(verbose status?)` | Set verbosity override (boolean) for subsequent operations (`nil` clears override) |
+| `(config)`          | Return the config filename override |
+| `(config filename)` | Set the config filename override for subsequent operations (`nil` clears override) |
+| `(init)`            | Initialize application without launching it |
+| `(deinit)`          | De-initialize application based on `:bract.core/deinit` key in the context |
+| `(start)`           | Start application, i.e. init + launch application |
+| `(stop)`            | Stop a started application based on `:bract.core/stopper` key in the context |
+
+**Note:** While these functions are for REPL support, they don't provide code reload feature.
