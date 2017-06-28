@@ -33,8 +33,6 @@
 - Add `uuid-str` utility function - unique ID for various purposes
 - Move generic Bract text from README to the external documentation
 - Add `invoke-stopper` inducer to stop a running application
-- Use inducers from `bract.core.dev` namespace instead of reimplementing functionality
-- Add documentation for Github pages
 
 
 ## 0.3.0 / 2017-June-11
