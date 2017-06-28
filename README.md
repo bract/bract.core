@@ -7,9 +7,16 @@ The _bract.core_ module implements the essential functionality and is a common d
 
 ## Usage
 
-Leiningen coordinates: `[bract/bract.core "0.3.0"]`
+Leiningen coordinates: `[bract/bract.core "0.3.1-SNAPSHOT"]`
 
-For documentation refer demo applications.
+
+## Documentation
+
+Bract documentation: https://bract.github.io/
+
+Module documentation: https://bract.github.io/module/core.html
+
+Demo applications: https://bract.github.io/documentation.html#demo-applications
 
 
 ## License
