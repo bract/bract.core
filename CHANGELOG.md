@@ -1,7 +1,12 @@
-# bract.core TODO and Change Log
+# bract.core Change Log
 
 ## Ideas and TODO
 
+- [TODO] Root context may be optionally defined in `bract/context.dev.edn` or `bract/context.edn`
+  - [TODO] An inducer that specifically does the cascading read
+  - [TOOD] Root context may specify root inducers
+  - [TODO] In dev mode `default-root-context` should be loaded from root context
+- [TODO - BREAKING CHANGE] Rename inducer `deinit` to `invoke-deinit` for consistency with other inducers
 - [TODO] Dev triggers should accept an optional param
   - Init a sub-system
   - De-init a sub-system
@@ -20,6 +25,14 @@
 - [TODO - Dev] Several tasks should accept an optional env key, e.g. `(start :qa)` that looks up env from context
   - Requires env key/alias definition
   - Env key/alias should switch the config file(s)
+
+
+## [WIP] 0.3.1 / 2017-June-??
+
+- Do not abort on inducer exception in dev mode, just rethrow (useful for REPL/reload workflow)
+- Add `uuid-str` utility function - unique ID for various purposes
+- Move generic Bract text from README to the external documentation
+- Add `invoke-stopper` inducer to stop a running application
 
 
 ## 0.3.0 / 2017-June-11

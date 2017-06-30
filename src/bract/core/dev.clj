@@ -73,13 +73,9 @@
 (defn init
   "Initialize app in DEV mode."
   []
-  (try
-    (inducer/set-verbosity default-root-context)
-    (echo/with-latency-capture "Initializing app in DEV mode"
-      (inducer/induce inducer/apply-inducer default-root-context default-root-inducers))
-    (catch Throwable e
-      (.printStackTrace e)
-      (echo/abort (.getMessage e)))))
+  (inducer/set-verbosity default-root-context)
+  (echo/with-latency-capture "Initializing app in DEV mode"
+    (inducer/induce inducer/apply-inducer default-root-context default-root-inducers)))
 
 
 (defonce ^:redef init-gate nil)
@@ -108,7 +104,7 @@
 
 
 (defn record-context!
-  "Rebind var bract.core.dev/record-context! to the given context."
+  "Rebind var bract.core.dev/app-context to the given context."
   [context]
   (alter-var-root #'app-context (constantly context))
   context)
@@ -119,9 +115,8 @@
   []
   (ensure-init)
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
-  (let [f (config/ctx-deinit app-context)]
-    (echo/with-latency-capture "De-initializing application"
-      (f))))
+  (echo/with-latency-capture "De-initializing application"
+    (inducer/deinit app-context)))
 
 
 (defn start
@@ -130,10 +125,9 @@
   (ensure-init)
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
   (echo/with-latency-capture "Launching application"
-    (-> (config/ctx-config app-context)
-      config/cfg-launcher
-      (apply [(assoc app-context
-                (key config/ctx-launch?) true)])
+    (-> app-context
+      (assoc (key config/ctx-launch?) true)
+      inducer/invoke-launcher
       record-context!)))
 
 
@@ -141,6 +135,6 @@
   "Stop the started application."
   []
   (ensure-init)
-  (let [stopper (config/ctx-stopper app-context)]
-    (echo/with-latency-capture "Stopping the started application"
-      (stopper))))
+  (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
+  (echo/with-latency-capture "Stopping the started application"
+    (inducer/invoke-stopper app-context)))
