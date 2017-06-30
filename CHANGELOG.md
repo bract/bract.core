@@ -27,7 +27,7 @@
   - Env key/alias should switch the config file(s)
 
 
-## [WIP] 0.3.1 / 2017-June-??
+## 0.3.1 / 2017-June-30
 
 - Do not abort on inducer exception in dev mode, just rethrow (useful for REPL/reload workflow)
 - Add `uuid-str` utility function - unique ID for various purposes
