@@ -2,11 +2,6 @@
 
 ## Ideas and TODO
 
-- [TODO] Root context may be optionally defined in `bract/context.dev.edn` or `bract/context.edn`
-  - [TODO] An inducer that specifically does the cascading read
-  - [TOOD] Root context may specify root inducers
-  - [TODO] In dev mode `default-root-context` should be loaded from root context
-- [TODO - BREAKING CHANGE] Rename inducer `deinit` to `invoke-deinit` for consistency with other inducers
 - [TODO] Dev triggers should accept an optional param
   - Init a sub-system
   - De-init a sub-system
@@ -16,15 +11,26 @@
 - [TODO] Support for parsing `project.clj`
   - [TODO] Discover and provide application version
   - [TODO] Discover and provide Bract (core and modules) version
+- [TODO - Dev] Several tasks should accept an optional env key, e.g. `(start :qa)` that looks up env from context
+  - Requires env key/alias definition
+  - Env key/alias should switch the config file(s)
+
+
+## [WIP] 0.4.0 / 2017-July-??
+
+- [TODO] Root context may be optionally defined in `bract/context.dev.edn` or `bract/context.edn`
+  - [TODO] An inducer that specifically does the cascading read
+  - [TOOD] Root context may specify root inducers
+  - [TODO] In dev mode `default-root-context` should be loaded from root context
+- [Todo] Overhaul deinit
+  - [Todo - BREAKING CHANGE] Rename inducer `deinit` to `invoke-deinit` for consistency with other inducers
+  - [Todo - BREAKING CHANGE] De-init to be a list of `(fn [])` passed around with context
 - [TODO] Support for application shutdown (hook) cleanup
   - As a mandatory/optional callback
   - As a mandatory/optional configured fn
 - [TODO] Support for uncaught exception handler
   - As a mandatory/optional callback
   - As a mandatory/optional configured fn
-- [TODO - Dev] Several tasks should accept an optional env key, e.g. `(start :qa)` that looks up env from context
-  - Requires env key/alias definition
-  - Env key/alias should switch the config file(s)
 
 
 ## 0.3.1 / 2017-June-30
