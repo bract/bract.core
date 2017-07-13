@@ -11,8 +11,7 @@
   (:require
     [clojure.edn     :as edn]
     [clojure.java.io :as io]
-    [clojure.test :refer :all]
-    [bract.core.config  :as config]
+    [clojure.test    :refer :all]
     [bract.core.inducer :as inducer])
   (:import
     [bract.core Echo]))

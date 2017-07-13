@@ -7,10 +7,10 @@
 ;   You must not remove this notice, or any other, from this software.
 
 
-(ns bract.core.config-test
+(ns bract.core.kdef-test
   (:require
     [clojure.test :refer :all]
-    [bract.core.config :as config]))
+    [bract.core.kdef :as kdef]))
 
 
 (deftest context-test
@@ -21,23 +21,23 @@
                         :bract.core/cli-args ["-c" "run"]
                         :bract.core/config {"foo" "bar"}
                         :bract.core/launch? true}]
-      (is (false? (config/ctx-verbose? good-context)))
-      (is (= ["foo.edn" "bar.properties"] (config/ctx-config-files good-context)))
-      (is (= :yes (config/ctx-exit? good-context)))
-      (is (= ["-c" "run"] (config/ctx-cli-args good-context)))
-      (is (= {"foo" "bar"} (config/ctx-config good-context)))
-      (is (= true (config/ctx-launch? good-context)))
-      (is (false? (config/ctx-launch? {})) "missing/default value")))
+      (is (false? (kdef/ctx-verbose? good-context)))
+      (is (= ["foo.edn" "bar.properties"] (kdef/ctx-config-files good-context)))
+      (is (= :yes (kdef/ctx-exit? good-context)))
+      (is (= ["-c" "run"] (kdef/ctx-cli-args good-context)))
+      (is (= {"foo" "bar"} (kdef/ctx-config good-context)))
+      (is (= true (kdef/ctx-launch? good-context)))
+      (is (false? (kdef/ctx-launch? {})) "missing/default value")))
   (testing "default values"
-    (is (false? (config/ctx-verbose? {})))
-    (is (= [] (config/ctx-config-files {})))
-    (is (false? (config/ctx-exit? {}))))
+    (is (false? (kdef/ctx-verbose? {})))
+    (is (= [] (kdef/ctx-config-files {})))
+    (is (false? (kdef/ctx-exit? {}))))
   (testing "missing/bad context keys"
     (let [bad-context {:bract.core/config "foobar"
                         :bract.core/launch? 10}]
-      (is (thrown? IllegalArgumentException (config/ctx-config  bad-context)) "invalid value")
-      (is (thrown? IllegalArgumentException (config/ctx-config  {}))          "missing value")
-      (is (thrown? IllegalArgumentException (config/ctx-launch? bad-context)) "invalid value"))))
+      (is (thrown? IllegalArgumentException (kdef/ctx-config  bad-context)) "invalid value")
+      (is (thrown? IllegalArgumentException (kdef/ctx-config  {}))          "missing value")
+      (is (thrown? IllegalArgumentException (kdef/ctx-launch? bad-context)) "invalid value"))))
 
 
 (deftest config-test
@@ -54,20 +54,20 @@
                           "bract.core.launcher" "bract.core.inducer/apply-inducer"}]]
       (is (= ["foo.bar.baz.qux/fred"
               "mary.had.a.little/lamb"]
-            (config/cfg-inducers good-config)))
+            (kdef/cfg-inducers good-config)))
       (is (= ["foo" "bar"]
-            (config/cfg-exports good-config)))
+            (kdef/cfg-exports good-config)))
       (is (some?
-            (config/cfg-launcher good-config)))))
+            (kdef/cfg-launcher good-config)))))
   (testing "missing/bad context keys"
     (let [bad-context {"bract.core.inducers" {:foo :bar}
                        "bract.core.context-hook" 10
                        "bract.core.config-hook"  15
                        "bract.core.exports"  20
                        "bract.core.launcher" false}]
-      (is (thrown? IllegalArgumentException (config/cfg-inducers      bad-context)))
-      (is (thrown? IllegalArgumentException (config/cfg-inducers      {})) "missing key")
-      (is (thrown? IllegalArgumentException (config/cfg-exports       bad-context)))
-      (is (thrown? IllegalArgumentException (config/cfg-exports       {})) "missing key")
-      (is (thrown? IllegalArgumentException (config/cfg-launcher      bad-context)))
-      (is (thrown? IllegalArgumentException (config/cfg-launcher      {})) "missing key"))))
+      (is (thrown? IllegalArgumentException (kdef/cfg-inducers      bad-context)))
+      (is (thrown? IllegalArgumentException (kdef/cfg-inducers      {})) "missing key")
+      (is (thrown? IllegalArgumentException (kdef/cfg-exports       bad-context)))
+      (is (thrown? IllegalArgumentException (kdef/cfg-exports       {})) "missing key")
+      (is (thrown? IllegalArgumentException (kdef/cfg-launcher      bad-context)))
+      (is (thrown? IllegalArgumentException (kdef/cfg-launcher      {})) "missing key"))))

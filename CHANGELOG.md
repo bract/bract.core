@@ -18,6 +18,7 @@
 
 ## [WIP] 0.4.0 / 2017-July-??
 
+- [BREAKING CHANGE] Rename `bract.core.config` namespace to `bract.core.kdef`
 - [TODO] Root context may be optionally defined in `bract/context.dev.edn` or `bract/context.edn`
   - [TODO] An inducer that specifically does the cascading read
   - [TOOD] Root context may specify root inducers

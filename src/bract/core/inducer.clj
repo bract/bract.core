@@ -10,13 +10,13 @@
 (ns bract.core.inducer
   "The inducer fns exposed by Bract-core."
   (:require
-    [keypin.core       :as keypin]
-    [keypin.util       :as kputil]
-    [bract.core.config :as config]
-    [bract.core.echo   :as echo]
-    [bract.core.impl   :as impl]
-    [bract.core.type   :as type]
-    [bract.core.util   :as util])
+    [keypin.core     :as keypin]
+    [keypin.util     :as kputil]
+    [bract.core.echo :as echo]
+    [bract.core.impl :as impl]
+    [bract.core.kdef :as kdef]
+    [bract.core.type :as type]
+    [bract.core.util :as util])
   (:import
     [bract.core Echo]))
 
@@ -45,7 +45,7 @@
     (induce apply-inducer context coll))
   ([f context coll]
     (reduce (fn [context inducer-candidate]
-              (if (config/ctx-exit? context)
+              (if (kdef/ctx-exit? context)
                 (reduced context)
                 (f context inducer-candidate)))
       context coll)))
@@ -58,7 +58,7 @@
   "Set Bract verbosity flag and return context."
   [context]
   (let [pre-verbose?  (Echo/isVerbose)
-        post-verbose? (config/ctx-verbose? context)]
+        post-verbose? (kdef/ctx-verbose? context)]
     (Echo/setVerbose post-verbose?)
     (when (and (not pre-verbose?) post-verbose?)
       (echo/echo
@@ -69,19 +69,19 @@
 (defn read-config
   "Use config filenames in the context to read and resolve config, and populate the context with it."
   [context]
-  (let [config-files (config/ctx-config-files context)]
+  (let [config-files (kdef/ctx-config-files context)]
     (if (seq config-files)
       (->> config-files
-        (config/resolve-config context)
-        (assoc context (key config/ctx-config)))
+        (kdef/resolve-config context)
+        (assoc context (key kdef/ctx-config)))
       context)))
 
 
 (defn run-context-inducers
   "Run the inducers specified in the context."
   ([context]
-    (impl/with-lookup-key (key config/ctx-inducers)
-      (->> (config/ctx-inducers context)
+    (impl/with-lookup-key (key kdef/ctx-inducers)
+      (->> (kdef/ctx-inducers context)
         (induce context))))
   ([context lookup-key]
     (impl/with-lookup-key lookup-key
@@ -93,13 +93,13 @@
 (defn run-config-inducers
   "Run the inducers specified in the application config."
   ([context]
-    (impl/with-lookup-key (key config/cfg-inducers)
-      (->> (config/ctx-config context)
-        config/cfg-inducers
+    (impl/with-lookup-key (key kdef/cfg-inducers)
+      (->> (kdef/ctx-config context)
+        kdef/cfg-inducers
         (induce context))))
   ([context lookup-key]
     (impl/with-lookup-key lookup-key
-      (->> (config/ctx-config context)
+      (->> (kdef/ctx-config context)
         ((keypin/make-key lookup-key vector? "Vector of inducer fns or their fully qualified names" {}))
         (induce context)))))
 
@@ -116,7 +116,7 @@
 (defn config-hook
   "Given context with config, invoke the config-hook fn with config as argument."
   [context function]
-  (let [config (config/ctx-config context)
+  (let [config (kdef/ctx-config context)
         f (type/ifunc function)]
     (util/expected fn? (format "%s to be a function" function) f)
     (f config)
@@ -127,8 +127,8 @@
   "Given context with config, read the value of config key \"bract.core.exports\" as a vector of string config keys and
   export the key-value pairs for those config keys as system properties."
   [context]
-  (let [config (config/ctx-config context)
-        exlist (-> (config/cfg-exports config)
+  (let [config (kdef/ctx-config context)
+        exlist (-> (kdef/cfg-exports config)
                  (echo/->echo "Exporting as system properties"))]
     (doseq [each exlist]
       (util/expected string? "export property name as string" each)
@@ -143,8 +143,8 @@
   "Given context with config, read the value of config key \"bract.core.exports\" as a vector of string config keys and
   remove them from system properties."
   [context]
-  (let [config (config/ctx-config context)
-        exlist (-> (config/cfg-exports config)
+  (let [config (kdef/ctx-config context)
+        exlist (-> (kdef/cfg-exports config)
                  (echo/->echo "Un-exporting (removing) system properties"))]
     (doseq [each exlist]
       (util/expected string? "export property name as string" each)
@@ -159,9 +159,9 @@
   "Given context with config, read the value of config key \"bract.core.launcher\" as a fully qualified launcher fn
   name and invoke it as (fn [context]) when the context key :bract.core/launch? has the value true."
   [context]
-  (if (config/ctx-launch? context)
-    (-> (config/ctx-config context)
-      config/cfg-launcher
+  (if (kdef/ctx-launch? context)
+    (-> (kdef/ctx-config context)
+      kdef/cfg-launcher
       (apply [context]))
     (do
       (echo/echo "Launch not enabled, skipping launch.")
@@ -171,7 +171,7 @@
 (defn deinit
   "Given context with :bract.core/deinit key and corresponding (fn []) de-init fn for the app, invoke it."
   [context]
-  (let [f (config/ctx-deinit context)]
+  (let [f (kdef/ctx-deinit context)]
     (f))
   context)
 
@@ -179,6 +179,6 @@
 (defn invoke-stopper
   "Given context with :bract.core/stopper key and corresponding (fn []) stopper fn for the app, invoke it."
   [context]
-  (let [f (config/ctx-stopper context)]
+  (let [f (kdef/ctx-stopper context)]
     (f))
   context)
