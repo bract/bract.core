@@ -10,6 +10,7 @@
 (ns bract.core.inducer
   "The inducer fns exposed by Bract-core."
   (:require
+    [clojure.java.io :as io]
     [keypin.core     :as keypin]
     [keypin.util     :as kputil]
     [bract.core.echo :as echo]
@@ -67,15 +68,23 @@
 
 
 (defn read-context
-  "Use context filename (when specified) in the context to read from and merge into the context."
+  "Use context filename (when specified) in the context under key :bract.core/context-file to read from and merge into
+  the context."
   [context]
   (if-let [context-file (kdef/ctx-context-file context)]
-    (kdef/resolve-context context context-file)
-    context))
+    (if (io/resource context-file)
+      (kdef/resolve-context context context-file)
+      (do
+        (echo/echof "Context file '%s' not found in classpath" context-file)
+        context))
+    (do
+      (echo/echo "No context file is defined under the key" (key kdef/ctx-context-file))
+      context)))
 
 
 (defn read-config
-  "Use config filenames in the context to read and resolve config, and populate the context with it."
+  "Use config filenames in the context under key :bract.core/config-files to read and resolve config, and populate the
+  context with it under the key :bract.core/config."
   [context]
   (let [config-files (kdef/ctx-config-files context)]
     (if (seq config-files)
