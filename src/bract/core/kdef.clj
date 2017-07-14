@@ -28,6 +28,10 @@
                                                                                   :default false
                                                                                   :envvar  "APP_VERBOSE"
                                                                                   :sysprop "app.verbose"}]
+  ctx-context-file  [:bract.core/context-file (some-fn string?
+                                                nil?)  "Context file name"       {:default nil
+                                                                    :envvar  "APP_CONTEXT"
+                                                                    :sysprop "app.context"}]
   ctx-config-files  [:bract.core/config-files  vector? "Config file names"       {:parser  kputil/any->vec
                                                                                   :default []
                                                                                   :envvar  "APP_CONFIG"
@@ -54,16 +58,19 @@
 ;; ----- utility fns -----
 
 
-(defn print-config
-  "Print the given config using the format determined from the supplied config file names."
-  [config config-filenames]
-  (let [^ConfigIO configIO (if (some (comp #(.endsWith ^String % ".edn")
-                                       string/trim
-                                       string/lower-case)
-                                 config-filenames)
-                             keypin/edn-file-io
-                             PropertyConfigIO/INSTANCE)]
-    (.writeConfig configIO ^Writer *out* ^Map config true)))
+(defn resolve-context
+  "Given a context filename, read and resolve as a map and merge into the current context."
+  [context context-filename]
+  (let [keypin-opts {:parent-key   "parent.context.filenames"
+                     :info-logger  #(echo/echo "[context] [keypin] [info]" %)
+                     :error-logger #(echo/echo "[context] [keypin] [error]" %)}]
+    (as-> [context-filename] <>
+      (keypin/read-config <> (assoc keypin-opts
+                               :realize? false)) ; read, but do not realize (i.e. evaluate variables)
+      (kputil/clojurize-data <>)
+      (merge context <>)                         ; merge new context onto the pre-existing context
+      (keypin/realize-config <> keypin-opts)
+      (kputil/clojurize-data <>))))
 
 
 (defn resolve-config
@@ -84,3 +91,15 @@
       (-> config-filenames
         (keypin/read-config keypin-opts)
         kputil/clojurize-data))))
+
+
+(defn print-config
+  "Print the given config using the format determined from the supplied config file names."
+  [config config-filenames]
+  (let [^ConfigIO configIO (if (some (comp #(.endsWith ^String % ".edn")
+                                       string/trim
+                                       string/lower-case)
+                                 config-filenames)
+                             keypin/edn-file-io
+                             PropertyConfigIO/INSTANCE)]
+    (.writeConfig configIO ^Writer *out* ^Map config true)))

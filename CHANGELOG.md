@@ -19,10 +19,8 @@
 ## [WIP] 0.4.0 / 2017-July-??
 
 - [BREAKING CHANGE] Rename `bract.core.config` namespace to `bract.core.kdef`
-- [TODO] Root context may be optionally defined in `bract/context.dev.edn` or `bract/context.edn`
-  - [TODO] An inducer that specifically does the cascading read
-  - [TOOD] Root context may specify root inducers
-  - [TODO] In dev mode `default-root-context` should be loaded from root context
+- Add `read-context` inducer to read/merge-into context from a file
+  - Context-key `:bract.core/context-file` to optionally specify a file to merge context from
 - [Todo] Overhaul deinit
   - [Todo - BREAKING CHANGE] Rename inducer `deinit` to `invoke-deinit` for consistency with other inducers
   - [Todo - BREAKING CHANGE] De-init to be a list of `(fn [])` passed around with context

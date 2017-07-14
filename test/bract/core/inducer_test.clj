@@ -60,6 +60,17 @@
         (Echo/setVerbose verbosity?)))))
 
 
+(deftest test-read-context
+  (testing "no context file"
+    (let [context {:foo :bar}]
+      (is (= context
+            (inducer/read-context context)))))
+  (testing "specified context file"
+    (let [context {:bract.core/context-file "sample.edn"}]
+      (is (= (merge context (-> "sample.edn" io/resource slurp edn/read-string))
+            (inducer/read-context context))))))
+
+
 (deftest test-read-config
   (let [context {:bract.core/config-files "sample.edn"}]
     (is (= (assoc context

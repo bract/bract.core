@@ -66,6 +66,14 @@
   context)
 
 
+(defn read-context
+  "Use context filename (when specified) in the context to read from and merge into the context."
+  [context]
+  (if-let [context-file (kdef/ctx-context-file context)]
+    (kdef/resolve-context context context-file)
+    context))
+
+
 (defn read-config
   "Use config filenames in the context to read and resolve config, and populate the context with it."
   [context]
