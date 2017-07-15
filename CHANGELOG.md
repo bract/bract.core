@@ -21,9 +21,9 @@
 - [BREAKING CHANGE] Rename `bract.core.config` namespace to `bract.core.kdef`
 - Add `read-context` inducer to read/merge-into context from a file
   - Context-key `:bract.core/context-file` to optionally specify a file to merge context from
-- [Todo] Overhaul deinit
-  - [Todo - BREAKING CHANGE] Rename inducer `deinit` to `invoke-deinit` for consistency with other inducers
-  - [Todo - BREAKING CHANGE] De-init to be a list of `(fn [])` passed around with context
+- Overhaul application deinit
+  - [BREAKING CHANGE] Rename inducer `deinit` to `invoke-deinit` for consistency with other inducers
+  - [BREAKING CHANGE] De-init to be a list of `(fn [])` passed around with context
 - [TODO] Support for application shutdown (hook) cleanup
   - As a mandatory/optional callback
   - As a mandatory/optional configured fn

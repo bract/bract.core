@@ -195,7 +195,7 @@
 
 (deftest test-deinit
   (vreset! volatile-holder 0)
-  (inducer/deinit {:bract.core/deinit (fn [] (vreset! volatile-holder 10))})
+  (inducer/invoke-deinit {:bract.core/deinit [(fn [] (vreset! volatile-holder 10))]})
   (is (= 10 @volatile-holder)))
 
 

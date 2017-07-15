@@ -116,7 +116,7 @@
   (ensure-init)
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
   (echo/with-latency-capture "De-initializing application"
-    (inducer/deinit app-context)))
+    (inducer/invoke-deinit app-context)))
 
 
 (defn start

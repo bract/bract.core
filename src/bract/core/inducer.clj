@@ -185,12 +185,24 @@
       context)))
 
 
-(defn deinit
-  "Given context with :bract.core/deinit key and corresponding (fn []) de-init fn for the app, invoke it."
-  [context]
-  (let [f (kdef/ctx-deinit context)]
-    (f))
-  context)
+(defn invoke-deinit
+  "Given context with :bract.core/deinit key and corresponding collection of (fn []) de-init fns for the app, invoke
+  them in a sequence."
+  ([context]
+    (invoke-deinit context true))
+  ([context ignore-errors?]
+    (let [coll (kdef/ctx-deinit context)]
+      (if (seq coll)
+        (doseq [f coll]
+          (try
+            (f)
+            (catch Exception e
+              (echo/echof "Application de-init error (%s): %s"
+                (if ignore-errors? "ignored" "not ignored") (util/stack-trace-str e))
+              (when-not ignore-errors?
+                (throw e)))))
+        (echo/echo "Application de-init is not configured, skipping de-initialization.")))
+    context))
 
 
 (defn invoke-stopper

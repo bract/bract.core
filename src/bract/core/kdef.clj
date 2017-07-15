@@ -40,8 +40,7 @@
   ctx-cli-args      [:bract.core/cli-args      coll?   "Collection of CLI arguments"]
   ctx-config        [:bract.core/config        map?    "Application config"]
   ctx-inducers      [:bract.core/inducers      vector? "Vector of inducer fns or their fully qualified names"]
-  ctx-deinit        [:bract.core/deinit        fn?     "De-initialization function (fn []) for the app"
-                     {:default #(echo/echo "Application de-init is not configured, skipping de-initialization.")}]
+  ctx-deinit        [:bract.core/deinit        coll?   "Functions [(fn []) ..] to deinitialize the app" {:default []}]
   ctx-launch?       [:bract.core/launch?  kputil/bool? "Whether invoke launcher fn" {:default false}]
   ctx-stopper       [:bract.core/stopper       fn?     "Function (fn []) to stop the started application"
                      {:default #(echo/echo "Application stopper is not configured, skipping stop.")}])
