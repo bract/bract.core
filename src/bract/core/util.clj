@@ -12,6 +12,7 @@
   (:require
     [clojure.string :as string])
   (:import
+    [java.io PrintWriter StringWriter]
     [java.util UUID]))
 
 
@@ -73,3 +74,12 @@
   ^String
   []
   (.toString (UUID/randomUUID)))
+
+
+(defn stack-trace-str
+  "Given a throwable (generally an exception) return the stack trace string as it would be printed on a console."
+  ^String
+  [^Throwable e]
+  (let [^StringWriter sw (StringWriter.)]
+    (.printStackTrace e (PrintWriter. sw))
+    (.toString sw)))
