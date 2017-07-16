@@ -10,15 +10,15 @@
 (ns bract.core.inducer
   "The inducer fns exposed by Bract-core."
   (:require
-    [clojure.java.io :as io]
-    [keypin.core     :as keypin]
-    [keypin.type     :as kptype]
-    [keypin.util     :as kputil]
-    [bract.core.echo :as echo]
-    [bract.core.impl :as impl]
-    [bract.core.kdef :as kdef]
-    [bract.core.type :as type]
-    [bract.core.util :as util])
+    [clojure.java.io   :as io]
+    [keypin.core       :as keypin]
+    [keypin.type       :as kptype]
+    [keypin.util       :as kputil]
+    [bract.core.echo   :as echo]
+    [bract.core.impl   :as impl]
+    [bract.core.keydef :as kdef]
+    [bract.core.type   :as type]
+    [bract.core.util   :as util])
   (:import
     [bract.core Echo]))
 

@@ -18,7 +18,7 @@
 
 ## [WIP] 0.4.0 / 2017-July-??
 
-- [BREAKING CHANGE] Rename `bract.core.config` namespace to `bract.core.kdef`
+- [BREAKING CHANGE] Rename `bract.core.config` namespace to `bract.core.keydef`
 - Add `read-context` inducer to read/merge-into context from a file
   - Context-key `:bract.core/context-file` to optionally specify a file to merge context from
 - Overhaul application deinit

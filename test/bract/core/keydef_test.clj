@@ -7,10 +7,10 @@
 ;   You must not remove this notice, or any other, from this software.
 
 
-(ns bract.core.kdef-test
+(ns bract.core.keydef-test
   (:require
     [clojure.test :refer :all]
-    [bract.core.kdef :as kdef]))
+    [bract.core.keydef :as kdef]))
 
 
 (deftest context-test

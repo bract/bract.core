@@ -7,7 +7,7 @@
 ;   You must not remove this notice, or any other, from this software.
 
 
-(ns bract.core.kdef
+(ns bract.core.keydef
   "Context and configuration keys used by bract.core and related functions."
   (:require
     [clojure.string :as string]
