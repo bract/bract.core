@@ -83,3 +83,20 @@
   (let [^StringWriter sw (StringWriter.)]
     (.printStackTrace e (PrintWriter. sw))
     (.toString sw)))
+
+
+(defn now-millis
+  "Return current epochal time in milliseconds."
+  (^long []
+    (System/currentTimeMillis))
+  (^long [^long start-millis]
+    (unchecked-subtract (System/currentTimeMillis) start-millis)))
+
+
+(defn sleep-millis
+  "Sleep for specified number of milliseconds."
+  [^long millis]
+  (try
+    (Thread/sleep millis)
+    (catch InterruptedException e
+      (.interrupt (Thread/currentThread)))))
