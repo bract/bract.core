@@ -24,9 +24,7 @@
 - Overhaul application deinit
   - [BREAKING CHANGE] Rename inducer `deinit` to `invoke-deinit` for consistency with other inducers
   - [BREAKING CHANGE] De-init to be a list of `(fn [])` passed around with context
-- [TODO] Support for application shutdown (hook) cleanup
-  - As a mandatory/optional callback
-  - As a mandatory/optional configured fn
+- Add `add-shutdown-hook` inducer to handle application termination signal
 - [TODO] Support for uncaught exception handler
   - As a mandatory/optional callback
   - As a mandatory/optional configured fn

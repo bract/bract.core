@@ -20,39 +20,48 @@
   (:import
     [java.io OutputStream Writer]
     [java.util Map]
+    [clojure.lang Atom]
     [keypin ConfigIO PropertyConfigIO]))
 
 
+(defn atom? [x] (instance? clojure.lang.Atom x))
+
+
 (keypin/defkey  ; context keys
-  ctx-verbose?      [:bract.core/verbose? kputil/bool? "Verbose initialization?" {:parser  kputil/any->bool
-                                                                                  :default false
-                                                                                  :envvar  "APP_VERBOSE"
-                                                                                  :sysprop "app.verbose"}]
-  ctx-context-file  [:bract.core/context-file (some-fn string?
-                                                nil?)  "Context file name"       {:default nil
-                                                                                  :envvar  "APP_CONTEXT"
-                                                                                  :sysprop "app.context"}]
-  ctx-config-files  [:bract.core/config-files  vector? "Config file names"       {:parser  kputil/any->vec
-                                                                                  :default []
-                                                                                  :envvar  "APP_CONFIG"
-                                                                                  :sysprop "app.config"}]
-  ctx-exit?         [:bract.core/exit?     kputil/any? "Whether break out of all inducer levels" {:default false}]
-  ctx-cli-args      [:bract.core/cli-args      coll?   "Collection of CLI arguments"]
-  ctx-config        [:bract.core/config        map?    "Application config"]
-  ctx-inducers      [:bract.core/inducers      vector? "Vector of inducer fns or their fully qualified names"]
-  ctx-deinit        [:bract.core/deinit        coll?   "Functions [(fn []) ..] to deinitialize the app" {:default []}]
-  ctx-launch?       [:bract.core/launch?  kputil/bool? "Whether invoke launcher fn" {:default false}]
-  ctx-stopper       [:bract.core/stopper       fn?     "Function (fn []) to stop the started application"
-                     {:default #(echo/echo "Application stopper is not configured, skipping stop.")}])
+  ctx-verbose?       [:bract.core/verbose? kputil/bool?  "Verbose initialization?" {:parser  kputil/any->bool
+                                                                                    :default false
+                                                                                    :envvar  "APP_VERBOSE"
+                                                                                    :sysprop "app.verbose"}]
+  ctx-context-file   [:bract.core/context-file (some-fn string?
+                                                 nil?)   "Context file name"       {:default nil
+                                                                                    :envvar  "APP_CONTEXT"
+                                                                                    :sysprop "app.context"}]
+  ctx-config-files   [:bract.core/config-files   vector? "Config file names"       {:parser  kputil/any->vec
+                                                                                    :default []
+                                                                                    :envvar  "APP_CONFIG"
+                                                                                    :sysprop "app.config"}]
+  ctx-exit?          [:bract.core/exit?     kputil/any?  "Whether break out of all inducer levels" {:default false}]
+  ctx-cli-args       [:bract.core/cli-args       coll?   "Collection of CLI arguments"]
+  ctx-config         [:bract.core/config         map?    "Application config"]
+  ctx-inducers       [:bract.core/inducers       vector? "Vector of inducer fns or their fully qualified names"]
+  ctx-deinit         [:bract.core/deinit         coll?   "Functions [(fn []) ..] to deinitialize the app" {:default []}]
+  ctx-launch?        [:bract.core/launch?  kputil/bool?  "Whether invoke launcher fn" {:default false}]
+  ctx-stopper        [:bract.core/stopper        fn?     "Function (fn []) to stop the started application"
+                      {:default #(echo/echo "Application stopper is not configured, skipping stop.")}]
+  ctx-shutdown-flag  [:bract.core/shutdown-flag  atom?   "Atom: true if shutdown is initiated"  {:default (atom false)}]
+  ctx-shutdown-hooks [:bract.core/shutdown-hooks atom?   "Atom: Threads added as shutdown hook" {:default (atom [])}])
 
 
 (keypin/defkey  ; config keys
-  cfg-inducers      ["bract.core.inducers"     vector? "Vector of fully qualified inducer fn names"
-                     {:parser kputil/any->edn}]
-  cfg-exports       ["bract.core.exports"      vector? "Vector of config keys to export as system properties"
-                     {:parser kputil/any->edn}]
-  cfg-launcher      ["bract.core.launcher"     fn?     "Fully qualified launcher fn name"
-                     {:parser kputil/str->var->deref}])
+  cfg-inducers       ["bract.core.inducers"      vector? "Vector of fully qualified inducer fn names"
+                      {:parser kputil/any->edn}]
+  cfg-exports        ["bract.core.exports"       vector? "Vector of config keys to export as system properties"
+                      {:parser kputil/any->edn}]
+  cfg-launcher       ["bract.core.launcher"      fn?     "Fully qualified launcher fn name"
+                      {:parser kputil/str->var->deref}]
+  cfg-drain-timeout  ["bract.core.drain.timeout" kputil/duration? "Workload drain timeout" {:parser kputil/any->duration
+                                                                                            :default [10000 :millis]}])
+
 
 ;; ----- utility fns -----
 

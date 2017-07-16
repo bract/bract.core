@@ -205,3 +205,27 @@
   (is (zero? @volatile-holder))
   (inducer/invoke-stopper {:bract.core/stopper (fn [] (vswap! volatile-holder (fn [^long x] (inc x))))})
   (is (= 1 @volatile-holder)))
+
+
+(deftest test-add-shutdown-hook
+  (let [hooks (atom [])
+        context {:bract.core/shutdown-hooks hooks
+                 :bract.core/config {"bract.core.drain.timeout" [1 :seconds]}}]
+    (testing "default invocation"
+      (try
+        (inducer/add-shutdown-hook context)
+        (doto ^Thread (last @hooks)
+          (.start)
+          (.join))
+        (.removeShutdownHook ^Runtime (Runtime/getRuntime) (last @hooks))
+        (finally
+          (swap! hooks pop))))
+    (testing "inducer invocation"
+      (try
+        (inducer/add-shutdown-hook context 'bract.core.inducer/invoke-stopper)
+        (doto ^Thread (last @hooks)
+          (.start)
+          (.join))
+        (.removeShutdownHook ^Runtime (Runtime/getRuntime) (last @hooks))
+        (finally
+          (swap! hooks pop))))))
