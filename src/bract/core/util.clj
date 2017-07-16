@@ -100,3 +100,14 @@
     (Thread/sleep millis)
     (catch InterruptedException e
       (.interrupt (Thread/currentThread)))))
+
+
+(defn set-default-uncaught-exception-handler
+  "Set specified function (fn [thread throwable]) as default uncaught exception handler."
+  [f]
+  (cond
+    (nil? f) (Thread/setDefaultUncaughtExceptionHandler nil)
+    (fn? f)  (Thread/setDefaultUncaughtExceptionHandler
+               (reify Thread$UncaughtExceptionHandler
+                 (uncaughtException [_ thread ex] (f thread ex))))
+    :else    (expected "function or nil" f)))

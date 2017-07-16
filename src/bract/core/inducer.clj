@@ -248,3 +248,17 @@
       (.addShutdownHook ^Runtime (Runtime/getRuntime) thread)
       (swap! hooks conj thread))
     context))
+
+
+(defn set-default-exception-handler
+  "Set specified function (STDERR printer by default) as the default uncaught-exception handler for all JVM threads."
+  ([context]
+    (set-default-exception-handler
+      context (fn [^Thread thread ^Throwable ex]
+                (util/err-println
+                  (format "Uncaught exception in thread ID: %d, thread name: %s - %s"
+                    (.getId thread) (.getName thread) (util/stack-trace-str ex))))))
+  ([context exception-handler]
+    (-> (type/ifunc exception-handler)
+      util/set-default-uncaught-exception-handler)
+    context))

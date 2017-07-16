@@ -25,9 +25,7 @@
   - [BREAKING CHANGE] Rename inducer `deinit` to `invoke-deinit` for consistency with other inducers
   - [BREAKING CHANGE] De-init to be a list of `(fn [])` passed around with context
 - Add `add-shutdown-hook` inducer to handle application termination signal
-- [TODO] Support for uncaught exception handler
-  - As a mandatory/optional callback
-  - As a mandatory/optional configured fn
+- Add `set-default-exception-handler` inducer to handle uncaught exceptions in threads
 
 
 ## 0.3.1 / 2017-June-30

@@ -12,8 +12,10 @@
     [clojure.edn     :as edn]
     [clojure.java.io :as io]
     [clojure.test    :refer :all]
-    [bract.core.inducer :as inducer])
+    [bract.core.inducer :as inducer]
+    [bract.core.util    :as util])
   (:import
+    [java.util.concurrent Executor Executors ThreadPoolExecutor]
     [bract.core Echo]))
 
 
@@ -229,3 +231,22 @@
         (.removeShutdownHook ^Runtime (Runtime/getRuntime) (last @hooks))
         (finally
           (swap! hooks pop))))))
+
+
+(deftest test-default-exception-handler
+  (let [^Executor pool (Executors/newCachedThreadPool)]
+    (try
+      (testing "default exception handler"
+        (inducer/set-default-exception-handler {})
+        (.execute pool #(Integer/parseInt "first test")))
+      (testing "custom exception handler"
+        (vreset! volatile-holder 0)
+        (inducer/set-default-exception-handler {} (fn [t ^Throwable ex]
+                                                    (.printStackTrace ex)
+                                                    (vswap! volatile-holder (fn [^long x] (inc x)))))
+        (.execute pool #(Integer/parseInt "second test"))
+        (while (zero? ^long @volatile-holder)
+          (Thread/yield)))
+      (finally
+        (.shutdown ^ThreadPoolExecutor pool)
+        (util/set-default-uncaught-exception-handler nil)))))
