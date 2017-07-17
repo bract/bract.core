@@ -210,8 +210,10 @@
 
 
 (deftest test-add-shutdown-hook
-  (let [hooks (atom [])
-        context {:bract.core/shutdown-hooks hooks
+  (let [flag  (atom false)
+        hooks (atom [])
+        context {:bract.core/shutdown-flag  flag
+                 :bract.core/shutdown-hooks hooks
                  :bract.core/config {"bract.core.drain.timeout" [1 :seconds]}}]
     (testing "default invocation"
       (try
@@ -221,6 +223,7 @@
           (.join))
         (.removeShutdownHook ^Runtime (Runtime/getRuntime) (last @hooks))
         (finally
+          (reset! flag false)
           (swap! hooks pop))))
     (testing "inducer invocation"
       (try
@@ -230,6 +233,7 @@
           (.join))
         (.removeShutdownHook ^Runtime (Runtime/getRuntime) (last @hooks))
         (finally
+          (reset! flag false)
           (swap! hooks pop))))))
 
 
