@@ -59,8 +59,9 @@
                       {:parser kputil/any->edn}]
   cfg-launcher       ["bract.core.launcher"      fn?     "Fully qualified launcher fn name"
                       {:parser kputil/str->var->deref}]
-  cfg-drain-timeout  ["bract.core.drain.timeout" kputil/duration? "Workload drain timeout" {:parser kputil/any->duration
-                                                                                            :default [10000 :millis]}])
+  cfg-drain-timeout  ["bract.core.drain.timeout" kputil/duration? "Workload drain timeout"
+                      {:parser kputil/any->duration
+                       :default (kputil/any->duration "default for bract.core.drain.timeout" [10000 :millis])}])
 
 
 ;; ----- utility fns -----
