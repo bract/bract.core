@@ -18,9 +18,10 @@
 
 ## [WIP] 0.4.0 / 2017-July-??
 
-- [TODO] Upgrade Keypin dependency to version `0.7.0`
-  - [TODO] Seamless 'duration' expression
-  - [TODO] Restrict context file reading to EDN only
+- Upgrade Keypin dependency to version `0.7.0`
+  - [TODO] Use the Keypin 0.7.0 GA version
+  - Seamless 'duration' expression
+  - Restrict context file reading to EDN only
 - [BREAKING CHANGE] Rename `bract.core.config` namespace to `bract.core.keydef`
 - Add `read-context` inducer to read/merge-into context from a file
   - Context-key `:bract.core/context-file` to optionally specify a file to merge context from

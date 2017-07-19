@@ -11,6 +11,7 @@
   (:require
     [clojure.test :refer :all]
     [keypin.type       :as kptype]
+    [keypin.util       :as kputil]
     [bract.core.keydef :as kdef]))
 
 
@@ -38,18 +39,18 @@
       (is (vector?                        (kdef/ctx-inducers       good-context)))
       (is (= true                         (kdef/ctx-launch?        good-context)))
       (is (fn?                            (kdef/ctx-stopper        good-context)))
-      (is (kdef/atom?                     (kdef/ctx-shutdown-flag  good-context)))
-      (is (kdef/atom?                     (kdef/ctx-shutdown-hooks good-context)))))
+      (is (kputil/atom?                   (kdef/ctx-shutdown-flag  good-context)))
+      (is (kputil/atom?                   (kdef/ctx-shutdown-hooks good-context)))))
   (testing "default values"
-    (is (false?     (kdef/ctx-verbose?       {})))
-    (is (= []       (kdef/ctx-config-files   {})))
-    (is (false?     (kdef/ctx-exit?          {})))
-    (is (= []       (kdef/ctx-deinit         {})))
-    (is (false?     (kdef/ctx-launch?        {})))
-    (is (kdef/atom? (kdef/ctx-shutdown-flag  {})))
-    (is (false?    @(kdef/ctx-shutdown-flag  {})))
-    (is (kdef/atom? (kdef/ctx-shutdown-hooks {})))
-    (is (= []      @(kdef/ctx-shutdown-hooks {}))))
+    (is (false?       (kdef/ctx-verbose?       {})))
+    (is (= []         (kdef/ctx-config-files   {})))
+    (is (false?       (kdef/ctx-exit?          {})))
+    (is (= []         (kdef/ctx-deinit         {})))
+    (is (false?       (kdef/ctx-launch?        {})))
+    (is (kputil/atom? (kdef/ctx-shutdown-flag  {})))
+    (is (false?      @(kdef/ctx-shutdown-flag  {})))
+    (is (kputil/atom? (kdef/ctx-shutdown-hooks {})))
+    (is (= []        @(kdef/ctx-shutdown-hooks {}))))
   (testing "missing values"
     (is (thrown? IllegalArgumentException (kdef/ctx-cli-args  {})))
     (is (thrown? IllegalArgumentException (kdef/ctx-config    {})))
@@ -94,9 +95,9 @@
                           "bract.core.launcher"      "bract.core.inducer/apply-inducer"
                           "bract.core.drain.timeout" "5 seconds"}]]
       (is (= ["foo.bar.baz.qux/fred"
-              "mary.had.a.little/lamb"] (kdef/cfg-inducers good-config)))
-      (is (= ["foo" "bar"]              (kdef/cfg-exports good-config)))
-      (is (some?                        (kdef/cfg-launcher good-config)))
+              "mary.had.a.little/lamb"] (kdef/cfg-inducers      good-config)))
+      (is (= ["foo" "bar"]              (kdef/cfg-exports       good-config)))
+      (is (some?                        (kdef/cfg-launcher      good-config)))
       (is (some?                        (kdef/cfg-drain-timeout good-config)))))
   (testing "default values"
     (is (= 10000 (kptype/millis (kdef/cfg-drain-timeout {})))))

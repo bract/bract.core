@@ -24,9 +24,6 @@
     [keypin ConfigIO PropertyConfigIO]))
 
 
-(defn atom? [x] (instance? clojure.lang.Atom x))
-
-
 (keypin/defkey  ; context keys
   ctx-verbose?       [:bract.core/verbose? kputil/bool?  "Verbose initialization?" {:parser  kputil/any->bool
                                                                                     :default false
@@ -48,8 +45,8 @@
   ctx-launch?        [:bract.core/launch?  kputil/bool?  "Whether invoke launcher fn" {:default false}]
   ctx-stopper        [:bract.core/stopper        fn?     "Function (fn []) to stop the started application"
                       {:default #(echo/echo "Application stopper is not configured, skipping stop.")}]
-  ctx-shutdown-flag  [:bract.core/shutdown-flag  atom?   "Atom: true if shutdown is initiated"  {:default (atom false)}]
-  ctx-shutdown-hooks [:bract.core/shutdown-hooks atom?   "Atom: Threads added as shutdown hook" {:default (atom [])}])
+  ctx-shutdown-flag  [:bract.core/shutdown-flag  kputil/atom? "Atom: Shutdown initiated?"      {:default (atom false)}]
+  ctx-shutdown-hooks [:bract.core/shutdown-hooks kputil/atom? "Atom: Added shutdown hook threads" {:default (atom [])}])
 
 
 (keypin/defkey  ; config keys
@@ -61,7 +58,7 @@
                       {:parser kputil/str->var->deref}]
   cfg-drain-timeout  ["bract.core.drain.timeout" kputil/duration? "Workload drain timeout"
                       {:parser kputil/any->duration
-                       :default (kputil/any->duration "default for bract.core.drain.timeout" [10000 :millis])}])
+                       :default [10000 :millis]}])
 
 
 ;; ----- utility fns -----
@@ -70,9 +67,12 @@
 (defn resolve-context
   "Given a context filename, read and resolve as a map and merge into the current context."
   [context context-filename]
-  (let [keypin-opts {:parent-key   "parent.context.filenames"
-                     :info-logger  #(echo/echo "[context] [keypin] [info]" %)
-                     :error-logger #(echo/echo "[context] [keypin] [error]" %)}]
+  (let [keypin-logger (kputil/make-logger
+                        #(echo/echo "[context] [keypin] [info]" %)
+                        #(echo/echo "[context] [keypin] [error]" %))
+        keypin-opts   {:parent-key     "parent.context.filenames"
+                       :logger         keypin-logger
+                       :config-readers [keypin/edn-file-io]}]
     (as-> [context-filename] <>
       (keypin/read-config <> (assoc keypin-opts
                                :realize? false)) ; read, but do not realize (i.e. evaluate variables)
@@ -85,9 +85,10 @@
 (defn resolve-config
   "Given a collection of config filenames, read and resolve config as a map and return it."
   [context config-filenames]
-  (let [keypin-opts {:parent-key   "parent.config.filenames"
-                     :info-logger  #(echo/echo "[keypin] [info]" %)
-                     :error-logger #(echo/echo "[keypin] [error]" %)}]
+  (let [keypin-opts {:parent-key "parent.config.filenames"
+                     :logger     (kputil/make-logger
+                                   #(echo/echo "[keypin] [info]" %)
+                                   #(echo/echo "[keypin] [error]" %))}]
     (if (contains? context ctx-config)
       (let [pre-config (ctx-config context)]
         (as-> config-filenames <>
