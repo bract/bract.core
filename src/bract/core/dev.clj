@@ -61,7 +61,7 @@
 ;; ----- default -----
 
 
-(def default-root-context {(key kdef/ctx-config-files) ["kdef/config.dev.edn"]
+(def default-root-context {(key kdef/ctx-config-files) ["config/config.dev.edn"]
                            (key kdef/ctx-launch?)      false})
 
 
