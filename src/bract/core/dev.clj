@@ -10,7 +10,7 @@
 (ns bract.core.dev
   "Development and test support."
   (:require
-    [bract.core.config  :as config]
+    [bract.core.keydef  :as kdef]
     [bract.core.echo    :as echo]
     [bract.core.inducer :as inducer]
     [bract.core.util    :as util])
@@ -61,8 +61,8 @@
 ;; ----- default -----
 
 
-(def default-root-context {(key config/ctx-config-files) ["config/config.dev.edn"]
-                           (key config/ctx-launch?)      false})
+(def default-root-context {(key kdef/ctx-config-files) ["kdef/config.dev.edn"]
+                           (key kdef/ctx-launch?)      false})
 
 
 (def default-root-inducers [inducer/set-verbosity
@@ -126,7 +126,7 @@
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
   (echo/with-latency-capture "Launching application"
     (-> app-context
-      (assoc (key config/ctx-launch?) true)
+      (assoc (key kdef/ctx-launch?) true)
       inducer/invoke-launcher
       record-context!)))
 
