@@ -18,7 +18,7 @@
 
 ## [WIP] 0.4.0 / 2017-July-??
 
-- Upgrade Keypin dependency to version `0.7.0`
+- Upgrade Keypin dependency to version `0.7.1`
   - Seamless 'duration' expression
   - Restrict context file reading to EDN only
 - [BREAKING CHANGE] Rename `bract.core.config` namespace to `bract.core.keydef`
