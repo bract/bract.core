@@ -16,7 +16,7 @@
   - Env key/alias should switch the config file(s)
 
 
-## [WIP] 0.4.0 / 2017-July-??
+## 0.4.0-alpha1 / 2017-July-31
 
 - Upgrade Keypin dependency to version `0.7.1`
   - Seamless 'duration' expression
