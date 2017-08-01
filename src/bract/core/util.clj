@@ -12,7 +12,7 @@
   (:require
     [clojure.string :as string])
   (:import
-    [java.io PrintWriter StringWriter]
+    [java.io PrintStream PrintWriter StringWriter]
     [java.util UUID]))
 
 
@@ -111,3 +111,21 @@
                (reify Thread$UncaughtExceptionHandler
                  (uncaughtException [_ thread ex] (f thread ex))))
     :else    (expected "function or nil" f)))
+
+
+(defn pst-when-uncaught-handler
+  "When uncaught exception handler is configured, print the stack trace."
+  ([^Throwable e]
+    (when (or (Thread/getDefaultUncaughtExceptionHandler)
+            (.getUncaughtExceptionHandler ^Thread (Thread/currentThread)))
+      (.printStackTrace e)))
+  ([^Throwable e out]
+    (when (or (Thread/getDefaultUncaughtExceptionHandler)
+            (.getUncaughtExceptionHandler ^Thread (Thread/currentThread)))
+      (cond
+        (instance? PrintStream out) (.printStackTrace e ^PrintStream out)
+        (instance? PrintWriter out) (.printStackTrace e ^PrintWriter out)
+        :otherwise (do
+                     (err-println "Invalid argument: expected java.io.PrintStream or java.io.PrintWriter but found"
+                       (pr-str (class out)) out)
+                     (expected "java.io.PrintStream or java.io.PrintWriter instance" out))))))

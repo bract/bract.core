@@ -81,9 +81,7 @@
     (echo/with-latency-capture "Initializing app in DEV mode"
       (inducer/induce inducer/apply-inducer default-root-context default-root-inducers))
     (catch Throwable e
-      (when (or (Thread/getDefaultUncaughtExceptionHandler)
-              (.getUncaughtExceptionHandler ^Thread (Thread/currentThread)))
-        (.printStackTrace e))
+      (util/pst-when-uncaught-handler e)
       (throw e))))
 
 
