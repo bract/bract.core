@@ -76,9 +76,13 @@
 (defn init
   "Initialize app in DEV mode."
   []
-  (inducer/set-verbosity default-root-context)
-  (echo/with-latency-capture "Initializing app in DEV mode"
-    (inducer/induce inducer/apply-inducer default-root-context default-root-inducers)))
+  (try
+    (inducer/set-verbosity default-root-context)
+    (echo/with-latency-capture "Initializing app in DEV mode"
+      (inducer/induce inducer/apply-inducer default-root-context default-root-inducers))
+    (catch Throwable e
+      (.printStackTrace e)
+      (throw e))))
 
 
 (defonce ^:redef init-gate nil)

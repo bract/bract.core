@@ -19,7 +19,7 @@
 ## [WIP] 0.4.0-alpha2 / 2017-August-??
 
 - Merge context from `bract-context.dev.edn` in dev mode when available
-- [TODO] Catch exception and print stack trace in dev mode (due to global uncaught handler)
+- Catch exception and print stack trace in dev mode (due to global uncaught handler)
 
 
 ## 0.4.0-alpha1 / 2017-July-31
