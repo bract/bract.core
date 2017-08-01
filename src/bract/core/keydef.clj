@@ -40,7 +40,7 @@
   ctx-exit?          [:bract.core/exit?     kputil/any?  "Whether break out of all inducer levels" {:default false}]
   ctx-cli-args       [:bract.core/cli-args       coll?   "Collection of CLI arguments"]
   ctx-config         [:bract.core/config         map?    "Application config"]
-  ctx-inducers       [:bract.core/inducers       vector? "Vector of inducer fns or their fully qualified names"]
+  ctx-inducers       [:bract.core/inducers       vector? "Vector of inducer fns or fully qualified names" {:default []}]
   ctx-deinit         [:bract.core/deinit         coll?   "Functions [(fn []) ..] to deinitialize the app" {:default []}]
   ctx-launch?        [:bract.core/launch?  kputil/bool?  "Whether invoke launcher fn" {:default false}]
   ctx-stopper        [:bract.core/stopper        fn?     "Function (fn []) to stop the started application"

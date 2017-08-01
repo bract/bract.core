@@ -43,7 +43,9 @@
       (is (kputil/atom?                   (kdef/ctx-shutdown-hooks good-context)))))
   (testing "default values"
     (is (false?       (kdef/ctx-verbose?       {})))
+    (is (nil?         (kdef/ctx-context-file   {})))
     (is (= []         (kdef/ctx-config-files   {})))
+    (is (= []         (kdef/ctx-inducers       {})))
     (is (false?       (kdef/ctx-exit?          {})))
     (is (= []         (kdef/ctx-deinit         {})))
     (is (false?       (kdef/ctx-launch?        {})))
@@ -53,8 +55,7 @@
     (is (= []        @(kdef/ctx-shutdown-hooks {}))))
   (testing "missing values"
     (is (thrown? IllegalArgumentException (kdef/ctx-cli-args  {})))
-    (is (thrown? IllegalArgumentException (kdef/ctx-config    {})))
-    (is (thrown? IllegalArgumentException (kdef/ctx-inducers  {}))))
+    (is (thrown? IllegalArgumentException (kdef/ctx-config    {}))))
   (testing "bad values"
     (let [bad-context {:bract.core/verbose?       10
                        :bract.core/context-file   10

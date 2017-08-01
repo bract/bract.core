@@ -20,6 +20,7 @@
 
 - Merge context from `bract-context.dev.edn` in dev mode when available
 - Catch exception and print stack trace in dev mode (due to global uncaught handler)
+- Key definition for context-inducers now defaults to an empty vector
 
 
 ## 0.4.0-alpha1 / 2017-July-31
