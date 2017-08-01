@@ -16,7 +16,7 @@
   - Env key/alias should switch the config file(s)
 
 
-## [WIP] 0.4.0-alpha2 / 2017-August-??
+## 0.4.0-alpha2 / 2017-August-01
 
 - Merge context from `bract-context.dev.edn` in dev mode when available
 - Catch exception and print stack trace in dev mode (due to uncaught handler)
