@@ -16,6 +16,12 @@
   - Env key/alias should switch the config file(s)
 
 
+## [WIP] 0.4.0-alpha2 / 2017-August-??
+
+- [TODO] Merge context from `bract/context.dev.edn` in dev mode when available
+- [TODO] Catch exception and print stack trace in dev mode (due to global uncaught handler)
+
+
 ## 0.4.0-alpha1 / 2017-July-31
 
 - Upgrade Keypin dependency to version `0.7.1`

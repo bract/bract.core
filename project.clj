@@ -1,4 +1,4 @@
-(defproject bract/bract.core "0.4.0-alpha1"
+(defproject bract/bract.core "0.4.0-alpha2-SNAPSHOT"
   :description "Multi-purpose, modular Clojure application initialization framework"
   :url "https://github.com/bract/bract.core"
   :license {:name "Eclipse Public License"
