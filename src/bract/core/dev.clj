@@ -61,11 +61,14 @@
 ;; ----- default -----
 
 
-(def default-root-context {(key kdef/ctx-config-files) ["config/config.dev.edn"]
+(def default-root-context {(key kdef/ctx-context-file) "bract-context.dev.edn"
+                           (key kdef/ctx-config-files) ["config/config.dev.edn"]
                            (key kdef/ctx-launch?)      false})
 
 
 (def default-root-inducers [inducer/set-verbosity
+                            inducer/read-context
+                            inducer/run-context-inducers
                             inducer/read-config
                             inducer/run-config-inducers])
 
