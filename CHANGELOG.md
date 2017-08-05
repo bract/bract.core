@@ -16,6 +16,11 @@
   - Env key/alias should switch the config file(s)
 
 
+## [WIP] 0.4.0 / 2017-August-??
+
+- [TODO: BREAKING CHANGE] Remove inducer `bract.core.inducer/config-hook`
+
+
 ## 0.4.0-alpha2 / 2017-August-01
 
 - Merge context from `bract-context.dev.edn` in dev mode when available
