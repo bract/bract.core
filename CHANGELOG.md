@@ -16,7 +16,7 @@
   - Env key/alias should switch the config file(s)
 
 
-## [WIP] 0.4.0 / 2017-August-??
+## 0.4.0 / 2017-August-05
 
 - [BREAKING CHANGE] Remove inducer `bract.core.inducer/config-hook`
 
