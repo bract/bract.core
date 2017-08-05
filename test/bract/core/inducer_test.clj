@@ -11,10 +11,11 @@
   (:require
     [clojure.edn     :as edn]
     [clojure.java.io :as io]
-    [clojure.test :refer :all]
-    [bract.core.config  :as config]
-    [bract.core.inducer :as inducer])
+    [clojure.test    :refer :all]
+    [bract.core.inducer :as inducer]
+    [bract.core.util    :as util])
   (:import
+    [java.util.concurrent Executor Executors ThreadPoolExecutor]
     [bract.core Echo]))
 
 
@@ -59,6 +60,21 @@
       (is (true? (Echo/isVerbose)) "Verbosity should be enabled after configuring it as true")
       (finally
         (Echo/setVerbose verbosity?)))))
+
+
+(deftest test-read-context
+  (testing "context file not specified"
+    (let [context {:foo :bar}]
+      (is (= context
+            (inducer/read-context context)))))
+  (testing "specified context file"
+    (let [context {:bract.core/context-file "sample.edn"}]
+      (is (= (merge context (-> "sample.edn" io/resource slurp edn/read-string))
+            (inducer/read-context context)))))
+  (testing "specified, but absent context file"
+    (let [context {:bract.core/context-file "example.edn"}]
+      (is (= context
+            (inducer/read-context context))))))
 
 
 (deftest test-read-config
@@ -181,7 +197,7 @@
 
 (deftest test-deinit
   (vreset! volatile-holder 0)
-  (inducer/deinit {:bract.core/deinit (fn [] (vreset! volatile-holder 10))})
+  (inducer/invoke-deinit {:bract.core/deinit [(fn [] (vreset! volatile-holder 10))]})
   (is (= 10 @volatile-holder)))
 
 
@@ -191,3 +207,50 @@
   (is (zero? @volatile-holder))
   (inducer/invoke-stopper {:bract.core/stopper (fn [] (vswap! volatile-holder (fn [^long x] (inc x))))})
   (is (= 1 @volatile-holder)))
+
+
+(deftest test-add-shutdown-hook
+  (let [flag  (atom false)
+        hooks (atom [])
+        context {:bract.core/shutdown-flag  flag
+                 :bract.core/shutdown-hooks hooks
+                 :bract.core/config {"bract.core.drain.timeout" [1 :seconds]}}]
+    (testing "default invocation"
+      (try
+        (inducer/add-shutdown-hook context)
+        (doto ^Thread (last @hooks)
+          (.start)
+          (.join))
+        (.removeShutdownHook ^Runtime (Runtime/getRuntime) (last @hooks))
+        (finally
+          (reset! flag false)
+          (swap! hooks pop))))
+    (testing "inducer invocation"
+      (try
+        (inducer/add-shutdown-hook context 'bract.core.inducer/invoke-stopper)
+        (doto ^Thread (last @hooks)
+          (.start)
+          (.join))
+        (.removeShutdownHook ^Runtime (Runtime/getRuntime) (last @hooks))
+        (finally
+          (reset! flag false)
+          (swap! hooks pop))))))
+
+
+(deftest test-default-exception-handler
+  (let [^Executor pool (Executors/newCachedThreadPool)]
+    (try
+      (testing "default exception handler"
+        (inducer/set-default-exception-handler {})
+        (.execute pool #(Integer/parseInt "first test")))
+      (testing "custom exception handler"
+        (vreset! volatile-holder 0)
+        (inducer/set-default-exception-handler {} (fn [t ^Throwable ex]
+                                                    (.printStackTrace ex)
+                                                    (vswap! volatile-holder (fn [^long x] (inc x)))))
+        (.execute pool #(Integer/parseInt "second test"))
+        (while (zero? ^long @volatile-holder)
+          (Thread/yield)))
+      (finally
+        (.shutdown ^ThreadPoolExecutor pool)
+        (util/set-default-uncaught-exception-handler nil)))))

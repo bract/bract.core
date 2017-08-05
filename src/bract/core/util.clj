@@ -12,6 +12,7 @@
   (:require
     [clojure.string :as string])
   (:import
+    [java.io PrintStream PrintWriter StringWriter]
     [java.util UUID]))
 
 
@@ -73,3 +74,58 @@
   ^String
   []
   (.toString (UUID/randomUUID)))
+
+
+(defn stack-trace-str
+  "Given a throwable (generally an exception) return the stack trace string as it would be printed on a console."
+  ^String
+  [^Throwable e]
+  (let [^StringWriter sw (StringWriter.)]
+    (.printStackTrace e (PrintWriter. sw))
+    (.toString sw)))
+
+
+(defn now-millis
+  "Return current epochal time in milliseconds."
+  (^long []
+    (System/currentTimeMillis))
+  (^long [^long start-millis]
+    (unchecked-subtract (System/currentTimeMillis) start-millis)))
+
+
+(defn sleep-millis
+  "Sleep for specified number of milliseconds."
+  [^long millis]
+  (try
+    (Thread/sleep millis)
+    (catch InterruptedException e
+      (.interrupt (Thread/currentThread)))))
+
+
+(defn set-default-uncaught-exception-handler
+  "Set specified function (fn [thread throwable]) as default uncaught exception handler."
+  [f]
+  (cond
+    (nil? f) (Thread/setDefaultUncaughtExceptionHandler nil)
+    (fn? f)  (Thread/setDefaultUncaughtExceptionHandler
+               (reify Thread$UncaughtExceptionHandler
+                 (uncaughtException [_ thread ex] (f thread ex))))
+    :else    (expected "function or nil" f)))
+
+
+(defn pst-when-uncaught-handler
+  "When uncaught exception handler is configured, print the stack trace."
+  ([^Throwable e]
+    (when (or (Thread/getDefaultUncaughtExceptionHandler)
+            (.getUncaughtExceptionHandler ^Thread (Thread/currentThread)))
+      (.printStackTrace e)))
+  ([^Throwable e out]
+    (when (or (Thread/getDefaultUncaughtExceptionHandler)
+            (.getUncaughtExceptionHandler ^Thread (Thread/currentThread)))
+      (cond
+        (instance? PrintStream out) (.printStackTrace e ^PrintStream out)
+        (instance? PrintWriter out) (.printStackTrace e ^PrintWriter out)
+        :otherwise (do
+                     (err-println "Invalid argument: expected java.io.PrintStream or java.io.PrintWriter but found"
+                       (pr-str (class out)) out)
+                     (expected "java.io.PrintStream or java.io.PrintWriter instance" out))))))

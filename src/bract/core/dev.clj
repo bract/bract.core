@@ -10,7 +10,7 @@
 (ns bract.core.dev
   "Development and test support."
   (:require
-    [bract.core.config  :as config]
+    [bract.core.keydef  :as kdef]
     [bract.core.echo    :as echo]
     [bract.core.inducer :as inducer]
     [bract.core.util    :as util])
@@ -61,11 +61,14 @@
 ;; ----- default -----
 
 
-(def default-root-context {(key config/ctx-config-files) ["config/config.dev.edn"]
-                           (key config/ctx-launch?)      false})
+(def default-root-context {(key kdef/ctx-context-file) "bract-context.dev.edn"
+                           (key kdef/ctx-config-files) ["config/config.dev.edn"]
+                           (key kdef/ctx-launch?)      false})
 
 
 (def default-root-inducers [inducer/set-verbosity
+                            inducer/read-context
+                            inducer/run-context-inducers
                             inducer/read-config
                             inducer/run-config-inducers])
 
@@ -73,9 +76,13 @@
 (defn init
   "Initialize app in DEV mode."
   []
-  (inducer/set-verbosity default-root-context)
-  (echo/with-latency-capture "Initializing app in DEV mode"
-    (inducer/induce inducer/apply-inducer default-root-context default-root-inducers)))
+  (try
+    (inducer/set-verbosity default-root-context)
+    (echo/with-latency-capture "Initializing app in DEV mode"
+      (inducer/induce inducer/apply-inducer default-root-context default-root-inducers))
+    (catch Throwable e
+      (util/pst-when-uncaught-handler e)
+      (throw e))))
 
 
 (defonce ^:redef init-gate nil)
@@ -116,7 +123,7 @@
   (ensure-init)
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
   (echo/with-latency-capture "De-initializing application"
-    (inducer/deinit app-context)))
+    (inducer/invoke-deinit app-context)))
 
 
 (defn start
@@ -126,7 +133,7 @@
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
   (echo/with-latency-capture "Launching application"
     (-> app-context
-      (assoc (key config/ctx-launch?) true)
+      (assoc (key kdef/ctx-launch?) true)
       inducer/invoke-launcher
       record-context!)))
 
