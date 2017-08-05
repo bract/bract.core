@@ -108,8 +108,6 @@
     (is (thrown? IllegalArgumentException (kdef/cfg-launcher {}))))
   (testing "missing/bad config entries"
     (let [bad-context {"bract.core.inducers"     {:foo :bar}
-                       "bract.core.context-hook" 10
-                       "bract.core.config-hook"  15
                        "bract.core.exports"      20
                        "bract.core.launcher"     false}]
       (is (thrown? IllegalArgumentException (kdef/cfg-inducers bad-context)))
