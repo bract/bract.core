@@ -18,7 +18,7 @@
 
 ## [WIP] 0.4.0 / 2017-August-??
 
-- [TODO: BREAKING CHANGE] Remove inducer `bract.core.inducer/config-hook`
+- [BREAKING CHANGE] Remove inducer `bract.core.inducer/config-hook`
 
 
 ## 0.4.0-alpha2 / 2017-August-01

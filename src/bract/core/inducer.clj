@@ -131,16 +131,6 @@
     context))
 
 
-(defn config-hook
-  "Given context with config, invoke the config-hook fn with config as argument."
-  [context function]
-  (let [config (kdef/ctx-config context)
-        f (type/ifunc function)]
-    (util/expected fn? (format "%s to be a function" function) f)
-    (f config)
-    context))
-
-
 (defn export-as-sysprops
   "Given context with config, read the value of config key \"bract.core.exports\" as a vector of string config keys and
   export the key-value pairs for those config keys as system properties."

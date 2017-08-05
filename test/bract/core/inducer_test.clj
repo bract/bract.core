@@ -150,19 +150,6 @@
       (is (= {:foo 10} @volatile-holder)))))
 
 
-(deftest test-config-hook
-  (let [config {"bract.core.config-hook" "bract.core.inducer-test/update-volatile-holder"}
-        context {:bract.core/config config}]
-    (testing "config-hook, fqvn"
-      (vreset! volatile-holder nil)
-      (inducer/config-hook context "bract.core.inducer-test/update-volatile-holder")
-      (is (= config @volatile-holder)))
-    (testing "config-hook, fn"
-      (vreset! volatile-holder nil)
-      (inducer/config-hook context update-volatile-holder)
-      (is (= config @volatile-holder)))))
-
-
 (deftest test-export-as-sysprops
   (let [context {:bract.core/config {"bract.core.exports" ["foo"
                                                            "bar"]
