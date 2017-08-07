@@ -28,7 +28,7 @@
                         :bract.core/deinit         '[foo bar]
                         :bract.core/launch?        true
                         :bract.core/stopper        (fn [] :stopped)
-                        :bract.core/shutdown-flag  (atom false)
+                        :bract.core/shutdown-flag  (volatile! false)
                         :bract.core/shutdown-hooks (atom [(fn [] :hook1)])}]
       (is (false?                         (kdef/ctx-verbose?       good-context)))
       (is (= "foo.edn"                    (kdef/ctx-context-file   good-context)))
@@ -39,7 +39,7 @@
       (is (vector?                        (kdef/ctx-inducers       good-context)))
       (is (= true                         (kdef/ctx-launch?        good-context)))
       (is (fn?                            (kdef/ctx-stopper        good-context)))
-      (is (kputil/atom?                   (kdef/ctx-shutdown-flag  good-context)))
+      (is (volatile?                      (kdef/ctx-shutdown-flag  good-context)))
       (is (kputil/atom?                   (kdef/ctx-shutdown-hooks good-context)))))
   (testing "default values"
     (is (false?       (kdef/ctx-verbose?       {})))
@@ -49,7 +49,7 @@
     (is (false?       (kdef/ctx-exit?          {})))
     (is (= []         (kdef/ctx-deinit         {})))
     (is (false?       (kdef/ctx-launch?        {})))
-    (is (kputil/atom? (kdef/ctx-shutdown-flag  {})))
+    (is (volatile?    (kdef/ctx-shutdown-flag  {})))
     (is (false?      @(kdef/ctx-shutdown-flag  {})))
     (is (kputil/atom? (kdef/ctx-shutdown-hooks {})))
     (is (= []        @(kdef/ctx-shutdown-hooks {}))))

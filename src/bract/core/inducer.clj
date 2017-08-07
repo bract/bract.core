@@ -211,21 +211,20 @@
   ([context]
     (add-shutdown-hook context invoke-deinit))
   ([context inducer]
-    (let [flag    (kdef/ctx-shutdown-flag  context)  ; atom of vector
-          hooks   (kdef/ctx-shutdown-hooks context)  ; atom of boolean
+    (let [flag    (kdef/ctx-shutdown-flag  context)  ; volatile of boolean
+          hooks   (kdef/ctx-shutdown-hooks context)  ; atom of vector
           timeout (-> (kdef/ctx-config context)
                     kdef/cfg-drain-timeout
                     kptype/millis)                   ; timeout in millis
           thread  (Thread. (fn []
                              (echo/echo "JVM received a TERMINATE request, reached shutdown-hook")
                              ;; set the flag
-                             (let []
-                               (when flag
-                                 (swap! flag (fn [fval]
-                                               (echo/echo (if fval
-                                                            "Shutdown flag is already set to true, leaving as is"
-                                                            "Shutdown flag was false, now set to true"))
-                                               true))))
+                             (when flag
+                               (vswap! flag (fn [fval]
+                                              (echo/echo (if fval
+                                                           "Shutdown flag is already set to true, leaving as is"
+                                                           "Shutdown flag was false, now set to true"))
+                                              true)))
                              ;; wait for timeout
                              (let [start-time-millis (util/now-millis)]
                                (while (< (util/now-millis start-time-millis) ^long timeout)

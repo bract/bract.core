@@ -197,7 +197,7 @@
 
 
 (deftest test-add-shutdown-hook
-  (let [flag  (atom false)
+  (let [flag  (volatile! false)
         hooks (atom [])
         context {:bract.core/shutdown-flag  flag
                  :bract.core/shutdown-hooks hooks
@@ -210,7 +210,7 @@
           (.join))
         (.removeShutdownHook ^Runtime (Runtime/getRuntime) (last @hooks))
         (finally
-          (reset! flag false)
+          (vreset! flag false)
           (swap! hooks pop))))
     (testing "inducer invocation"
       (try
@@ -220,7 +220,7 @@
           (.join))
         (.removeShutdownHook ^Runtime (Runtime/getRuntime) (last @hooks))
         (finally
-          (reset! flag false)
+          (vreset! flag false)
           (swap! hooks pop))))))
 
 

@@ -17,7 +17,7 @@
 
 ## [WIP] 0.4.1 / 2017-August-??
 
-- [TODO] Configure shutdown-state `keydef/ctx-shutdown-flag` to be a volatile instead of atom
+- Make `keydef/ctx-shutdown-flag :bract.core/shutdown-flag` volatile instead of atom
 - [TODO] Fix reverse order of reporting remaining drain time
 
 
