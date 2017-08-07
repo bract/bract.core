@@ -2,18 +2,23 @@
 
 ## Ideas and TODO
 
+- [TODO] Utility functions to report runtime information
+- [TODO - BREAKING CHANGE] Use parent key `parent.filenames` for both context and config
 - [TODO] Dev triggers should accept an optional param
   - Init a sub-system
   - De-init a sub-system
   - Launch a sub-system
   - etc.
 - [TODO] Support for parameterized (or prefixed/qualified) config
-- [TODO] Support for parsing `project.clj`
-  - [TODO] Discover and provide application version
-  - [TODO] Discover and provide Bract (core and modules) version
 - [TODO - Dev] Several tasks should accept an optional env key, e.g. `(start :qa)` that looks up env from context
   - Requires env key/alias definition
   - Env key/alias should switch the config file(s)
+
+
+## [WIP] 0.4.1 / 2017-August-??
+
+- [TODO] Configure shutdown-state `keydef/ctx-shutdown-flag` to be a volatile instead of atom
+- [TODO] Fix reverse order of reporting remaining drain time
 
 
 ## 0.4.0 / 2017-August-05
