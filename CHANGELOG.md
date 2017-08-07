@@ -18,7 +18,7 @@
 ## [WIP] 0.4.1 / 2017-August-??
 
 - Make `keydef/ctx-shutdown-flag :bract.core/shutdown-flag` volatile instead of atom
-- [TODO] Fix reverse order of reporting remaining drain time
+- Fix reverse order of reporting remaining drain time
 
 
 ## 0.4.0 / 2017-August-05

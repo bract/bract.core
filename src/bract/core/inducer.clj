@@ -226,11 +226,13 @@
                                                            "Shutdown flag was false, now set to true"))
                                               true)))
                              ;; wait for timeout
-                             (let [start-time-millis (util/now-millis)]
-                               (while (< (util/now-millis start-time-millis) ^long timeout)
-                                 (util/sleep-millis 500)
-                                 (echo/echof "Waiting for current workload to drain, time remaing: %d ms"
-                                   (util/now-millis start-time-millis))))
+                             (let [until-time-millis (unchecked-add (util/now-millis) ^long timeout)]
+                               (while (< (util/now-millis) until-time-millis)
+                                 (let [nap-millis (unchecked-subtract until-time-millis (util/now-millis))]
+                                   (when (pos? nap-millis)
+                                     (echo/echof "Waiting for current workload to drain, time remaing: %d ms"
+                                       nap-millis)
+                                     (util/sleep-millis (min 500 nap-millis))))))
                              ;; invoke shutdown-hook inducer
                              (echo/echo "Workload draining timed out, executing shutdown-hook inducer now")
                              (apply-inducer context inducer)))]
