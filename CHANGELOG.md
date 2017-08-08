@@ -15,9 +15,9 @@
   - Env key/alias should switch the config file(s)
 
 
-## [WIP] 0.4.1 / 2017-August-??
+## 0.4.1 / 2017-August-08
 
-- Make `keydef/ctx-shutdown-flag :bract.core/shutdown-flag` volatile instead of atom
+- Make `bract.core.keydef/ctx-shutdown-flag :bract.core/shutdown-flag` volatile instead of atom
 - Fix reverse order of reporting remaining drain time
 
 
