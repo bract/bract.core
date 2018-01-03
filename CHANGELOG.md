@@ -2,17 +2,32 @@
 
 ## Ideas and TODO
 
-- [TODO] Utility functions to report runtime information
-- [TODO - BREAKING CHANGE] Use parent key `parent.filenames` for both context and config
 - [TODO] Dev triggers should accept an optional param
   - Init a sub-system
   - De-init a sub-system
   - Launch a sub-system
   - etc.
 - [TODO] Support for parameterized (or prefixed/qualified) config
+- [TODO] Support for config substitution/reference, via Keypin `0.8.0`
+- [TODO] Function to transform every config key, based on `:bract.core/ctx-config-key-xf {:default identity}`
+  - Helpful to auto-stringify keys in EDN config files
 - [TODO - Dev] Several tasks should accept an optional env key, e.g. `(start :qa)` that looks up env from context
   - Requires env key/alias definition
   - Env key/alias should switch the config file(s)
+- [TODO] Metaphor web service framework
+  - https://zalando.github.io/restful-api-guidelines/
+  - OWASP Top-10 security guidelines
+
+
+## [WIP] 0.5.0 / 2018-January-??
+
+- [TODO - BREAKING CHANGE] Use parent key `parent.filenames` for both context and config
+- [TODO] Shutdown hooks should be invokable at any point
+  - By default the hook adds invocation of `deinit` tasks
+  - Doesn't that mean the deinit value should be `(atom [tasks])` instead of `[tasks]`?
+- [TODO] Do not return context from `bract.core.dev` functions
+- [TODO] Add utility function to report system info
+- [TODO] Echo for invoke-launcher should include launcher name
 
 
 ## 0.4.1 / 2017-August-08
