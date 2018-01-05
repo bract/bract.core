@@ -13,7 +13,8 @@
     [clojure.string :as string])
   (:import
     [java.io PrintStream PrintWriter StringWriter]
-    [java.util UUID]))
+    [java.util UUID]
+    [clojure.lang Named]))
 
 
 (defn expected
@@ -61,19 +62,23 @@
        ~@body)))
 
 
-(defn as-vec
-  "Turn argument into a vector if it is a collection, else wrap the argument into a single-item vector."
-  [x]
-  (if (coll? x)
-    (vec x)
-    [x]))
-
-
-(defn uuid-str
-  "Return a random UUID string."
-  ^String
-  []
-  (.toString (UUID/randomUUID)))
+(defn clean-uuid
+  "Generate or convert UUID into a sanitized, lower-case form."
+  (^String []
+   (clean-uuid (.toString (java.util.UUID/randomUUID))))
+  (^String [^String uuid]
+   (if (nil? uuid)
+     nil
+     (let [n (.length uuid)
+           ^StringBuilder b (StringBuilder. n)]
+       (loop [i 0]
+         (if (>= i n)
+           (.toString b)
+           (let [c (.charAt uuid i)]
+             (when (Character/isLetterOrDigit c) ; ignore non-letter and non-numeric
+               ;; make lower-case before adding
+               (.append b (Character/toLowerCase c)))
+             (recur (unchecked-inc i)))))))))
 
 
 (defn stack-trace-str
@@ -129,3 +134,56 @@
                      (err-println "Invalid argument: expected java.io.PrintStream or java.io.PrintWriter but found"
                        (pr-str (class out)) out)
                      (expected "java.io.PrintStream or java.io.PrintWriter instance" out))))))
+
+
+;; conversion
+
+
+(defn as-vec
+  "Turn argument into a vector if it is a collection, else wrap the argument into a single-item vector."
+  [x]
+  (if (coll? x)
+    (vec x)
+    [x]))
+
+
+(defn as-str
+  "Turn anything into string."
+  [x]
+  (cond
+    (instance? Named x) (let [right (name x)]
+                          (if-let [left (namespace x)]
+                            (str left \/ right)
+                            right))
+    (string? x)         x
+    :otherwise          (str x)))
+
+
+(let [;; conversion constants
+        ms-to-s 1000
+        ms-to-m (* 1000 60)
+        ms-to-h (* 1000 60 60)
+        ms-to-d (* 1000 60 60 24)]
+  (defn millis->str
+    "Convert milliseconds to human readable string."
+    [^long millis]
+    (cond
+      (> millis ms-to-d) (str (quot millis ms-to-d) "d " (millis->str (rem millis ms-to-d)))
+      (> millis ms-to-h) (str (quot millis ms-to-h) "h " (millis->str (rem millis ms-to-h)))
+      (> millis ms-to-m) (str (quot millis ms-to-m) "m " (millis->str (rem millis ms-to-m)))
+      (> millis ms-to-s) (str (quot millis ms-to-s) "s " (millis->str (rem millis ms-to-s)))
+      :otherwise         (str millis "ms"))))
+
+
+(let [;; conversion constants
+        b-to-kb 1024
+        b-to-mb (* 1024 1024)
+        b-to-gb (* 1024 1024 1024)]
+  (defn nbytes->str
+    "Convert bytes-count to human readable string."
+    [^long n]
+    (cond
+      (> n b-to-gb) (format "%.2f GBytes" (double (/ n b-to-gb)))
+      (> n b-to-mb) (format "%.2f MBytes" (double (/ n b-to-mb)))
+      (> n b-to-kb) (format "%.2f KBytes" (double (/ n b-to-kb)))
+      :otherwise (str n " Bytes"))))
