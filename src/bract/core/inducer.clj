@@ -168,9 +168,10 @@
   name and invoke it as (fn [context]) when the context key :bract.core/launch? has the value true."
   [context]
   (if (kdef/ctx-launch? context)
-    (-> (kdef/ctx-config context)
-      kdef/cfg-launcher
-      (apply [context]))
+    (let [launcher (-> (kdef/ctx-config context)
+                     kdef/cfg-launcher)]
+      (echo/echo (str "Launcher name: " launcher))
+      (launcher context))
     (do
       (echo/echo "Launch not enabled, skipping launch.")
       context)))

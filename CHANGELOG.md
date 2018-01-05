@@ -21,12 +21,12 @@
 
 ## [WIP] 0.5.0 / 2018-January-??
 
-- [TODO - BREAKING CHANGE] Use parent key `parent.filenames` for both context and config
 - [TODO] Shutdown hooks should be invokable at any point
   - By default the hook adds invocation of `deinit` tasks
   - Doesn't that mean the deinit value should be `(atom [tasks])` instead of `[tasks]`?
 - [TODO] Do not return context from `bract.core.dev` functions
-- [TODO] Echo for invoke-launcher should include launcher name
+- Echo
+  - Echo for invoke-launcher should include launcher name
 - Utility
   - [BREAKING CHANGE] Drop `bract.core.util/uuid-str` in favour of `bract.core.util/clean-uuid`
   - Add utility function `bract.core.util.runtime/sysinfo` to report system info
