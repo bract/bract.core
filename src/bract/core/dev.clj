@@ -80,6 +80,7 @@
     (inducer/set-verbosity default-root-context)
     (echo/with-latency-capture "Initializing app in DEV mode"
       (inducer/induce inducer/apply-inducer default-root-context default-root-inducers))
+    nil
     (catch Throwable e
       (util/pst-when-uncaught-handler e)
       (throw e))))
@@ -123,7 +124,8 @@
   (ensure-init)
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
   (echo/with-latency-capture "De-initializing application"
-    (inducer/invoke-deinit app-context)))
+    (inducer/invoke-deinit app-context))
+  nil)
 
 
 (defn start
@@ -135,7 +137,8 @@
     (-> app-context
       (assoc (key kdef/ctx-launch?) true)
       inducer/invoke-launcher
-      record-context!)))
+      record-context!))
+  nil)
 
 
 (defn stop
@@ -144,4 +147,5 @@
   (ensure-init)
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
   (echo/with-latency-capture "Stopping the started application"
-    (inducer/invoke-stopper app-context)))
+    (inducer/invoke-stopper app-context))
+  nil)

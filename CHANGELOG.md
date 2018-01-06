@@ -24,7 +24,8 @@
 - [TODO] Shutdown hooks should be invokable at any point
   - By default the hook adds invocation of `deinit` tasks
   - Doesn't that mean the deinit value should be `(atom [tasks])` instead of `[tasks]`?
-- [TODO] Do not return context from `bract.core.dev` functions
+- Do not return context from some `bract.core.dev` functions (for REPL usability)
+  - `init`, `deinit`, `start`, `stop`
 - Echo
   - Make inducer `invoke-launcher` echo the launcher name
 - Utility
