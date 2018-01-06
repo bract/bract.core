@@ -170,7 +170,7 @@
   (if (kdef/ctx-launch? context)
     (let [launcher (-> (kdef/ctx-config context)
                      kdef/cfg-launcher)]
-      (echo/echo (str "Launching with " launcher))
+      (echo/echo (str "Launcher name: " launcher))
       (launcher context))
     (do
       (echo/echo "Launch not enabled, skipping launch.")
