@@ -227,7 +227,10 @@
                                                            "Shutdown flag was false, now set to true"))
                                               true)))
                              ;; wait for timeout
-                             (let [until-time-millis (unchecked-add (util/now-millis) ^long timeout)]
+                             (let [last-alive-millis (long @(kdef/ctx-alive-tstamp context))
+                                   until-time-millis (if (pos? last-alive-millis)
+                                                       (unchecked-add last-alive-millis ^long timeout)
+                                                       (unchecked-add (util/now-millis) ^long timeout))]
                                (while (< (util/now-millis) until-time-millis)
                                  (let [nap-millis (unchecked-subtract until-time-millis (util/now-millis))]
                                    (when (pos? nap-millis)

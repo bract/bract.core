@@ -14,7 +14,8 @@
   (:import
     [java.io PrintStream PrintWriter StringWriter]
     [java.util UUID]
-    [clojure.lang Named]))
+    [java.util.concurrent ThreadLocalRandom]
+    [clojure.lang IDeref IFn Named]))
 
 
 (defn expected
@@ -105,6 +106,24 @@
     (Thread/sleep millis)
     (catch InterruptedException e
       (.interrupt (Thread/currentThread)))))
+
+
+(defn alive-millis
+  "Return a function (fn []) that when invoked, records the current time as when was the application last alive. You
+  may deref the same function as (deref f) to find out the time the application was last alive. Optimized for
+  concurrent updates; eventually consistent."
+  ([]
+    (alive-millis (.availableProcessors ^Runtime (Runtime/getRuntime))))
+  ([^long n]
+    (let [trackers (-> n
+                     (repeatedly #(volatile! 0))  ; initialize with all zeros
+                     vec)]
+      (reify
+        IFn    (invoke [_] (let [idx (.nextLong (ThreadLocalRandom/current) n)]
+                             (vreset! (get trackers idx) (now-millis))))
+        IDeref (deref  [_] (->> trackers
+                             (map deref)
+                             (apply max)))))))
 
 
 (defn set-default-uncaught-exception-handler

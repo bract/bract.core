@@ -21,11 +21,14 @@
 
 ## [WIP] 0.5.0 / 2018-January-??
 
-- [TODO] Shutdown hooks should be invokable at any point
-  - By default the hook adds invocation of `deinit` tasks
-  - Doesn't that mean the deinit value should be `(atom [tasks])` instead of `[tasks]`?
-- Do not return context from some `bract.core.dev` functions (for REPL usability)
-  - `init`, `deinit`, `start`, `stop`
+- Key definitions
+  - Add `:bract.core/alive-tstamp` to represent last alive timestamp recorder/reporter
+  - [TODO] Shutdown hooks should be invokable at any point
+    - By default the hook adds invocation of `deinit` tasks
+    - Doesn't that mean the deinit value should be `(atom [tasks])` instead of `[tasks]`?
+- Dev helpers
+  - [BREAKING CHANGE] Do not return context from some `bract.core.dev` functions (for REPL usability)
+    - `init`, `deinit`, `start`, `stop`
 - Echo
   - Make inducer `invoke-launcher` echo the launcher name
 - Utility
