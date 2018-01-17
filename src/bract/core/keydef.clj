@@ -45,6 +45,7 @@
   ctx-launch?        [:bract.core/launch?  kputil/bool?  "Whether invoke launcher fn" {:default false}]
   ctx-stopper        [:bract.core/stopper        fn?     "Function (fn []) to stop the started application"
                       {:default #(echo/echo "Application stopper is not configured, skipping stop.")}]
+  ctx-health-check   [:bract.core/health-check   coll?   "Collection of health check functions (fn [])" {:default []}]
   ctx-alive-tstamp   [:bract.core/alive-tstamp   ifn?    "Derefable (fn []): alive timestamp in milliseconds"
                       {:default (util/alive-millis)}]
   ctx-shutdown-flag  [:bract.core/shutdown-flag  volatile?    "Volatile: Shutdown begun?" {:default (volatile! false)}]

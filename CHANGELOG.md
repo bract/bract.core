@@ -22,6 +22,7 @@
 ## [WIP] 0.5.0 / 2018-January-??
 
 - Key definitions
+  - Add `:bract.core/health-check` to represent health check functions
   - Add `:bract.core/alive-tstamp` to represent last alive timestamp recorder/reporter
   - [TODO] Shutdown hooks should be invokable at any point
     - By default the hook adds invocation of `deinit` tasks

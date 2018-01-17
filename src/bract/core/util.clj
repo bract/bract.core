@@ -126,6 +126,60 @@
                              (apply max)))))))
 
 
+(defn health-status
+  "Given a collection of health status maps (with keys :status and :impact) of zero or more components, derive overall
+  health status and return status map {:status status :components components} based on the following rules:
+  0. Health status :critical > :degraded > :healthy (high to low)
+  1. Higher old-status always overrides lower new-status.
+  2. Same old-status and new-status are considered unchanged.
+  3. A higher new-status is interpreted as follows:
+     Old status|New status|Impact :direct|Impact :indirect|Impact :noimpact
+     ----------|----------|--------------|----------------|----------------
+      degraded | critical |   critical   |    degraded    |    degraded
+      healthy  | critical |   critical   |    degraded    |    healthy
+      healthy  | degraded |   degraded   |    degraded    |    healthy
+
+  Example of returned status:
+  {:status :degraded  ; derived from components - :critical, :degraded, :healthy (default), :unknown
+   :components [{:id     :mysql
+                 :status :degraded
+                 :impact :hard    ; impact on overall health - :hard (default), :soft, :none/nil/false
+                 :breaker :half-open
+                 :retry-in \"14000ms\"}
+                {:id     :cache
+                 :status :critical
+                 :impact :soft}
+                {:id     :disk
+                 :status :healthy
+                 :impact :none
+                 :free-gb 39.42}]}"
+  [components]
+  (let [critical  2
+        degraded  1
+        healthy   0
+        n->status [:healthy :degraded :critical]
+        status->n {:healthy  0
+                   :degraded 1
+                   :critical 2}
+        status-up (fn ^long [^long old-status ^long new-status impact]
+                    (if (>= old-status new-status)
+                      old-status
+                      (case impact
+                        nil   old-status  ; falsey is the same as :none
+                        false old-status  ; falsey is the same as :none
+                        :none old-status
+                        :soft degraded
+                        new-status)))]
+    {:status (->> components
+               (reduce (fn [^long old-status {:keys [status impact] :as health}]
+                         (if-let [^long new-status (status->n status)]
+                           (status-up old-status new-status impact)
+                           old-status))
+                 healthy)
+               n->status)
+     :components components}))
+
+
 (defn set-default-uncaught-exception-handler
   "Set specified function (fn [thread throwable]) as default uncaught exception handler."
   [f]
