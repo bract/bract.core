@@ -50,6 +50,15 @@
           :os-arch               (.getArch os-bean)
           :os-version            (.getVersion os-bean)
           :system-load-avg       (.getSystemLoadAverage os-bean)
+          ;; user
+          :user-dir              (System/getProperty "user.dir")
+          :user-home             (System/getProperty "user.home")
+          :user-name             (System/getProperty "user.name")
+          ;; java
+          :java-class-path       (System/getProperty "java.class.path")
+          :java-home             (System/getProperty "java.home")
+          :java-vendor           (System/getProperty "java.vendor")
+          :java-version          (System/getProperty "java.version")
           ;; startup
           :jvm-launch-args       (vec (.getInputArguments rt-bean))
           ;; uptime
