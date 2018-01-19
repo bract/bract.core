@@ -15,5 +15,16 @@
 
 
 (deftest test-sysinfo
-  (pp/pprint (r/sysinfo))
+  #_(pp/pprint (r/sysinfo))
   (is (map? (r/sysinfo))))
+
+
+(deftest test-runtime-info
+  #_(pp/pprint (r/runtime-info [#(throw (IllegalStateException. "this is a test exception"))
+                                #(str "Arity mismatch:" %1 %2)
+                                #(do [:foo 20 'bar])
+                                #(do {:zindex 30})]))
+  (is (map? (r/runtime-info [#(throw (IllegalStateException. "this is a test exception"))
+                             #(str "Arity mismatch:" %1 %2)
+                             #(do [:foo 20 'bar])
+                             #(do {:zindex 30})]))))

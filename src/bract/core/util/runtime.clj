@@ -74,6 +74,19 @@
         (merge (sunext-osinfo os-bean))))))
 
 
+(defn runtime-info
+  "Return system info merged with information gathered from info generator fns, each being (fn [])."
+  [info-fns]
+  (reduce (fn [m f]
+            (let [r (try (f)
+                      (catch Exception e
+                        {(str f) (str e)}))]
+              (conj m (if (map? r)
+                        r
+                        {(str f) r}))))
+    (sysinfo) info-fns))
+
+
 (defn sysinfo-extension-middleware
   "Given an extender fn `(fn []) -> map` extend the sysinfo function to merge results."
   ([extender]
