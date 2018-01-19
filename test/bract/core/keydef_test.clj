@@ -12,7 +12,8 @@
     [clojure.test :refer :all]
     [keypin.type       :as kptype]
     [keypin.util       :as kputil]
-    [bract.core.keydef :as kdef]))
+    [bract.core.keydef :as kdef]
+    [bract.core.util   :as util]))
 
 
 (deftest context-test
@@ -28,6 +29,11 @@
                         :bract.core/deinit         '[foo bar]
                         :bract.core/launch?        true
                         :bract.core/stopper        (fn [] :stopped)
+                        :bract.core/health-check   [(fn [] {:id :mysql :status :degraded})
+                                                    (fn [] {:id :cache :status :healthy})]
+                        :bract.core/runtime-info   [(fn [] {:foo 10})
+                                                    (fn [] {:bar 20})]
+                        :bract.core/alive-tstamp   (util/alive-millis)
                         :bract.core/shutdown-flag  (volatile! false)
                         :bract.core/shutdown-hooks (atom [(fn [] :hook1)])}]
       (is (false?                         (kdef/ctx-verbose?       good-context)))
@@ -39,6 +45,9 @@
       (is (vector?                        (kdef/ctx-inducers       good-context)))
       (is (= true                         (kdef/ctx-launch?        good-context)))
       (is (fn?                            (kdef/ctx-stopper        good-context)))
+      (is (vector?                        (kdef/ctx-health-check   good-context)))
+      (is (vector?                        (kdef/ctx-runtime-info   good-context)))
+      (is (ifn?                           (kdef/ctx-alive-tstamp   good-context)))
       (is (volatile?                      (kdef/ctx-shutdown-flag  good-context)))
       (is (kputil/atom?                   (kdef/ctx-shutdown-hooks good-context)))))
   (testing "default values"
@@ -49,6 +58,9 @@
     (is (false?       (kdef/ctx-exit?          {})))
     (is (= []         (kdef/ctx-deinit         {})))
     (is (false?       (kdef/ctx-launch?        {})))
+    (is (vector?      (kdef/ctx-health-check   {})))
+    (is (vector?      (kdef/ctx-runtime-info   {})))
+    (is (ifn?         (kdef/ctx-alive-tstamp   {})))
     (is (volatile?    (kdef/ctx-shutdown-flag  {})))
     (is (false?      @(kdef/ctx-shutdown-flag  {})))
     (is (kputil/atom? (kdef/ctx-shutdown-hooks {})))
@@ -66,6 +78,9 @@
                        :bract.core/deinit         10
                        :bract.core/launch?        10
                        :bract.core/stopper        10
+                       :bract.core/health-check   10
+                       :bract.core/runtime-info   10
+                       :bract.core/alive-tstamp   10
                        :bract.core/shutdown-flag  10
                        :bract.core/shutdown-hooks 10}]
       (is (thrown? IllegalArgumentException (kdef/ctx-verbose?       bad-context)))
@@ -77,6 +92,9 @@
       (is (thrown? IllegalArgumentException (kdef/ctx-deinit         bad-context)))
       (is (thrown? IllegalArgumentException (kdef/ctx-launch?        bad-context)))
       (is (thrown? IllegalArgumentException (kdef/ctx-stopper        bad-context)))
+      (is (thrown? IllegalArgumentException (kdef/ctx-health-check   bad-context)))
+      (is (thrown? IllegalArgumentException (kdef/ctx-runtime-info   bad-context)))
+      (is (thrown? IllegalArgumentException (kdef/ctx-alive-tstamp   bad-context)))
       (is (thrown? IllegalArgumentException (kdef/ctx-shutdown-flag  bad-context)))
       (is (thrown? IllegalArgumentException (kdef/ctx-shutdown-hooks bad-context))))))
 
