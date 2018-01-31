@@ -2,19 +2,18 @@
 
 ## Ideas and TODO
 
-- [TODO] Dev triggers should accept an optional param
+- [Idea] Dev triggers should accept an optional param
   - Init a sub-system
   - De-init a sub-system
   - Launch a sub-system
   - etc.
-- [TODO] Support for parameterized (or prefixed/qualified) config
-- [TODO] Support for config substitution/reference, via Keypin `0.8.0`
-- [TODO] Function to transform every config key, based on `:bract.core/ctx-config-key-xf {:default identity}`
+- [Idea] Support for parameterized (or prefixed/qualified) config
+- [Idea] Function to transform every config key, based on `:bract.core/ctx-config-key-xf {:default identity}`
   - Helpful to auto-stringify keys in EDN config files
-- [TODO - Dev] Several tasks should accept an optional env key, e.g. `(start :qa)` that looks up env from context
+- [Idea - Dev] Several tasks should accept an optional env key, e.g. `(start :qa)` that looks up env from context
   - Requires env key/alias definition
   - Env key/alias should switch the config file(s)
-- [TODO] Metaphor web service framework
+- [Idea] Metaphor web service framework
   - https://zalando.github.io/restful-api-guidelines/
   - OWASP Top-10 security guidelines
 
