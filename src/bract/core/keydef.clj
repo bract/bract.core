@@ -95,7 +95,8 @@
       (kputil/clojurize-data <>)
       (merge context <>)                         ; merge new context onto the pre-existing context
       (keypin/realize-config <> keypin-opts)
-      (kputil/clojurize-data <>))))
+      (kputil/clojurize-data <>)
+      (kputil/clojurize-subst <>))))
 
 
 (defn resolve-config
@@ -113,10 +114,12 @@
           (kputil/clojurize-data <>)
           (merge pre-config <>)                      ; merge config onto the pre-existing config
           (keypin/realize-config <> keypin-opts)
-          (kputil/clojurize-data <>)))
+          (kputil/clojurize-data <>)
+          (kputil/clojurize-subst <>)))
       (-> config-filenames
         (keypin/read-config keypin-opts)
-        kputil/clojurize-data))))
+        kputil/clojurize-data
+        kputil/clojurize-subst))))
 
 
 (defn print-config

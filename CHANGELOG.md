@@ -21,6 +21,8 @@
 
 ## [WIP] 0.5.0 / 2018-January-??
 
+- Upgrade Keypin dependency to version `0.7.2`
+  - Symbol/keyword variable substitution in EDN context/config
 - Key definitions
   - Add `:bract.core/health-check` to represent health check functions
   - Add `:bract.core/alive-tstamp` to represent last alive timestamp recorder/reporter
