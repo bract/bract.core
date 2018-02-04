@@ -80,7 +80,6 @@
     (inducer/set-verbosity default-root-context)
     (echo/with-latency-capture "Initializing app in DEV mode"
       (inducer/induce inducer/apply-inducer default-root-context default-root-inducers))
-    nil
     (catch Throwable e
       (util/pst-when-uncaught-handler e)
       (throw e))))
