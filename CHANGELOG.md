@@ -13,6 +13,10 @@
 - [Idea - Dev] Several tasks should accept an optional env key, e.g. `(start :qa)` that looks up env from context
   - Requires env key/alias definition
   - Env key/alias should switch the config file(s)
+- [Idea] Shutdown hooks should be invokable at any point
+  - By default the hook adds invocation of `deinit` tasks
+  - Doesn't that mean the deinit value should be `(atom [tasks])` instead of `[tasks]`?
+  - Counterpoint: Why can't all deinit steps be deduced/assoc'ed at init-time (current design)
 - [Idea] Metaphor web service framework
   - https://zalando.github.io/restful-api-guidelines/
   - OWASP Top-10 security guidelines
@@ -20,17 +24,18 @@
 
 ## [WIP] 0.5.0 / 2018-January-??
 
-- Upgrade Keypin dependency to version `0.7.2`
-  - Symbol/keyword variable substitution in EDN context/config
+- Config
+  - Upgrade Keypin dependency to version `0.7.2`
+    - Symbol/keyword variable substitution in EDN context/config
+  - [TODO - BREAKING CHANGE] Key `parent.filenames` applies to both context and config files now
 - Key definitions
   - Add `:bract.core/health-check` to represent health check functions
   - Add `:bract.core/alive-tstamp` to represent last alive timestamp recorder/reporter
-  - [TODO] Shutdown hooks should be invokable at any point
-    - By default the hook adds invocation of `deinit` tasks
-    - Doesn't that mean the deinit value should be `(atom [tasks])` instead of `[tasks]`?
+  - [TODO - BREAKING CHANGE] Rename `:bract.core/shutdown-flag` to `:bract.core/*shutdown-flag`
+  - [TODO - BREAKING CHANGE] Change `:bract.core/shutdown-hooks` to be a vector instead of atom
 - Dev helpers
   - [BREAKING CHANGE] Do not return context from some `bract.core.dev` functions (for REPL usability)
-    - `init`, `deinit`, `start`, `stop`
+    - `deinit`, `start`, `stop`
 - Echo
   - Make inducer `invoke-launcher` echo the launcher name
 - Utility
