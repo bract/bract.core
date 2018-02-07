@@ -27,7 +27,7 @@
 - Config
   - Upgrade Keypin dependency to version `0.7.2`
     - Symbol/keyword variable substitution in EDN context/config
-  - [TODO - BREAKING CHANGE] Key `parent.filenames` applies to both context and config files now
+  - [BREAKING CHANGE] Apply parent key `parent.filenames` to both context and config files
 - Key definitions
   - Add `:bract.core/health-check` to represent health check functions
   - Add `:bract.core/alive-tstamp` to represent last alive timestamp recorder/reporter

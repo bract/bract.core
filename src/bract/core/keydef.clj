@@ -86,7 +86,7 @@
   (let [keypin-logger (kputil/make-logger
                         #(echo/echo "[context] [keypin] [info]" %)
                         #(echo/echo "[context] [keypin] [error]" %))
-        keypin-opts   {:parent-key     "parent.context.filenames"
+        keypin-opts   {:parent-key     "parent.filenames"
                        :logger         keypin-logger
                        :config-readers [keypin/edn-file-io]}]
     (as-> [context-filename] <>
@@ -102,7 +102,7 @@
 (defn resolve-config
   "Given a collection of config filenames, read and resolve config as a map and return it."
   [context config-filenames]
-  (let [keypin-opts {:parent-key "parent.config.filenames"
+  (let [keypin-opts {:parent-key "parent.filenames"
                      :logger     (kputil/make-logger
                                    #(echo/echo "[keypin] [info]" %)
                                    #(echo/echo "[keypin] [error]" %))}]
