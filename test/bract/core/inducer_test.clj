@@ -199,7 +199,7 @@
 (deftest test-add-shutdown-hook
   (let [flag  (volatile! false)
         hooks (atom [])
-        context {:bract.core/shutdown-flag  flag
+        context {:bract.core/*shutdown-flag flag
                  :bract.core/shutdown-hooks hooks
                  :bract.core/config {"bract.core.drain.timeout" [1 :seconds]}}]
     (testing "default invocation"

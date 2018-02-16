@@ -61,7 +61,7 @@
   ctx-runtime-info   [:bract.core/runtime-info  fn-coll? "Runtime-info functions [(fn []) ..]" {:default []}]
   ctx-alive-tstamp   [:bract.core/alive-tstamp   ifn?    "Derefable (fn []): alive timestamp in milliseconds"
                       {:default (util/alive-millis)}]
-  ctx-shutdown-flag  [:bract.core/shutdown-flag  volatile?    "Volatile: Shutdown begun?" {:default (volatile! false)}]
+  *ctx-shutdown-flag [:bract.core/*shutdown-flag volatile?    "Volatile: Shutdown begun?" {:default (volatile! false)}]
   ctx-shutdown-hooks [:bract.core/shutdown-hooks kputil/atom? "Atom: Added shutdown hook threads" {:default (atom [])}])
 
 

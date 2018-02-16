@@ -206,13 +206,13 @@
 
 
 (defn add-shutdown-hook
-  "Given context with :bract.core/shutdown-flag and :bract.core/shutdown-hooks keys related to app shutdown, and config
-  key \"bract.core.drain.timeout\", add an inducer as a shutdown hook. Specified inducer (invoke-deinit by default) may
-  be a function or a fully-qualified function name."
+  "Given context with :bract.core/*shutdown-flag and :bract.core/shutdown-hooks keys related to app shutdown, and
+  config key \"bract.core.drain.timeout\", add an inducer as a shutdown hook. Specified inducer (invoke-deinit by
+  default) may be a function or a fully-qualified function name."
   ([context]
     (add-shutdown-hook context invoke-deinit))
   ([context inducer]
-    (let [flag    (kdef/ctx-shutdown-flag  context)  ; volatile of boolean
+    (let [flag    (kdef/*ctx-shutdown-flag context)  ; volatile of boolean
           hooks   (kdef/ctx-shutdown-hooks context)  ; atom of vector
           timeout (-> (kdef/ctx-config context)
                     kdef/cfg-drain-timeout

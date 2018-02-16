@@ -31,7 +31,7 @@
 - Key definitions
   - Add `:bract.core/health-check` to represent health check functions
   - Add `:bract.core/alive-tstamp` to represent last alive timestamp recorder/reporter
-  - [TODO - BREAKING CHANGE] Rename `:bract.core/shutdown-flag` to `:bract.core/*shutdown-flag`
+  - [BREAKING CHANGE] Rename `:bract.core/shutdown-flag` to `:bract.core/*shutdown-flag`
   - [TODO - BREAKING CHANGE] Change `:bract.core/shutdown-hooks` to be a vector instead of atom
 - Dev helpers
   - [BREAKING CHANGE] Do not return context from some `bract.core.dev` functions (for REPL usability)
