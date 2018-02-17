@@ -37,7 +37,7 @@
 
 
 (keypin/defkey  ; context keys
-  ctx-verbose?       [:bract.core/verbose? kputil/bool?  "Verbose initialization?" {:parser  kputil/any->bool
+  ctx-verbose?       [:bract.core/verbose?  kputil/bool? "Verbose initialization?" {:parser  kputil/any->bool
                                                                                     :default false
                                                                                     :envvar  "APP_VERBOSE"
                                                                                     :sysprop "app.verbose"}]
