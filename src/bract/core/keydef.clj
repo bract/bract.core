@@ -54,15 +54,15 @@
   ctx-config         [:bract.core/config         map?    "Application config"]
   ctx-inducers       [:bract.core/inducers       vector? "Vector of inducer fns or fully qualified names" {:default []}]
   ctx-deinit         [:bract.core/deinit        fn-coll? "Functions [(fn []) ..] to deinitialize the app" {:default []}]
-  ctx-launch?        [:bract.core/launch?  kputil/bool?  "Whether invoke launcher fn" {:default false}]
+  ctx-launch?        [:bract.core/launch?   kputil/bool? "Whether invoke launcher fn" {:default false}]
   ctx-stopper        [:bract.core/stopper        fn?     "Function (fn []) to stop the started application"
                       {:default #(echo/echo "Application stopper is not configured, skipping stop.")}]
   ctx-health-check   [:bract.core/health-check  fn-coll? "Health check functions [(fn []) ..]" {:default []}]
   ctx-runtime-info   [:bract.core/runtime-info  fn-coll? "Runtime-info functions [(fn []) ..]" {:default []}]
   ctx-alive-tstamp   [:bract.core/alive-tstamp   ifn?    "Derefable (fn []): alive timestamp in milliseconds"
                       {:default (util/alive-millis)}]
-  *ctx-shutdown-flag [:bract.core/*shutdown-flag volatile?    "Volatile: Shutdown begun?" {:default (volatile! false)}]
-  ctx-shutdown-hooks [:bract.core/shutdown-hooks kputil/atom? "Atom: Added shutdown hook threads" {:default (atom [])}])
+  *ctx-shutdown-flag [:bract.core/*shutdown-flag volatile? "Volatile: Shutdown begun?" {:default (volatile! false)}]
+  ctx-shutdown-hooks [:bract.core/shutdown-hooks vector? "Added shutdown hook threads" {:default []}])
 
 
 (keypin/defkey  ; config keys

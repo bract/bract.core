@@ -12,6 +12,7 @@
     [clojure.edn     :as edn]
     [clojure.java.io :as io]
     [clojure.test    :refer :all]
+    [bract.core.keydef  :as kdef]
     [bract.core.inducer :as inducer]
     [bract.core.util    :as util])
   (:import
@@ -198,30 +199,32 @@
 
 (deftest test-add-shutdown-hook
   (let [flag  (volatile! false)
-        hooks (atom [])
+        hooks []
         context {:bract.core/*shutdown-flag flag
                  :bract.core/shutdown-hooks hooks
                  :bract.core/config {"bract.core.drain.timeout" [1 :seconds]}}]
     (testing "default invocation"
       (try
-        (inducer/add-shutdown-hook context)
-        (doto ^Thread (last @hooks)
-          (.start)
-          (.join))
-        (.removeShutdownHook ^Runtime (Runtime/getRuntime) (last @hooks))
+        (let [new-context (inducer/add-shutdown-hook context)
+              new-hooks   (kdef/ctx-shutdown-hooks new-context)]
+          (is (seq new-hooks) "Non-empty hooks vector because we added a hook")
+          (doto ^Thread (last new-hooks)
+            (.start)
+            (.join))
+          (.removeShutdownHook ^Runtime (Runtime/getRuntime) (last new-hooks)))
         (finally
-          (vreset! flag false)
-          (swap! hooks pop))))
+          (vreset! flag false))))
     (testing "inducer invocation"
       (try
-        (inducer/add-shutdown-hook context 'bract.core.inducer/invoke-stopper)
-        (doto ^Thread (last @hooks)
-          (.start)
-          (.join))
-        (.removeShutdownHook ^Runtime (Runtime/getRuntime) (last @hooks))
+        (let [new-context (inducer/add-shutdown-hook context 'bract.core.inducer/invoke-stopper)
+              new-hooks   (kdef/ctx-shutdown-hooks new-context)]
+          (is (seq new-hooks) "Non-empty hooks vector because we added a hook")
+          (doto ^Thread (last new-hooks)
+            (.start)
+            (.join))
+          (.removeShutdownHook ^Runtime (Runtime/getRuntime) (last new-hooks)))
         (finally
-          (vreset! flag false)
-          (swap! hooks pop))))))
+          (vreset! flag false))))))
 
 
 (deftest test-default-exception-handler

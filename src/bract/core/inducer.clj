@@ -213,7 +213,6 @@
     (add-shutdown-hook context invoke-deinit))
   ([context inducer]
     (let [flag    (kdef/*ctx-shutdown-flag context)  ; volatile of boolean
-          hooks   (kdef/ctx-shutdown-hooks context)  ; atom of vector
           timeout (-> (kdef/ctx-config context)
                     kdef/cfg-drain-timeout
                     kptype/millis)                   ; timeout in millis
@@ -241,8 +240,7 @@
                              (echo/echo "Workload draining timed out, executing shutdown-hook inducer now")
                              (apply-inducer context inducer)))]
       (.addShutdownHook ^Runtime (Runtime/getRuntime) thread)
-      (swap! hooks conj thread))
-    context))
+      (update context (key kdef/ctx-shutdown-hooks) conj thread))))
 
 
 (defn set-default-exception-handler

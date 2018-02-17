@@ -35,7 +35,7 @@
                                                     (fn [] {:bar 20})]
                         :bract.core/alive-tstamp   (util/alive-millis)
                         :bract.core/*shutdown-flag (volatile! false)
-                        :bract.core/shutdown-hooks (atom [(fn [] :hook1)])}]
+                        :bract.core/shutdown-hooks [(fn [] :hook1)]}]
       (is (false?                         (kdef/ctx-verbose?       good-context)))
       (is (= "foo.edn"                    (kdef/ctx-context-file   good-context)))
       (is (= ["foo.edn" "bar.properties"] (kdef/ctx-config-files   good-context)))
@@ -49,7 +49,7 @@
       (is (vector?                        (kdef/ctx-runtime-info   good-context)))
       (is (ifn?                           (kdef/ctx-alive-tstamp   good-context)))
       (is (volatile?                      (kdef/*ctx-shutdown-flag good-context)))
-      (is (kputil/atom?                   (kdef/ctx-shutdown-hooks good-context)))))
+      (is (vector?                        (kdef/ctx-shutdown-hooks good-context)))))
   (testing "default values"
     (is (false?       (kdef/ctx-verbose?       {})))
     (is (nil?         (kdef/ctx-context-file   {})))
@@ -63,8 +63,8 @@
     (is (ifn?         (kdef/ctx-alive-tstamp   {})))
     (is (volatile?    (kdef/*ctx-shutdown-flag {})))
     (is (false?      @(kdef/*ctx-shutdown-flag {})))
-    (is (kputil/atom? (kdef/ctx-shutdown-hooks {})))
-    (is (= []        @(kdef/ctx-shutdown-hooks {}))))
+    (is (vector?      (kdef/ctx-shutdown-hooks {})))
+    (is (= []         (kdef/ctx-shutdown-hooks {}))))
   (testing "missing values"
     (is (thrown? IllegalArgumentException (kdef/ctx-cli-args  {})))
     (is (thrown? IllegalArgumentException (kdef/ctx-config    {}))))
