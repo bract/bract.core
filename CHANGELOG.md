@@ -18,7 +18,7 @@
   - OWASP Top-10 security guidelines
 
 
-## [WIP] 0.5.0 / 2018-January-??
+## [WIP] 0.5.0 / 2018-February-??
 
 - Config
   - Upgrade Keypin dependency to version `0.7.2`
