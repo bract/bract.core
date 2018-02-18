@@ -29,15 +29,12 @@
   - Add `:bract.core/alive-tstamp` to represent last alive timestamp recorder/reporter
   - [BREAKING CHANGE] Rename `:bract.core/shutdown-flag` to `:bract.core/*shutdown-flag`
   - [BREAKING CHANGE] Change `:bract.core/shutdown-hooks` to be a vector of hooked threads
-- Inducer
-  - [TODO] Add `run-inducers` (or retrofit `induce`) to run arbitrary inducers
-  - [TODO?? - BREAKING CHANGE] Drop `run-config-inducers` in favour of `run-inducers`
-  - [TODO?? - BREAKING CHANGE] Drop `run-context-inducers` in favour of `run-inducers`
 - Dev helpers
   - [BREAKING CHANGE] Do not return context from some `bract.core.dev` functions (for REPL usability)
     - `deinit`, `start`, `stop`
-- Echo
+- Inducer
   - Make inducer `invoke-launcher` echo the launcher name
+  - Make inducer `invoke-deinit` empty the deinit vector before returning context
 - Utility
   - [BREAKING CHANGE] Drop `bract.core.util/uuid-str` in favour of `bract.core.util/clean-uuid`
   - Add utility function `bract.core.util.runtime/sysinfo` to report system info

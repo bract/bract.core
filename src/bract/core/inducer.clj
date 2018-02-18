@@ -179,7 +179,7 @@
 
 (defn invoke-deinit
   "Given context with :bract.core/deinit key and corresponding collection of (fn []) de-init fns for the app, invoke
-  them in a sequence."
+  them in a sequence. Return context with empty deinit vector."
   ([context]
     (invoke-deinit context true))
   ([context ignore-errors?]
@@ -194,7 +194,7 @@
               (when-not ignore-errors?
                 (throw e)))))
         (echo/echo "Application de-init is not configured, skipping de-initialization.")))
-    context))
+    (assoc context (key kdef/ctx-deinit) [])))
 
 
 (defn invoke-stopper
