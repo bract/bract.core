@@ -32,6 +32,7 @@
 - Dev helpers
   - [BREAKING CHANGE] Do not return context from some `bract.core.dev` functions (for REPL usability)
     - `deinit`, `start`, `stop`
+  - Update `app-context` after deinit step
 - Inducer
   - Make inducer `invoke-launcher` echo the launcher name
   - Make inducer `invoke-deinit` empty the deinit vector before returning context
