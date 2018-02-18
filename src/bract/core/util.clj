@@ -13,7 +13,9 @@
     [clojure.string :as string])
   (:import
     [java.io PrintStream PrintWriter StringWriter]
-    [java.util UUID]))
+    [java.util UUID]
+    [java.util.concurrent ThreadLocalRandom]
+    [clojure.lang IDeref IFn Named]))
 
 
 (defn expected
@@ -61,19 +63,23 @@
        ~@body)))
 
 
-(defn as-vec
-  "Turn argument into a vector if it is a collection, else wrap the argument into a single-item vector."
-  [x]
-  (if (coll? x)
-    (vec x)
-    [x]))
-
-
-(defn uuid-str
-  "Return a random UUID string."
-  ^String
-  []
-  (.toString (UUID/randomUUID)))
+(defn clean-uuid
+  "Generate or convert UUID into a sanitized, lower-case form."
+  (^String []
+   (clean-uuid (.toString (java.util.UUID/randomUUID))))
+  (^String [^String uuid]
+   (if (nil? uuid)
+     nil
+     (let [n (.length uuid)
+           ^StringBuilder b (StringBuilder. n)]
+       (loop [i 0]
+         (if (>= i n)
+           (.toString b)
+           (let [c (.charAt uuid i)]
+             (when (Character/isLetterOrDigit c) ; ignore non-letter and non-numeric
+               ;; make lower-case before adding
+               (.append b (Character/toLowerCase c)))
+             (recur (unchecked-inc i)))))))))
 
 
 (defn stack-trace-str
@@ -100,6 +106,78 @@
     (Thread/sleep millis)
     (catch InterruptedException e
       (.interrupt (Thread/currentThread)))))
+
+
+(defn alive-millis
+  "Return a function (fn []) that when invoked, records the current time as when was the application last alive. You
+  may deref the same function as (deref f) to find out the time the application was last alive. Optimized for
+  concurrent updates; eventually consistent."
+  ([]
+    (alive-millis (.availableProcessors ^Runtime (Runtime/getRuntime))))
+  ([^long n]
+    (let [trackers (-> n
+                     (repeatedly #(volatile! 0))  ; initialize with all zeros
+                     vec)]
+      (reify
+        IFn    (invoke [_] (let [idx (.nextLong (ThreadLocalRandom/current) n)]
+                             (vreset! (get trackers idx) (now-millis))))
+        IDeref (deref  [_] (->> trackers
+                             (map deref)
+                             (apply max)))))))
+
+
+(defn health-status
+  "Given a collection of health status maps (with keys :status and :impact) of zero or more components, derive overall
+  health status and return status map {:status status :components components} based on the following rules:
+  0. Health status :critical > :degraded > :healthy (high to low)
+  1. Higher old-status always overrides lower new-status.
+  2. Same old-status and new-status are considered unchanged.
+  3. A higher new-status is interpreted as follows:
+     Old status|New status|Impact :direct|Impact :indirect|Impact :noimpact
+     ----------|----------|--------------|----------------|----------------
+      degraded | critical |   critical   |    degraded    |    degraded
+      healthy  | critical |   critical   |    degraded    |    healthy
+      healthy  | degraded |   degraded   |    degraded    |    healthy
+
+  Example of returned status:
+  {:status :degraded  ; derived from components - :critical, :degraded, :healthy (default), :unknown
+   :components [{:id     :mysql
+                 :status :degraded
+                 :impact :hard    ; impact on overall health - :hard (default), :soft, :none/nil/false
+                 :breaker :half-open
+                 :retry-in \"14000ms\"}
+                {:id     :cache
+                 :status :critical
+                 :impact :soft}
+                {:id     :disk
+                 :status :healthy
+                 :impact :none
+                 :free-gb 39.42}]}"
+  [components]
+  (let [critical  2
+        degraded  1
+        healthy   0
+        n->status [:healthy :degraded :critical]
+        status->n {:healthy  0
+                   :degraded 1
+                   :critical 2}
+        status-up (fn ^long [^long old-status ^long new-status impact]
+                    (if (>= old-status new-status)
+                      old-status
+                      (case impact
+                        nil   old-status  ; falsey is the same as :none
+                        false old-status  ; falsey is the same as :none
+                        :none old-status
+                        :soft degraded
+                        new-status)))]
+    {:status (->> components
+               (reduce (fn [^long old-status {:keys [status impact] :as health}]
+                         (if-let [^long new-status (status->n status)]
+                           (status-up old-status new-status impact)
+                           old-status))
+                 healthy)
+               n->status)
+     :components components}))
 
 
 (defn set-default-uncaught-exception-handler
@@ -129,3 +207,56 @@
                      (err-println "Invalid argument: expected java.io.PrintStream or java.io.PrintWriter but found"
                        (pr-str (class out)) out)
                      (expected "java.io.PrintStream or java.io.PrintWriter instance" out))))))
+
+
+;; conversion
+
+
+(defn as-vec
+  "Turn argument into a vector if it is a collection, else wrap the argument into a single-item vector."
+  [x]
+  (if (coll? x)
+    (vec x)
+    [x]))
+
+
+(defn as-str
+  "Turn anything into string."
+  [x]
+  (cond
+    (instance? Named x) (let [right (name x)]
+                          (if-let [left (namespace x)]
+                            (str left \/ right)
+                            right))
+    (string? x)         x
+    :otherwise          (str x)))
+
+
+(let [;; conversion constants
+        ms-to-s 1000
+        ms-to-m (* 1000 60)
+        ms-to-h (* 1000 60 60)
+        ms-to-d (* 1000 60 60 24)]
+  (defn millis->str
+    "Convert milliseconds to human readable string."
+    [^long millis]
+    (cond
+      (> millis ms-to-d) (str (quot millis ms-to-d) "d " (millis->str (rem millis ms-to-d)))
+      (> millis ms-to-h) (str (quot millis ms-to-h) "h " (millis->str (rem millis ms-to-h)))
+      (> millis ms-to-m) (str (quot millis ms-to-m) "m " (millis->str (rem millis ms-to-m)))
+      (> millis ms-to-s) (str (quot millis ms-to-s) "s " (millis->str (rem millis ms-to-s)))
+      :otherwise         (str millis "ms"))))
+
+
+(let [;; conversion constants
+        b-to-kb 1024
+        b-to-mb (* 1024 1024)
+        b-to-gb (* 1024 1024 1024)]
+  (defn nbytes->str
+    "Convert bytes-count to human readable string."
+    [^long n]
+    (cond
+      (> n b-to-gb) (format "%.2f GBytes" (double (/ n b-to-gb)))
+      (> n b-to-mb) (format "%.2f MBytes" (double (/ n b-to-mb)))
+      (> n b-to-kb) (format "%.2f KBytes" (double (/ n b-to-kb)))
+      :otherwise (str n " Bytes"))))

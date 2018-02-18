@@ -90,7 +90,7 @@
   [message & body]
   `(let [start# (System/currentTimeMillis)
          messg# ~message]
-     (echof "Starting '%s'" messg#)
+     (echof "Invoking '%s'" messg#)
      (try
        ~@body
        (finally

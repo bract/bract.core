@@ -24,8 +24,20 @@
     [keypin ConfigIO PropertyConfigIO]))
 
 
+(defn- fn-coll?
+  [fs]
+  (and (coll? fs)
+    (every? fn? fs)))
+
+
+(defn- ifn-coll?
+  [fs]
+  (and (coll? fs)
+    (every? ifn? fs)))
+
+
 (keypin/defkey  ; context keys
-  ctx-verbose?       [:bract.core/verbose? kputil/bool?  "Verbose initialization?" {:parser  kputil/any->bool
+  ctx-verbose?       [:bract.core/verbose?  kputil/bool? "Verbose initialization?" {:parser  kputil/any->bool
                                                                                     :default false
                                                                                     :envvar  "APP_VERBOSE"
                                                                                     :sysprop "app.verbose"}]
@@ -41,12 +53,16 @@
   ctx-cli-args       [:bract.core/cli-args       coll?   "Collection of CLI arguments"]
   ctx-config         [:bract.core/config         map?    "Application config"]
   ctx-inducers       [:bract.core/inducers       vector? "Vector of inducer fns or fully qualified names" {:default []}]
-  ctx-deinit         [:bract.core/deinit         coll?   "Functions [(fn []) ..] to deinitialize the app" {:default []}]
-  ctx-launch?        [:bract.core/launch?  kputil/bool?  "Whether invoke launcher fn" {:default false}]
+  ctx-deinit         [:bract.core/deinit        fn-coll? "Functions [(fn []) ..] to deinitialize the app" {:default []}]
+  ctx-launch?        [:bract.core/launch?   kputil/bool? "Whether invoke launcher fn" {:default false}]
   ctx-stopper        [:bract.core/stopper        fn?     "Function (fn []) to stop the started application"
                       {:default #(echo/echo "Application stopper is not configured, skipping stop.")}]
-  ctx-shutdown-flag  [:bract.core/shutdown-flag  volatile?    "Volatile: Shutdown begun?" {:default (volatile! false)}]
-  ctx-shutdown-hooks [:bract.core/shutdown-hooks kputil/atom? "Atom: Added shutdown hook threads" {:default (atom [])}])
+  ctx-health-check   [:bract.core/health-check  fn-coll? "Health check functions [(fn []) ..]" {:default []}]
+  ctx-runtime-info   [:bract.core/runtime-info  fn-coll? "Runtime-info functions [(fn []) ..]" {:default []}]
+  ctx-alive-tstamp   [:bract.core/alive-tstamp   ifn?    "Derefable (fn []): alive timestamp in milliseconds"
+                      {:default (util/alive-millis)}]
+  *ctx-shutdown-flag [:bract.core/*shutdown-flag volatile? "Volatile: Shutdown begun?" {:default (volatile! false)}]
+  ctx-shutdown-hooks [:bract.core/shutdown-hooks vector? "Added shutdown hook threads" {:default []}])
 
 
 (keypin/defkey  ; config keys
@@ -54,8 +70,8 @@
                       {:parser kputil/any->edn}]
   cfg-exports        ["bract.core.exports"       vector? "Vector of config keys to export as system properties"
                       {:parser kputil/any->edn}]
-  cfg-launcher       ["bract.core.launcher"      fn?     "Fully qualified launcher fn name"
-                      {:parser kputil/str->var->deref}]
+  cfg-launcher       ["bract.core.launcher"      var?    "Fully qualified launcher fn name"
+                      {:parser kputil/str->var}]
   cfg-drain-timeout  ["bract.core.drain.timeout" kputil/duration? "Workload drain timeout"
                       {:parser kputil/any->duration
                        :default [10000 :millis]}])
@@ -70,7 +86,7 @@
   (let [keypin-logger (kputil/make-logger
                         #(echo/echo "[context] [keypin] [info]" %)
                         #(echo/echo "[context] [keypin] [error]" %))
-        keypin-opts   {:parent-key     "parent.context.filenames"
+        keypin-opts   {:parent-key     "parent.filenames"
                        :logger         keypin-logger
                        :config-readers [keypin/edn-file-io]}]
     (as-> [context-filename] <>
@@ -79,13 +95,14 @@
       (kputil/clojurize-data <>)
       (merge context <>)                         ; merge new context onto the pre-existing context
       (keypin/realize-config <> keypin-opts)
-      (kputil/clojurize-data <>))))
+      (kputil/clojurize-data <>)
+      (kputil/clojurize-subst <>))))
 
 
 (defn resolve-config
   "Given a collection of config filenames, read and resolve config as a map and return it."
   [context config-filenames]
-  (let [keypin-opts {:parent-key "parent.config.filenames"
+  (let [keypin-opts {:parent-key "parent.filenames"
                      :logger     (kputil/make-logger
                                    #(echo/echo "[keypin] [info]" %)
                                    #(echo/echo "[keypin] [error]" %))}]
@@ -97,10 +114,12 @@
           (kputil/clojurize-data <>)
           (merge pre-config <>)                      ; merge config onto the pre-existing config
           (keypin/realize-config <> keypin-opts)
-          (kputil/clojurize-data <>)))
+          (kputil/clojurize-data <>)
+          (kputil/clojurize-subst <>)))
       (-> config-filenames
         (keypin/read-config keypin-opts)
-        kputil/clojurize-data))))
+        kputil/clojurize-data
+        kputil/clojurize-subst))))
 
 
 (defn print-config

@@ -168,9 +168,10 @@
   name and invoke it as (fn [context]) when the context key :bract.core/launch? has the value true."
   [context]
   (if (kdef/ctx-launch? context)
-    (-> (kdef/ctx-config context)
-      kdef/cfg-launcher
-      (apply [context]))
+    (let [launcher (-> (kdef/ctx-config context)
+                     kdef/cfg-launcher)]
+      (echo/echo "Launcher name:" launcher)
+      (launcher context))
     (do
       (echo/echo "Launch not enabled, skipping launch.")
       context)))
@@ -178,7 +179,7 @@
 
 (defn invoke-deinit
   "Given context with :bract.core/deinit key and corresponding collection of (fn []) de-init fns for the app, invoke
-  them in a sequence."
+  them in a sequence. Return context with empty deinit vector."
   ([context]
     (invoke-deinit context true))
   ([context ignore-errors?]
@@ -193,7 +194,7 @@
               (when-not ignore-errors?
                 (throw e)))))
         (echo/echo "Application de-init is not configured, skipping de-initialization.")))
-    context))
+    (assoc context (key kdef/ctx-deinit) [])))
 
 
 (defn invoke-stopper
@@ -205,14 +206,13 @@
 
 
 (defn add-shutdown-hook
-  "Given context with :bract.core/shutdown-flag and :bract.core/shutdown-hooks keys related to app shutdown, and config
-  key \"bract.core.drain.timeout\", add an inducer as a shutdown hook. Specified inducer (invoke-deinit by default) may
-  be a function or a fully-qualified function name."
+  "Given context with :bract.core/*shutdown-flag and :bract.core/shutdown-hooks keys related to app shutdown, and
+  config key \"bract.core.drain.timeout\", add an inducer as a shutdown hook. Specified inducer (invoke-deinit by
+  default) may be a function or a fully-qualified function name."
   ([context]
     (add-shutdown-hook context invoke-deinit))
   ([context inducer]
-    (let [flag    (kdef/ctx-shutdown-flag  context)  ; volatile of boolean
-          hooks   (kdef/ctx-shutdown-hooks context)  ; atom of vector
+    (let [flag    (kdef/*ctx-shutdown-flag context)  ; volatile of boolean
           timeout (-> (kdef/ctx-config context)
                     kdef/cfg-drain-timeout
                     kptype/millis)                   ; timeout in millis
@@ -226,7 +226,10 @@
                                                            "Shutdown flag was false, now set to true"))
                                               true)))
                              ;; wait for timeout
-                             (let [until-time-millis (unchecked-add (util/now-millis) ^long timeout)]
+                             (let [last-alive-millis (long @(kdef/ctx-alive-tstamp context))
+                                   until-time-millis (if (pos? last-alive-millis)
+                                                       (unchecked-add last-alive-millis ^long timeout)
+                                                       (unchecked-add (util/now-millis) ^long timeout))]
                                (while (< (util/now-millis) until-time-millis)
                                  (let [nap-millis (unchecked-subtract until-time-millis (util/now-millis))]
                                    (when (pos? nap-millis)
@@ -237,8 +240,7 @@
                              (echo/echo "Workload draining timed out, executing shutdown-hook inducer now")
                              (apply-inducer context inducer)))]
       (.addShutdownHook ^Runtime (Runtime/getRuntime) thread)
-      (swap! hooks conj thread))
-    context))
+      (update context (key kdef/ctx-shutdown-hooks) conj thread))))
 
 
 (defn set-default-exception-handler

@@ -2,17 +2,44 @@
 
 ## Ideas and TODO
 
-- [TODO] Utility functions to report runtime information
-- [TODO - BREAKING CHANGE] Use parent key `parent.filenames` for both context and config
-- [TODO] Dev triggers should accept an optional param
+- [Idea] Dev triggers should accept an optional param
   - Init a sub-system
   - De-init a sub-system
   - Launch a sub-system
   - etc.
-- [TODO] Support for parameterized (or prefixed/qualified) config
-- [TODO - Dev] Several tasks should accept an optional env key, e.g. `(start :qa)` that looks up env from context
+- [Idea] Support for parameterized (or prefixed/qualified) config
+- [Idea] Function to transform every config key, based on `:bract.core/ctx-config-key-xf {:default identity}`
+  - Helpful to auto-stringify keys in EDN config files
+- [Idea - Dev] Several tasks should accept an optional env key, e.g. `(start :qa)` that looks up env from context
   - Requires env key/alias definition
   - Env key/alias should switch the config file(s)
+- [Idea] Metaphor web service framework
+  - https://zalando.github.io/restful-api-guidelines/
+  - OWASP Top-10 security guidelines
+
+
+## [WIP] 0.5.0 / 2018-February-??
+
+- Config
+  - Upgrade Keypin dependency to version `0.7.2`
+    - Symbol/keyword variable substitution in EDN context/config
+  - [BREAKING CHANGE] Apply parent key `parent.filenames` to both context and config files
+- Key definitions
+  - Add `:bract.core/health-check` to represent health check functions
+  - Add `:bract.core/alive-tstamp` to represent last alive timestamp recorder/reporter
+  - [BREAKING CHANGE] Rename `:bract.core/shutdown-flag` to `:bract.core/*shutdown-flag`
+  - [BREAKING CHANGE] Change `:bract.core/shutdown-hooks` to be a vector of hooked threads
+- Dev helpers
+  - [BREAKING CHANGE] Do not return context from some `bract.core.dev` functions (for REPL usability)
+    - `deinit`, `start`, `stop`
+  - Update `app-context` after deinit step
+- Inducer
+  - Make inducer `invoke-launcher` echo the launcher name
+  - Make inducer `invoke-deinit` empty the deinit vector before returning context
+- Utility
+  - [BREAKING CHANGE] Drop `bract.core.util/uuid-str` in favour of `bract.core.util/clean-uuid`
+  - Add utility function `bract.core.util.runtime/sysinfo` to report system info
+  - Add string and unit conversion functions
 
 
 ## 0.4.1 / 2017-August-08

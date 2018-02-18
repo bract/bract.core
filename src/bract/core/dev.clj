@@ -123,7 +123,10 @@
   (ensure-init)
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
   (echo/with-latency-capture "De-initializing application"
-    (inducer/invoke-deinit app-context)))
+    (-> app-context
+      inducer/invoke-deinit
+      record-context!))
+  nil)
 
 
 (defn start
@@ -135,7 +138,8 @@
     (-> app-context
       (assoc (key kdef/ctx-launch?) true)
       inducer/invoke-launcher
-      record-context!)))
+      record-context!))
+  nil)
 
 
 (defn stop
@@ -144,4 +148,5 @@
   (ensure-init)
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
   (echo/with-latency-capture "Stopping the started application"
-    (inducer/invoke-stopper app-context)))
+    (inducer/invoke-stopper app-context))
+  nil)
