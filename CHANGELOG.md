@@ -18,7 +18,7 @@
   - OWASP Top-10 security guidelines
 
 
-## [WIP] 0.5.0 / 2018-February-??
+## 0.5.0 / 2018-February-18
 
 - Config
   - Upgrade Keypin dependency to version `0.7.2`
@@ -32,7 +32,7 @@
 - Dev helpers
   - [BREAKING CHANGE] Do not return context from some `bract.core.dev` functions (for REPL usability)
     - `deinit`, `start`, `stop`
-  - Update `app-context` after deinit step
+  - Update `app-context` after deinit
 - Inducer
   - Make inducer `invoke-launcher` echo the launcher name
   - Make inducer `invoke-deinit` empty the deinit vector before returning context
