@@ -18,6 +18,14 @@
   - OWASP Top-10 security guidelines
 
 
+## [WIP] 0.5.1 / 2018-February-??
+
+- [TODO] Add context key definition `:bract.core/exit-code` - app exit code, default 0
+- Inducer
+  - [TODO] discover-hostname - discover hostname and populate config
+  - [TODO] discover-project-edn-version - discover project version and populate config
+
+
 ## 0.5.0 / 2018-February-18
 
 - Config
