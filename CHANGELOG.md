@@ -20,7 +20,7 @@
 
 ## [WIP] 0.5.1 / 2018-February-??
 
-- [TODO] Add context key definition `:bract.core/exit-code` - app exit code, default 0
+- Add context key definition `:bract.core/jvm-exit-code` - app exit code (int, >= 0), default nil
 - Inducer
   - [TODO] discover-hostname - discover hostname and populate config
   - [TODO] discover-project-edn-version - discover project version and populate config
