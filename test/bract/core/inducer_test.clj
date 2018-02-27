@@ -244,3 +244,28 @@
       (finally
         (.shutdown ^ThreadPoolExecutor pool)
         (util/set-default-uncaught-exception-handler nil)))))
+
+
+(deftest test-discover-hostname
+  (testing "config not present"
+    (is (string? (-> (inducer/discover-hostname {})
+                   kdef/ctx-config
+                   (get "discovered.hostname")))))
+  (testing "config already present"
+    (is (= "foo" (-> {:bract.core/config {"discovered.hostname" "foo"}}
+                   inducer/discover-hostname
+                   kdef/ctx-config
+                   (get "discovered.hostname"))))))
+
+
+(deftest test-discover-project-edn-version
+  (testing "config not present"
+    (is (= "1.0.0" (-> {}
+                     (inducer/discover-project-edn-version {:project-edn "sample.edn"})
+                     kdef/ctx-config
+                     (get "discovered.app.version")))))
+  (testing "config already present"
+    (is (= "foo" (-> {:bract.core/config {"discovered.app.version" "foo"}}
+                   (inducer/discover-project-edn-version {:project-edn "sample.edn"})
+                   kdef/ctx-config
+                   (get "discovered.app.version"))))))

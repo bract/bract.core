@@ -10,6 +10,7 @@
 (ns bract.core.inducer
   "The inducer fns exposed by Bract-core."
   (:require
+    [clojure.edn       :as edn]
     [clojure.java.io   :as io]
     [keypin.core       :as keypin]
     [keypin.type       :as kptype]
@@ -20,6 +21,7 @@
     [bract.core.type   :as type]
     [bract.core.util   :as util])
   (:import
+    [java.net InetAddress UnknownHostException]
     [bract.core Echo]))
 
 
@@ -255,3 +257,66 @@
     (-> (type/ifunc exception-handler)
       util/set-default-uncaught-exception-handler)
     context))
+
+
+;; ----- inducers that inject config -----
+
+
+(defn discover-hostname
+  "Discover hostname and add to config if absent.
+  Options:
+  :config-key - configuration key to update discovered hostname at, default: \"discovered.hostname\""
+  ([context]
+    (discover-hostname context {}))
+  ([context {:keys [config-key]
+             :or {config-key "discovered.hostname"}}]
+    (kdef/discover-config context config-key
+      (fn [key-path]
+        (try
+          (let [^InetAddress localhost (InetAddress/getLocalHost)]
+            (assoc-in context key-path (.getHostName localhost)))
+          (catch UnknownHostException e
+            (echo/echof "Cannot determine hostname (stack trace below), not adding config key '%s'"
+              (pr-str config-key))
+            (.printStackTrace e System/err)
+            context))))))
+
+
+(defn discover-project-edn-version
+  "Discover application version from project.edn file containing :version key, and add to config if absent.
+  Options:
+  :config-key  - configuration key to update discovered version at, default: \"discovered.app.version\"
+  :project-edn - resource path to the project EDN file, default: \"project.edn\" (in classpath)"
+  ([context]
+    (discover-project-edn-version context {}))
+  ([context {:keys [config-key
+                    project-edn]
+             :or {config-key  "discovered.app.version"
+                  project-edn "project.edn"}}]
+    (kdef/discover-config context config-key
+      (fn [key-path]
+        (if-let [project-edn-resource (io/resource project-edn)]
+          (try
+            (let [proj-map (-> project-edn-resource
+                             slurp
+                             edn/read-string)]
+              (if-let [version (:version proj-map)]
+                (assoc-in context key-path version)
+                (do
+                  (echo/echof
+                    "Cannot find key :version in the config read from classpath file '%s', not adding config key '%s'"
+                    (pr-str project-edn)
+                    (pr-str config-key))
+                  context)))
+            (catch Exception e
+              (echo/echof "Error reading file '%s' in classpath as EDN (stack trace below), not adding config key '%s'"
+                (pr-str project-edn)
+                (pr-str config-key))
+              (.printStackTrace e System/err)
+              context))
+          (do
+            (echo/echof (str "Cannot find the file '%s' in classpath, not adding config key '%s'. "
+                          "This may help: https://github.com/kumarshantanu/lein-project-edn")
+              (pr-str project-edn)
+              (pr-str config-key))
+            context))))))

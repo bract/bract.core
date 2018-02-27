@@ -135,3 +135,17 @@
                              keypin/edn-file-io
                              PropertyConfigIO/INSTANCE)]
     (.writeConfig configIO ^Writer *out* ^Map config true)))
+
+
+(defn discover-config
+  "Discover non-nil config for given discovery-key using supplied function `(fn [key-path]) -> context` and put into
+  the config under given context if not already populated. Return potentially updated context."
+  [context discovery-key f]
+  (let [discovery-key-path [(key ctx-config) discovery-key]]
+    (if-let [found (get-in context discovery-key-path)]
+      (do
+        (echo/echof "Not adding config key '%s', already populated with value: %s"
+          (pr-str discovery-key)
+          (pr-str found))
+        context)
+      (f discovery-key-path))))
