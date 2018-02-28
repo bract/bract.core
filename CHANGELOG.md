@@ -22,6 +22,7 @@
 ## [WIP] 0.5.1 / 2018-February-??
 
 - Add context key definition `:bract.core/app-exit-code` - app exit code (int, >= 0), default nil
+- Add namespace `bract.core.dev-init` to easily initialize test namespaces
 - Inducer
   - `discover-hostname` - discover hostname and populate config
   - `discover-project-edn-version` - discover project version and populate config
