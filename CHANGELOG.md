@@ -17,6 +17,7 @@
   - https://zalando.github.io/restful-api-guidelines/
   - OWASP Top-10 security guidelines
 - [Todo - BREAKING CHANGE] Drop bract.core.type and bract.core.impl in favour of a multimethod (for flexibility)
+- [Todo] Change launcher keydef from str->var to function-aware parser
 
 
 ## [WIP] 0.5.1 / 2018-February-??
@@ -27,6 +28,7 @@
   - `discover-hostname` - discover hostname and populate config
   - `discover-project-edn-version` - discover project version and populate config
   - `fallback-config-files` - specify config filenames when unspecified
+  - `update-launcher` - specify alternate launcher on-the-fly
 - Fix issue where resolving new config ignores existing config
 
 
