@@ -25,6 +25,7 @@
 - Inducer
   - `discover-hostname` - discover hostname and populate config
   - `discover-project-edn-version` - discover project version and populate config
+  - `fallback-config-files` - specify config filenames when unspecified
 - Fix issue where resolving new config ignores existing config
 
 

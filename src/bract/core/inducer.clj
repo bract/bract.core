@@ -85,6 +85,16 @@
       context)))
 
 
+(defn fallback-config-files
+  "Set specified config filenames in the context if empty."
+  [context fallback-config-filenames]
+  (let [config-files (kdef/ctx-config-files context)]
+    (if (seq config-files)
+      context
+      (assoc context
+        (key kdef/ctx-config-files) (vec fallback-config-filenames)))))
+
+
 (defn read-config
   "Use config filenames in the context under key :bract.core/config-files to read and resolve config, and populate the
   context with it under the key :bract.core/config."

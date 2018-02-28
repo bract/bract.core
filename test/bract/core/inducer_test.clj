@@ -78,6 +78,13 @@
             (inducer/read-context context))))))
 
 
+(deftest test-fallback-config-files
+  (is (= {:bract.core/config-files ["foo"]}
+        (inducer/fallback-config-files {} ["foo"])))
+  (is (= {:bract.core/config-files ["foo"]}
+        (inducer/fallback-config-files {:bract.core/config-files ["foo"]} ["bar"]))))
+
+
 (deftest test-read-config
   (let [context {:bract.core/config-files "sample.edn"}]
     (is (= (assoc context
