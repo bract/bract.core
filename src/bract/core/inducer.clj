@@ -175,7 +175,7 @@
     context))
 
 
-(defn update-launcher
+(defn prepare-launcher
   "Update launcher config with the specified one and enable launch."
   [context launcher]
   (-> context
