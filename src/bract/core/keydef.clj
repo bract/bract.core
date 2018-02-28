@@ -109,7 +109,7 @@
                      :logger     (kputil/make-logger
                                    #(echo/echo "[keypin] [info]" %)
                                    #(echo/echo "[keypin] [error]" %))}]
-    (if (contains? context ctx-config)
+    (if (contains? context (key ctx-config))
       (let [pre-config (ctx-config context)]
         (as-> config-filenames <>
           (keypin/read-config <> (assoc keypin-opts

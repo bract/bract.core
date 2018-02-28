@@ -25,6 +25,7 @@
 - Inducer
   - `discover-hostname` - discover hostname and populate config
   - `discover-project-edn-version` - discover project version and populate config
+- Fix issue where resolving new config ignores existing config
 
 
 ## 0.5.0 / 2018-February-18
