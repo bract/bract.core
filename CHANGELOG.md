@@ -16,11 +16,12 @@
 - [Idea] Metaphor web service framework
   - https://zalando.github.io/restful-api-guidelines/
   - OWASP Top-10 security guidelines
+- [Todo - BREAKING CHANGE] Drop bract.core.type and bract.core.impl in favour of a multimethod (for flexibility)
 
 
 ## [WIP] 0.5.1 / 2018-February-??
 
-- Add context key definition `:bract.core/jvm-exit-code` - app exit code (int, >= 0), default nil
+- Add context key definition `:bract.core/app-exit-code` - app exit code (int, >= 0), default nil
 - Inducer
   - `discover-hostname` - discover hostname and populate config
   - `discover-project-edn-version` - discover project version and populate config
