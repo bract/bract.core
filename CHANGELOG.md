@@ -25,7 +25,7 @@
   - config-inducers (replaced by explicitly specified key)
 
 
-## [WIP] 0.5.1 / 2018-March-??
+## 0.5.1 / 2018-March-05
 
 - Add context key definition `:bract.core/app-exit-code` - app exit code (int, >= 0), default nil
 - Add namespace `bract.core.dev-init` to easily initialize test namespaces
