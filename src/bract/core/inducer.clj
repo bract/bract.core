@@ -178,10 +178,9 @@
 (defn prepare-launcher
   "Update launcher config with the specified one and enable launch."
   [context launcher]
-  (-> context
-    (update (key kdef/ctx-config)
-      assoc (key kdef/cfg-launcher) launcher)
-    (assoc (key kdef/ctx-launch?) true)))
+  (assoc context
+    (key kdef/ctx-launcher) launcher
+    (key kdef/ctx-launch?) true))
 
 
 (defn invoke-launcher
@@ -189,8 +188,7 @@
   name and invoke it as (fn [context]) when the context key :bract.core/launch? has the value true."
   [context]
   (if (kdef/ctx-launch? context)
-    (let [launcher (-> (kdef/ctx-config context)
-                     kdef/cfg-launcher)]
+    (let [launcher (kdef/ctx-launcher context)]
       (echo/echo "Launcher name:" launcher)
       (launcher context))
     (do

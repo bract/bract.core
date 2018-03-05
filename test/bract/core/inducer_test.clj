@@ -193,7 +193,7 @@
   (inducer/invoke-launcher {:bract.core/launch? false})
   (is (zero? @volatile-holder))
   (inducer/invoke-launcher {:bract.core/launch? true
-                            :bract.core/config {"bract.core.launcher" "bract.core.inducer-test/launcher-inc"}})
+                            :bract.core/launcher 'bract.core.inducer-test/launcher-inc})
   (is (= 1 @volatile-holder)))
 
 

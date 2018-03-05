@@ -28,6 +28,7 @@
                                                      [bar.baz qux]]
                         :bract.core/deinit         '[foo bar]
                         :bract.core/launch?        true
+                        :bract.core/launcher       'bract.core.inducer/apply-inducer
                         :bract.core/stopper        (fn [] :stopped)
                         :bract.core/health-check   [(fn [] {:id :mysql :status :degraded})
                                                     (fn [] {:id :cache :status :healthy})]
@@ -45,6 +46,7 @@
       (is (= {"foo" "bar"}                (kdef/ctx-config         good-context)))
       (is (vector?                        (kdef/ctx-inducers       good-context)))
       (is (= true                         (kdef/ctx-launch?        good-context)))
+      (is (some?                          (kdef/ctx-launcher       good-context)))
       (is (fn?                            (kdef/ctx-stopper        good-context)))
       (is (vector?                        (kdef/ctx-health-check   good-context)))
       (is (vector?                        (kdef/ctx-runtime-info   good-context)))
@@ -70,7 +72,8 @@
     (is (= []         (kdef/ctx-shutdown-hooks {}))))
   (testing "missing values"
     (is (thrown? IllegalArgumentException (kdef/ctx-cli-args  {})))
-    (is (thrown? IllegalArgumentException (kdef/ctx-config    {}))))
+    (is (thrown? IllegalArgumentException (kdef/ctx-config    {})))
+    (is (thrown? IllegalArgumentException (kdef/ctx-launcher {}))))
   (testing "bad values"
     (let [bad-context {:bract.core/verbose?       10
                        :bract.core/context-file   10
@@ -80,6 +83,7 @@
                        :bract.core/inducers       10
                        :bract.core/deinit         10
                        :bract.core/launch?        10
+                       :bract.core/launcher       false
                        :bract.core/stopper        10
                        :bract.core/health-check   10
                        :bract.core/runtime-info   10
@@ -95,6 +99,7 @@
       (is (thrown? IllegalArgumentException (kdef/ctx-inducers       bad-context)))
       (is (thrown? IllegalArgumentException (kdef/ctx-deinit         bad-context)))
       (is (thrown? IllegalArgumentException (kdef/ctx-launch?        bad-context)))
+      (is (thrown? IllegalArgumentException (kdef/ctx-launcher       bad-context)))
       (is (thrown? IllegalArgumentException (kdef/ctx-stopper        bad-context)))
       (is (thrown? IllegalArgumentException (kdef/ctx-health-check   bad-context)))
       (is (thrown? IllegalArgumentException (kdef/ctx-runtime-info   bad-context)))
@@ -117,23 +122,18 @@
                                                        \"mary.had.a.little/lamb\"]"
                           "bract.core.exports"       "[\"foo\"
                                                        \"bar\"]"
-                          "bract.core.launcher"      "bract.core.inducer/apply-inducer"
                           "bract.core.drain.timeout" "5 seconds"}]]
       (is (= ["foo.bar.baz.qux/fred"
               "mary.had.a.little/lamb"] (kdef/cfg-inducers      good-config)))
       (is (= ["foo" "bar"]              (kdef/cfg-exports       good-config)))
-      (is (some?                        (kdef/cfg-launcher      good-config)))
       (is (some?                        (kdef/cfg-drain-timeout good-config)))))
   (testing "default values"
     (is (= 10000 (kptype/millis (kdef/cfg-drain-timeout {})))))
   (testing "missing values"
     (is (thrown? IllegalArgumentException (kdef/cfg-inducers {})))
-    (is (thrown? IllegalArgumentException (kdef/cfg-exports  {})))
-    (is (thrown? IllegalArgumentException (kdef/cfg-launcher {}))))
+    (is (thrown? IllegalArgumentException (kdef/cfg-exports  {}))))
   (testing "missing/bad config entries"
-    (let [bad-context {"bract.core.inducers"     {:foo :bar}
-                       "bract.core.exports"      20
-                       "bract.core.launcher"     false}]
-      (is (thrown? IllegalArgumentException (kdef/cfg-inducers bad-context)))
-      (is (thrown? IllegalArgumentException (kdef/cfg-exports  bad-context)))
-      (is (thrown? IllegalArgumentException (kdef/cfg-launcher bad-context))))))
+    (let [bad-config {"bract.core.inducers"     {:foo :bar}
+                      "bract.core.exports"      20}]
+      (is (thrown? IllegalArgumentException (kdef/cfg-inducers bad-config)))
+      (is (thrown? IllegalArgumentException (kdef/cfg-exports  bad-config))))))
