@@ -17,10 +17,15 @@
 
 ## [WIP] 0.6.0 / 2018-March-??
 
+- Config
+  - Upgrade Keypin dependency to version `0.7.3`
+    - [Todo] Use GA version of Keypin `0.7.3`
+    - For parser function `keypin.util/any->fn`
+- [Todo] Change launcher keydef from str->var to function-aware parser (any->fn)
 - [Todo - BREAKING CHANGE] Drop bract.core.type and bract.core.impl in favour of a multimethod (for flexibility)
 - [Todo - BREAKING CHANGE] Switch launcher from config to context value
 - [Todo - BREAKING CHANGE] Remove exports config keydef (use variable instead)
-- [Todo] Change launcher keydef from str->var to function-aware parser (any->fn)
+- [Todo] Add `bract.core.main` namespace for non-CLI apps
 - [Todo] Introduce inducer-list key definition for
   - pre-config 
   - app-inducers
