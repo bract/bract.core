@@ -72,8 +72,8 @@
 (keypin/defkey  ; config keys
   cfg-inducers       ["bract.core.inducers"      vector? "Vector of fully qualified inducer fn names"
                       {:parser kputil/any->edn}]
-  cfg-exports        ["bract.core.exports"       vector? "Vector of config keys to export as system properties"
-                      {:parser kputil/any->edn}]
+;  cfg-exports        ["bract.core.exports"       vector? "Vector of config keys to export as system properties"
+;                      {:parser kputil/any->edn}]
   cfg-drain-timeout  ["bract.core.drain.timeout" kputil/duration? "Workload drain timeout"
                       {:parser kputil/any->duration
                        :default [10000 :millis]}])
