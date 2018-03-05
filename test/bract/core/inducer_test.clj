@@ -78,6 +78,13 @@
             (inducer/read-context context))))))
 
 
+(deftest test-fallback-config-files
+  (is (= {:bract.core/config-files ["foo"]}
+        (inducer/fallback-config-files {} ["foo"])))
+  (is (= {:bract.core/config-files ["foo"]}
+        (inducer/fallback-config-files {:bract.core/config-files ["foo"]} ["bar"]))))
+
+
 (deftest test-read-config
   (let [context {:bract.core/config-files "sample.edn"}]
     (is (= (assoc context
@@ -174,6 +181,13 @@
   (vswap! volatile-holder #(inc ^long %)))
 
 
+(deftest test-prepare-launcher
+  (let [context (inducer/prepare-launcher {} #'launcher-inc)]
+    (is (= {:bract.core/config {"bract.core.launcher" #'launcher-inc}})))
+  (let [context (inducer/prepare-launcher {:bract.core/config {"bract.core.launcher" 'foo.bar/baz}} #'launcher-inc)]
+    (is (= {:bract.core/config {"bract.core.launcher" #'launcher-inc}}))))
+
+
 (deftest test-invoke-launcher
   (vreset! volatile-holder 0)
   (inducer/invoke-launcher {:bract.core/launch? false})
@@ -244,3 +258,28 @@
       (finally
         (.shutdown ^ThreadPoolExecutor pool)
         (util/set-default-uncaught-exception-handler nil)))))
+
+
+(deftest test-discover-hostname
+  (testing "config not present"
+    (is (string? (-> (inducer/discover-hostname {})
+                   kdef/ctx-config
+                   (get "discovered.hostname")))))
+  (testing "config already present"
+    (is (= "foo" (-> {:bract.core/config {"discovered.hostname" "foo"}}
+                   inducer/discover-hostname
+                   kdef/ctx-config
+                   (get "discovered.hostname"))))))
+
+
+(deftest test-discover-project-edn-version
+  (testing "config not present"
+    (is (= "1.0.0" (-> {}
+                     (inducer/discover-project-edn-version {:project-edn "sample.edn"})
+                     kdef/ctx-config
+                     (get "discovered.app.version")))))
+  (testing "config already present"
+    (is (= "foo" (-> {:bract.core/config {"discovered.app.version" "foo"}}
+                   (inducer/discover-project-edn-version {:project-edn "sample.edn"})
+                   kdef/ctx-config
+                   (get "discovered.app.version"))))))

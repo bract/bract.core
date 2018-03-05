@@ -61,6 +61,9 @@
   ctx-runtime-info   [:bract.core/runtime-info  fn-coll? "Runtime-info functions [(fn []) ..]" {:default []}]
   ctx-alive-tstamp   [:bract.core/alive-tstamp   ifn?    "Derefable (fn []): alive timestamp in milliseconds"
                       {:default (util/alive-millis)}]
+  ctx-app-exit-code  [:bract.core/app-exit-code  (some-fn (every-pred integer? (some-fn pos? zero?))
+                                                   nil?) "Application exit code (int, >= 0)" {:parser kputil/any->int
+                                                                                              :default nil}]
   *ctx-shutdown-flag [:bract.core/*shutdown-flag volatile? "Volatile: Shutdown begun?" {:default (volatile! false)}]
   ctx-shutdown-hooks [:bract.core/shutdown-hooks vector? "Added shutdown hook threads" {:default []}])
 
@@ -106,7 +109,7 @@
                      :logger     (kputil/make-logger
                                    #(echo/echo "[keypin] [info]" %)
                                    #(echo/echo "[keypin] [error]" %))}]
-    (if (contains? context ctx-config)
+    (if (contains? context (key ctx-config))
       (let [pre-config (ctx-config context)]
         (as-> config-filenames <>
           (keypin/read-config <> (assoc keypin-opts
@@ -132,3 +135,17 @@
                              keypin/edn-file-io
                              PropertyConfigIO/INSTANCE)]
     (.writeConfig configIO ^Writer *out* ^Map config true)))
+
+
+(defn discover-config
+  "Discover non-nil config for given discovery-key using supplied function `(fn [key-path]) -> context` and put into
+  the config under given context if not already populated. Return potentially updated context."
+  [context discovery-key f]
+  (let [discovery-key-path [(key ctx-config) discovery-key]]
+    (if-let [found (get-in context discovery-key-path)]
+      (do
+        (echo/echof "Not adding config key '%s', already populated with value: %s"
+          (pr-str discovery-key)
+          (pr-str found))
+        context)
+      (f discovery-key-path))))
