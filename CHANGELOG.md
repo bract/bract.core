@@ -13,14 +13,19 @@
 - [Idea - Dev] Several tasks should accept an optional env key, e.g. `(start :qa)` that looks up env from context
   - Requires env key/alias definition
   - Env key/alias should switch the config file(s)
-- [Idea] Metaphor web service framework
-  - https://zalando.github.io/restful-api-guidelines/
-  - OWASP Top-10 security guidelines
 - [Todo - BREAKING CHANGE] Drop bract.core.type and bract.core.impl in favour of a multimethod (for flexibility)
-- [Todo] Change launcher keydef from str->var to function-aware parser
+- [Todo - BREAKING CHANGE] Switch launcher from config to context value
+- [Todo - BREAKING CHANGE] Remove exports config keydef (use variable instead)
+- [Todo] Change launcher keydef from str->var to function-aware parser (any->fn)
+- [Todo] Introduce inducer-list key definition for
+  - pre-config 
+  - app-inducers
+- [Todo] Possibly drop the inducer-list key definition
+  - context-inducers (replaced by explicitly specified key)
+  - config-inducers (replaced by explicitly specified key)
 
 
-## [WIP] 0.5.1 / 2018-February-??
+## [WIP] 0.5.1 / 2018-March-??
 
 - Add context key definition `:bract.core/app-exit-code` - app exit code (int, >= 0), default nil
 - Add namespace `bract.core.dev-init` to easily initialize test namespaces
