@@ -13,6 +13,10 @@
 - [Idea - Dev] Several tasks should accept an optional env key, e.g. `(start :qa)` that looks up env from context
   - Requires env key/alias definition
   - Env key/alias should switch the config file(s)
+
+
+## [WIP] 0.6.0 / 2018-March-??
+
 - [Todo - BREAKING CHANGE] Drop bract.core.type and bract.core.impl in favour of a multimethod (for flexibility)
 - [Todo - BREAKING CHANGE] Switch launcher from config to context value
 - [Todo - BREAKING CHANGE] Remove exports config keydef (use variable instead)
