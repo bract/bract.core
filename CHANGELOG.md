@@ -21,7 +21,9 @@
   - Upgrade Keypin dependency to version `0.7.3`
     - [Todo] Use GA version of Keypin `0.7.3`
     - For parser function `keypin.util/any->fn`
-- [Todo] Change launcher keydef from str->var to function-aware parser (any->fn)
+- Key definitions
+  - [TODO - BREAKING CHANGE] Switch launcher from config to context
+  - Change launcher parser from `str->var` to `any->fn`
 - [Todo - BREAKING CHANGE] Drop bract.core.type and bract.core.impl in favour of a multimethod (for flexibility)
 - [Todo - BREAKING CHANGE] Switch launcher from config to context value
 - [Todo - BREAKING CHANGE] Remove exports config keydef (use variable instead)

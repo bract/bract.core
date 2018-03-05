@@ -73,8 +73,8 @@
                       {:parser kputil/any->edn}]
   cfg-exports        ["bract.core.exports"       vector? "Vector of config keys to export as system properties"
                       {:parser kputil/any->edn}]
-  cfg-launcher       ["bract.core.launcher"      var?    "Fully qualified launcher fn name"
-                      {:parser kputil/str->var}]
+  cfg-launcher       ["bract.core.launcher"      fn?     "Fully qualified launcher fn name"
+                      {:parser kputil/any->fn}]
   cfg-drain-timeout  ["bract.core.drain.timeout" kputil/duration? "Workload drain timeout"
                       {:parser kputil/any->duration
                        :default [10000 :millis]}])
