@@ -13,6 +13,11 @@
 - [Idea - Dev] Several tasks should accept an optional env key, e.g. `(start :qa)` that looks up env from context
   - Requires env key/alias definition
   - Env key/alias should switch the config file(s)
+- [Idea - BREAKING CHANGE] Drop bract.core.{type|impl} in favour of a multimethod
+  - Fix for: Protocol extended to overloaded types (interfaces)
+- [Idea] Possibly drop the inducer-list key definition
+  - context-inducers (replaced by explicitly specified key)
+  - config-inducers (replaced by explicitly specified key)
 
 
 ## [WIP] 0.6.0 / 2018-March-??
@@ -29,14 +34,7 @@
   - Change launcher parser from `str->var` to `any->fn`
 - Inducers
   - [BREAKING CHANGE] Have `export-as-sysprops` and `unexport-sysprops` accept export-key/value arguments
-- [Todo - BREAKING CHANGE] Drop bract.core.type and bract.core.impl in favour of a multimethod (for flexibility)
 - Add `bract.core.main` namespace for CLI entry point
-- [Todo] Introduce inducer-list key definition for
-  - pre-config 
-  - app-inducers
-- [Todo] Possibly drop the inducer-list key definition
-  - context-inducers (replaced by explicitly specified key)
-  - config-inducers (replaced by explicitly specified key)
 
 
 ## 0.5.1 / 2018-March-05
