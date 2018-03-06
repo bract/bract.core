@@ -104,7 +104,9 @@
       (->> config-files
         (kdef/resolve-config context)
         (assoc context (key kdef/ctx-config)))
-      context)))
+      (do
+        (echo/echo (format "No config files specified at %s for reading, skipping" (key kdef/ctx-config-files)))
+        context))))
 
 
 (defn run-context-inducers
