@@ -42,7 +42,7 @@
                                                                                     :envvar  "APP_VERBOSE"
                                                                                     :sysprop "app.verbose"}]
   ctx-context-file   [:bract.core/context-file (some-fn string?
-                                                 nil?)   "Context file name"       {:default nil
+                                                 nil?)   "Context file name"       {:default "bract-context.edn"
                                                                                     :envvar  "APP_CONTEXT"
                                                                                     :sysprop "app.context"}]
   ctx-config-files   [:bract.core/config-files   vector? "Config file names"       {:parser  kputil/any->vec

@@ -56,7 +56,7 @@
       (is (vector?                        (kdef/ctx-shutdown-hooks good-context)))))
   (testing "default values"
     (is (false?       (kdef/ctx-verbose?       {})))
-    (is (nil?         (kdef/ctx-context-file   {})))
+    (is (string?      (kdef/ctx-context-file   {})))
     (is (= []         (kdef/ctx-config-files   {})))
     (is (= []         (kdef/ctx-inducers       {})))
     (is (false?       (kdef/ctx-exit?          {})))
