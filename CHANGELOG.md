@@ -23,9 +23,10 @@
     - For parser function `keypin.util/any->fn`
 - Key definitions
   - [BREAKING CHANGE] Switch launcher key from config `"bract.core.launcher"` to context `:bract.core/launcher`
-  - Change launcher parser from `str->var` to `any->fn`
   - [BREAKING CHANGE] Remove exports config keydef (in favor of using variable instead)
   - [BREAKING CHANGE] Set default context file to `bract-context.edn`
+  - Set default value for config key `config-inducers` to `[]`
+  - Change launcher parser from `str->var` to `any->fn`
 - Inducers
   - [BREAKING CHANGE] Have `export-as-sysprops` and `unexport-sysprops` accept export-key/value arguments
 - [Todo - BREAKING CHANGE] Drop bract.core.type and bract.core.impl in favour of a multimethod (for flexibility)

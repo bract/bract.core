@@ -123,9 +123,10 @@
               "mary.had.a.little/lamb"] (kdef/cfg-inducers      good-config)))
       (is (some?                        (kdef/cfg-drain-timeout good-config)))))
   (testing "default values"
-    (is (= 10000 (kptype/millis (kdef/cfg-drain-timeout {})))))
+    (is (= 10000 (kptype/millis (kdef/cfg-drain-timeout {}))))
+    (is (= []    (kdef/cfg-inducers {}))))
   (testing "missing values"
-    (is (thrown? IllegalArgumentException (kdef/cfg-inducers {}))))
+    )
   (testing "missing/bad config entries"
     (let [bad-config {"bract.core.inducers"     {:foo :bar}}]
       (is (thrown? IllegalArgumentException (kdef/cfg-inducers bad-config))))))
