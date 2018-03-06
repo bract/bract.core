@@ -30,7 +30,7 @@
 - Inducers
   - [BREAKING CHANGE] Have `export-as-sysprops` and `unexport-sysprops` accept export-key/value arguments
 - [Todo - BREAKING CHANGE] Drop bract.core.type and bract.core.impl in favour of a multimethod (for flexibility)
-- [Todo] Add `bract.core.main` namespace for non-CLI apps
+- Add `bract.core.main` namespace for CLI entry point
 - [Todo] Introduce inducer-list key definition for
   - pre-config 
   - app-inducers
