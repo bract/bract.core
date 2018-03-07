@@ -34,6 +34,7 @@
   - Change launcher parser from `str->var` to `any->fn`
 - Inducers
   - [BREAKING CHANGE] Have `export-as-sysprops` and `unexport-sysprops` accept export-key/value arguments
+  - Fix issue where vector and map arguments are misconstrued as functions upon parsing
 - Add `bract.core.main` namespace for CLI entry point
 
 
