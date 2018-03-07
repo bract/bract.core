@@ -21,7 +21,6 @@
   [core-inducer/set-verbosity        ; set default verbosity
    core-inducer/read-context         ; read context file if present
    core-inducer/set-verbosity        ; set user-preferred verbosity
-   core-inducer/read-config          ; read config file(s) if specified
    core-inducer/run-context-inducers ; run context inducers
    ])
 
