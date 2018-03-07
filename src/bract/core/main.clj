@@ -17,7 +17,7 @@
 
 
 (def root-inducers
-  "Root inducers for"
+  "Root inducers for bract.core module."
   [core-inducer/set-verbosity        ; set default verbosity
    core-inducer/read-context         ; read context file if present
    core-inducer/set-verbosity        ; set user-preferred verbosity

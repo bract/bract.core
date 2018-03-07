@@ -13,6 +13,7 @@
     [bract.core.keydef  :as kdef]
     [bract.core.echo    :as echo]
     [bract.core.inducer :as inducer]
+    [bract.core.main    :as main]
     [bract.core.util    :as util])
   (:import
     [bract.core Echo]))
@@ -61,25 +62,18 @@
 ;; ----- default -----
 
 
-(def default-root-context {(key kdef/ctx-context-file) "bract-context.dev.edn"
-                           (key kdef/ctx-config-files) ["config/config.dev.edn"]
-                           (key kdef/ctx-launch?)      false})
-
-
-(def default-root-inducers [inducer/set-verbosity
-                            inducer/read-context
-                            inducer/run-context-inducers
-                            inducer/read-config
-                            inducer/run-config-inducers])
+(def root-context {(key kdef/ctx-context-file) "bract-context.dev.edn"
+                   (key kdef/ctx-config-files) ["config/config.dev.edn"]
+                   (key kdef/ctx-launch?)      false})
 
 
 (defn init
   "Initialize app in DEV mode."
   []
   (try
-    (inducer/set-verbosity default-root-context)
+    (inducer/set-verbosity root-context)
     (echo/with-latency-capture "Initializing app in DEV mode"
-      (inducer/induce inducer/apply-inducer default-root-context default-root-inducers))
+      (inducer/induce inducer/apply-inducer root-context main/root-inducers))
     (catch Throwable e
       (util/pst-when-uncaught-handler e)
       (throw e))))

@@ -32,6 +32,10 @@
   - Fix issue where vector and map arguments are misconstrued as functions upon parsing
 - CLI entrypoint
   - Add `bract.core.main` namespace for CLI entry point
+    - Define root inducers
+- Dev support
+  - [BREAKING CHANGE] Drop dev root inducers in favour of `bract.core.main` root inducers
+  - [BREAKING CHANGE] Rename `bract.core.dev/default-root-context` to `bract.core.dev/root-context`
 
 
 ## 0.5.1 / 2018-March-05
