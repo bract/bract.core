@@ -22,6 +22,7 @@
    core-inducer/read-context         ; read context file if present
    core-inducer/set-verbosity        ; set user-preferred verbosity
    core-inducer/run-context-inducers ; run context inducers
+   core-inducer/invoke-launcher      ; launch application
    ])
 
 
