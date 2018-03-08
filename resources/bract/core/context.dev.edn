@@ -1,6 +1,0 @@
-{;;
- ;; bract.core development context
- ;;
- :app/cfg-inducers [bract.core.inducer/read-config]
- :app/dev-inducers [;; record the context for dev workflow
-                    bract.core.dev/record-context!]}

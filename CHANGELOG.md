@@ -43,9 +43,6 @@
 - Dev support
   - [BREAKING CHANGE] Drop dev root inducers in favour of `bract.core.main` root inducers
   - [BREAKING CHANGE] Rename `bract.core.dev/default-root-context` to `bract.core.dev/root-context`
-- Resources
-  - Base context entries in `bract/core/context.edn` 
-  - Dev context entries in `bract/core/context.dev.edn`
 
 
 ## 0.5.1 / 2018-March-05

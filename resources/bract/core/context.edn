@@ -1,5 +1,0 @@
-{;;
- ;; bract.core default context
- ;;
- :app/cfg-inducers [bract.core.inducer/read-config]
- :app/dev-inducers []}
