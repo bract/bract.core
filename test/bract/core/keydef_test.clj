@@ -114,19 +114,25 @@
   (testing "happy tests"
     (doseq [good-config [{"bract.core.inducers"      ["foo.bar.baz.qux/fred"
                                                       "mary.had.a.little/lamb"]
-                          "bract.core.launcher"      'bract.core.inducer/apply-inducer
+                          "bract.core.exports"       ["foo"
+                                                      "bar"]
                           "bract.core.drain.timeout" [5 :seconds]}
                          {"bract.core.inducers"      "[\"foo.bar.baz.qux/fred\"
                                                        \"mary.had.a.little/lamb\"]"
+                          "bract.core.exports"       "[\"foo\"
+                                                       \"bar\"]"
                           "bract.core.drain.timeout" "5 seconds"}]]
       (is (= ["foo.bar.baz.qux/fred"
               "mary.had.a.little/lamb"] (kdef/cfg-inducers      good-config)))
+      (is (= ["foo" "bar"]              (kdef/cfg-exports       good-config)))
       (is (some?                        (kdef/cfg-drain-timeout good-config)))))
   (testing "default values"
     (is (= 10000 (kptype/millis (kdef/cfg-drain-timeout {}))))
     (is (= []    (kdef/cfg-inducers {}))))
   (testing "missing values"
-    )
+    (is (thrown? IllegalArgumentException (kdef/cfg-exports  {}))))
   (testing "missing/bad config entries"
-    (let [bad-config {"bract.core.inducers"     {:foo :bar}}]
-      (is (thrown? IllegalArgumentException (kdef/cfg-inducers bad-config))))))
+    (let [bad-config {"bract.core.inducers"     {:foo :bar}
+                      "bract.core.exports"      20}]
+      (is (thrown? IllegalArgumentException (kdef/cfg-inducers bad-config)))
+      (is (thrown? IllegalArgumentException (kdef/cfg-exports  bad-config))))))

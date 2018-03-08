@@ -159,18 +159,19 @@
 
 
 (deftest test-export-as-sysprops
-  (let [context {:bract.core/config {"foo" "foo10"
+  (let [context {:bract.core/config {"bract.core.exports" ["foo"
+                                                           "bar"]
+                                     "foo" "foo10"
                                      "bar" "bar20"
                                      "baz" "baz30"}}]
     (testing "export"
       (is (nil? (System/getProperty "foo")))
       (is (nil? (System/getProperty "bar")))
-      (inducer/export-as-sysprops context {"foo" "foo10"
-                                           "bar" "bar20"})
+      (inducer/export-as-sysprops context)
       (is (= "foo10" (System/getProperty "foo")))
       (is (= "bar20" (System/getProperty "bar"))))
     (testing "unexport"
-      (inducer/unexport-sysprops context ["foo" "bar"])
+      (inducer/unexport-sysprops context)
       (is (nil? (System/getProperty "foo")))
       (is (nil? (System/getProperty "bar"))))))
 

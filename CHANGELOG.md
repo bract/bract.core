@@ -13,6 +13,15 @@
 - [Idea - Dev] Several tasks should accept an optional env key, e.g. `(start :qa)` that looks up env from context
   - Requires env key/alias definition
   - Env key/alias should switch the config file(s)
+- Config
+  - [Todo] Make config and context entries accessible to each other for substitutions
+  - [Todo] Realize variables as extraction time (late, not early)
+  - [Todo - BREAKING CHANGE] Remove exports config keydef `"bract.core.exports"` (in favor of using variable instead)
+  - [Todo - BREAKING CHANGE] Have inducers dealing with system properties accept export-key/value arguments
+    - `export-as-sysprops`
+    - `unexport-sysprops`
+  - [Todo - BREAKING CHANGE] Drop inducer `run-context-inducers` in favor of dynamic/late variable substitution
+  - [Todo - BREAKING CHANGE] Drop inducer `run-config-inducers` in favor of dynamic/late variable substitution
 
 
 ## [WIP] 0.6.0 / 2018-March-??
@@ -23,14 +32,10 @@
     - For parser function `keypin.util/any->fn`
 - Key definitions
   - [BREAKING CHANGE] Switch launcher key from config `"bract.core.launcher"` to context `:bract.core/launcher`
-  - [BREAKING CHANGE] Remove exports config keydef `"bract.core.exports"` (in favor of using variable instead)
   - [BREAKING CHANGE] Set default context file to `bract-context.edn`
   - Set default value for config key `config-inducers` to `[]`
   - Change launcher parser from `str->var` to `any->fn`
 - Inducers
-  - [BREAKING CHANGE] Have inducers dealing with system properties accept export-key/value arguments
-    - `export-as-sysprops`
-    - `unexport-sysprops`
   - Fix issue where vector and map arguments are misinterpreted as functions upon parsing
 - CLI entrypoint
   - Add `bract.core.main` namespace for CLI entry point

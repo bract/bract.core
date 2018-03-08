@@ -146,29 +146,33 @@
 
 
 (defn export-as-sysprops
-  "Given context and export-key/value map, export those key-value pairs (both must be string) as system properties."
-  [context export-map]
-  (util/expected map? "export property map as map" export-map)
-  (echo/echo "Exporting as system properties" export-map)
-  (reduce-kv
-    (fn [_ k v]
-      (util/expected string? "export property name as string" k)
-      (util/expected string? (format "export property value for key '%s' as string" k) v)
-      (System/setProperty k v))
-    nil
-    export-map))
+  "Given context with config, read the value of config key \"bract.core.exports\" as a vector of string config keys and
+  export the key-value pairs for those config keys as system properties."
+  [context]
+  (let [config (kdef/ctx-config context)
+        exlist (-> (kdef/cfg-exports config)
+                 (echo/->echo "Exporting as system properties"))]
+    (doseq [each exlist]
+      (util/expected string? "export property name as string" each)
+      (when-not (contains? config each)
+        (util/expected (format "export property name '%s' to exist in config" each) config))
+      (util/expected string? (format "value for export property name '%s' as string" each) (get config each))
+      (System/setProperty each (get config each)))
+    context))
 
 
 (defn unexport-sysprops
-  "Given context and export keys, remove the export-keys from system properties."
-  [context export-keys]
-  (util/expected (some-fn map? coll?) "export property keys as map or collection" export-keys)
-  (let [ks (-> (if (map? export-keys)
-                 (keys export-keys)
-                 export-keys)
-             (echo/->echo "Un-exporting (removing) system properties"))]
-    (doseq [each ks]
+  "Given context with config, read the value of config key \"bract.core.exports\" as a vector of string config keys and
+  remove them from system properties."
+  [context]
+  (let [config (kdef/ctx-config context)
+        exlist (-> (kdef/cfg-exports config)
+                 (echo/->echo "Un-exporting (removing) system properties"))]
+    (doseq [each exlist]
       (util/expected string? "export property name as string" each)
+      (when-not (contains? config each)
+        (util/expected (format "export property name '%s' to exist in config" each) config))
+      (util/expected string? (format "value for export property name '%s' as string" each) (get config each))
       (System/clearProperty each))
     context))
 
