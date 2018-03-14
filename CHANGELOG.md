@@ -28,8 +28,7 @@
 
 - Config
   - Upgrade Keypin dependency to version `0.7.3`
-    - [Todo] Use GA version of Keypin `0.7.3`
-    - For parser function `keypin.util/any->fn`
+    - For parser function `keypin.util/str->fn`
 - Key definitions
   - [BREAKING CHANGE] Switch launcher key from config `"bract.core.launcher"` to context `:bract.core/launcher`
   - [BREAKING CHANGE] Set default context file to `bract-context.edn`
