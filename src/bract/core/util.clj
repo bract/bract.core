@@ -209,6 +209,12 @@
                      (expected "java.io.PrintStream or java.io.PrintWriter instance" out))))))
 
 
+(defn invoke
+  "Invoke first argument as a function on the remaining arguments."
+  [f & args]
+  (apply f args))
+
+
 ;; conversion
 
 
