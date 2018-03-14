@@ -24,7 +24,7 @@
   - [Todo - BREAKING CHANGE] Drop inducer `run-config-inducers` in favor of dynamic/late variable substitution
 
 
-## [WIP] 0.6.0 / 2018-March-??
+## 0.6.0-alpha1 / 2018-March-14
 
 - Config
   - Upgrade Keypin dependency to version `0.7.3`
