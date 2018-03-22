@@ -26,7 +26,7 @@
 
 ## [WIP] 0.6.0-alpha2 / 2018-March-??
 
-- [Todo] Add `let-var` utility macro
+- Add `let-var` utility macro
 
 
 ## 0.6.0-alpha1 / 2018-March-14
