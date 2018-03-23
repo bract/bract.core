@@ -24,6 +24,11 @@
   - [Todo - BREAKING CHANGE] Drop inducer `run-config-inducers` in favor of dynamic/late variable substitution
 
 
+## [WIP] 0.6.0-alpha3 / 2018-March-??
+
+- [Todo] Add context utility fn `(induce-exit context)`
+
+
 ## 0.6.0-alpha2 / 2018-March-22
 
 - Add `let-var` utility macro
