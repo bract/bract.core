@@ -26,7 +26,7 @@
 
 ## [WIP] 0.6.0-alpha3 / 2018-March-??
 
-- [Todo] Add context utility fn `(induce-exit context)`
+- Add context utility fn `bract.core.keydef/induce-exit`
 
 
 ## 0.6.0-alpha2 / 2018-March-22

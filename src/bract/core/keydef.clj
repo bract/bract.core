@@ -125,6 +125,12 @@
         kputil/clojurize-subst))))
 
 
+(defn induce-exit
+  "Update given context with {:bract.core/exit? true} to bail out of the inducer-chain at all levels."
+  [context]
+  (assoc context (key ctx-exit?) true))
+
+
 (defn print-config
   "Print the given config using the format determined from the supplied config file names."
   [config config-filenames]
