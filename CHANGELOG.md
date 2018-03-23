@@ -24,7 +24,7 @@
   - [Todo - BREAKING CHANGE] Drop inducer `run-config-inducers` in favor of dynamic/late variable substitution
 
 
-## [WIP] 0.6.0-alpha3 / 2018-March-??
+## 0.6.0-alpha3 / 2018-March-23
 
 - Add context utility fn `bract.core.keydef/induce-exit`
 - Change exit-code constraint from 'zero or +ve int' to 'int'
