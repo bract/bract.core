@@ -27,6 +27,7 @@
 ## [WIP] 0.6.0-alpha3 / 2018-March-??
 
 - Add context utility fn `bract.core.keydef/induce-exit`
+- Change exit-code constraint from 'zero or +ve int' to 'int'
 
 
 ## 0.6.0-alpha2 / 2018-March-22

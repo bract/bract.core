@@ -105,7 +105,7 @@
       (is (thrown? IllegalArgumentException (kdef/ctx-runtime-info   bad-context)))
       (is (thrown? IllegalArgumentException (kdef/ctx-alive-tstamp   bad-context)))
       (is (thrown? IllegalArgumentException (kdef/ctx-app-exit-code  bad-context)))
-      (is (thrown? IllegalArgumentException (kdef/ctx-app-exit-code  {:bract.core/app-exit-code -10})))
+      (is (thrown? IllegalArgumentException (kdef/ctx-app-exit-code  {:bract.core/app-exit-code "foo"})))
       (is (thrown? IllegalArgumentException (kdef/*ctx-shutdown-flag bad-context)))
       (is (thrown? IllegalArgumentException (kdef/ctx-shutdown-hooks bad-context))))))
 

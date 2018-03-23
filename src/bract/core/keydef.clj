@@ -62,9 +62,9 @@
   ctx-runtime-info   [:bract.core/runtime-info  fn-coll? "Runtime-info functions [(fn []) ..]" {:default []}]
   ctx-alive-tstamp   [:bract.core/alive-tstamp   ifn?    "Derefable (fn []): alive timestamp in milliseconds"
                       {:default (util/alive-millis)}]
-  ctx-app-exit-code  [:bract.core/app-exit-code  (some-fn (every-pred integer? (some-fn pos? zero?))
-                                                   nil?) "Application exit code (int, >= 0)" {:parser kputil/any->int
-                                                                                              :default nil}]
+  ctx-app-exit-code  [:bract.core/app-exit-code  (some-fn integer?
+                                                   nil?) "Application exit code (int)" {:parser kputil/any->int
+                                                                                        :default nil}]
   *ctx-shutdown-flag [:bract.core/*shutdown-flag volatile? "Volatile: Shutdown begun?" {:default (volatile! false)}]
   ctx-shutdown-hooks [:bract.core/shutdown-hooks vector? "Added shutdown hook threads" {:default []}])
 
