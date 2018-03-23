@@ -126,9 +126,14 @@
 
 
 (defn induce-exit
-  "Update given context with {:bract.core/exit? true} to bail out of the inducer-chain at all levels."
-  [context]
-  (assoc context (key ctx-exit?) true))
+  "Update given context with {:bract.core/exit? true} to bail out of the inducer-chain at all levels. Optionally, add
+  application exit code when exiting inducer chain."
+  ([context]
+    (assoc context (key ctx-exit?) true))
+  ([context ^long exit-code]
+    (-> context
+      (assoc (key ctx-app-exit-code) exit-code)
+      (assoc (key ctx-exit?) true))))
 
 
 (defn print-config
