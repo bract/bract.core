@@ -26,7 +26,7 @@
 
 ## [WIP] 0.6.0-alpha4 / 2018-March-??
 
-- [Todo] Upgrade Keypin to version `0.7.4`
+- Upgrade Keypin to version `0.7.4`
 - [Todo - BREAKING CHANGE] Remove inducer `bract.core.inducer/fallback-config-files`
 
 
