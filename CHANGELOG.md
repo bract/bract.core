@@ -24,6 +24,12 @@
   - [Todo - BREAKING CHANGE] Drop inducer `run-config-inducers` in favor of dynamic/late variable substitution
 
 
+## [WIP] 0.6.0-alpha4 / 2018-March-??
+
+- [Todo] Upgrade Keypin to version `0.7.4`
+- [Todo - BREAKING CHANGE] Remove inducer `bract.core.inducer/fallback-config-files`
+
+
 ## 0.6.0-alpha3 / 2018-March-23
 
 - Add context utility fn `bract.core.keydef/induce-exit`
