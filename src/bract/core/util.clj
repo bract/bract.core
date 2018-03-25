@@ -277,7 +277,7 @@
   (if (empty? bindings)
     `(do ~@body)
     (let [[left right] bindings]
-      `(let [right# ~right
+      `(let [right# (symbol ~right)
              ns# (symbol (namespace right#))]
          (try (require ns#)
            (catch FileNotFoundException e#
