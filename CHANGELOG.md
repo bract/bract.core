@@ -24,7 +24,7 @@
   - [Todo - BREAKING CHANGE] Drop inducer `run-config-inducers` in favor of dynamic/late variable substitution
 
 
-## [WIP] 0.6.0-beta1 / 2018-March-??
+## 0.6.0-beta1 / 2018-March-27
 
 - Output important messages to STDERR when echo is disabled
 
