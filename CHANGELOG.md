@@ -26,7 +26,7 @@
 
 ## [WIP] 0.6.0-beta1 / 2018-March-??
 
-- [Todo] Output important messages to STDERR when Echo is disabled
+- Output important messages to STDERR when echo is disabled
 
 
 ## 0.6.0-alpha4 / 2018-March-25

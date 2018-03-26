@@ -227,8 +227,11 @@
           timeout (-> (kdef/ctx-config context)
                     kdef/cfg-drain-timeout
                     kptype/millis)                   ; timeout in millis
+          t-messg "The JVM received a TERMINATE request, reached shutdown-hook"
           thread  (Thread. (fn []
-                             (echo/echo "JVM received a TERMINATE request, reached shutdown-hook")
+                             (if (Echo/isVerbose)
+                               (echo/echo t-messg)
+                               (util/err-println t-messg))
                              ;; set the flag
                              (when flag
                                (vswap! flag (fn [fval]
@@ -242,10 +245,13 @@
                                                        (unchecked-add last-alive-millis ^long timeout)
                                                        (unchecked-add (util/now-millis) ^long timeout))]
                                (while (< (util/now-millis) until-time-millis)
-                                 (let [nap-millis (unchecked-subtract until-time-millis (util/now-millis))]
+                                 (let [nap-millis  (unchecked-subtract until-time-millis (util/now-millis))
+                                       nap-message (format "Waiting for current workload to drain, time remaing: %d ms"
+                                                     nap-millis)]
                                    (when (pos? nap-millis)
-                                     (echo/echof "Waiting for current workload to drain, time remaing: %d ms"
-                                       nap-millis)
+                                     (if (Echo/isVerbose)
+                                       (echo/echo nap-message)
+                                       (util/err-println nap-message))
                                      (util/sleep-millis (min 500 nap-millis))))))
                              ;; invoke shutdown-hook inducer
                              (echo/echo "Workload draining timed out, executing shutdown-hook inducer now")
