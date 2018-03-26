@@ -24,6 +24,11 @@
   - [Todo - BREAKING CHANGE] Drop inducer `run-config-inducers` in favor of dynamic/late variable substitution
 
 
+## [WIP] 0.6.0-beta1 / 2018-March-??
+
+- [Todo] Output important messages to STDERR when Echo is disabled
+
+
 ## 0.6.0-alpha4 / 2018-March-25
 
 - Upgrade Keypin to version `0.7.4`
