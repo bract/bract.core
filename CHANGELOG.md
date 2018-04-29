@@ -24,6 +24,12 @@
   - [Todo - BREAKING CHANGE] Drop inducer `run-config-inducers` in favor of dynamic/late variable substitution
 
 
+## [WIP] 0.6.0-beta2 / 2018-March-??
+
+- [Todo] Exception during inducer should echo the inducer name and error message
+- [Todo] In `run-context-inducers` and `run-config-inducers` echo the key under which we find inducers
+
+
 ## 0.6.0-beta1 / 2018-March-27
 
 - Output important messages to STDERR when echo is disabled
