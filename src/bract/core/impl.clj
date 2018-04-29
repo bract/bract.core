@@ -24,6 +24,7 @@
 (defmacro with-lookup-key
   [lookup-key & body]
   `(binding [*lookup-key* ~lookup-key]
+     (echo/echo "Looking up inducer-list at key" ~lookup-key)
      ~@body))
 
 
