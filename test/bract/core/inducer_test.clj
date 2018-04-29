@@ -89,10 +89,12 @@
   (testing "arity 1"
     (let [verbosity? (Echo/isVerbose)
           context {:bract.core/verbose? true
-                   :bract.core/inducers ['bract.core.inducer/set-verbosity]}]
+                   :bract.core/inducers ['bract.core.inducer/set-verbosity
+                                         (fn [x] (throw (IllegalStateException. "test")))]}]
       (try
         (Echo/setVerbose false)
-        (inducer/run-context-inducers context)
+        (is (thrown? IllegalStateException
+              (inducer/run-context-inducers context)) "Verbose exception echo")
         (is (true? (Echo/isVerbose)) "Verbosity should be enabled after configuring it as true")
         (finally
           (Echo/setVerbose verbosity?)))))

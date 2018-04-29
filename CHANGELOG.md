@@ -26,7 +26,7 @@
 
 ## [WIP] 0.6.0-beta2 / 2018-March-??
 
-- [Todo] Exception during inducer should echo the inducer name and error message
+- Echo the inducer name and error message on exception in inducer
 - [Todo] In `run-context-inducers` and `run-config-inducers` echo the key under which we find inducers
 
 

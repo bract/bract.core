@@ -92,6 +92,9 @@
          messg# ~message]
      (echof "Invoking '%s'" messg#)
      (try
-       ~@body
-       (finally
-         (echof "Finished '%s' in %dms" messg# (- (System/currentTimeMillis) start#))))))
+       (let [result# (do ~@body)]
+         (echof "Finished '%s' in %dms" messg# (- (System/currentTimeMillis) start#))
+         result#)
+       (catch Exception e#
+         (echof "Error in '%s' in %dms - %s" messg# (- (System/currentTimeMillis) start#) (str e#))
+         (throw e#)))))
