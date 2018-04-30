@@ -14,6 +14,7 @@
   - Requires env key/alias definition
   - Env key/alias should switch the config file(s)
 - Config
+  - [Todo] Add a context keydef (fn) to determine whether draining is over, for `add-shutdown-hook` times out
   - [Todo] Make config and context entries accessible to each other for substitutions
   - [Todo] Realize variables as extraction time (late, not early)
   - [Todo - BREAKING CHANGE] Remove exports config keydef `"bract.core.exports"` (in favor of using variable instead)
