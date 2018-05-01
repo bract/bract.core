@@ -131,7 +131,7 @@
   (echo/with-latency-capture "Launching application"
     (-> app-context
       (assoc (key kdef/ctx-launch?) true)
-      inducer/invoke-launcher
+      inducer/invoke-launchers
       record-context!))
   nil)
 
