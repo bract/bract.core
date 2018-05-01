@@ -167,25 +167,23 @@
     context))
 
 
-(defn prepare-launcher
-  "Update launcher config with the specified one and enable launch."
-  [context launcher]
-  (assoc context
-    (key kdef/ctx-launcher) launcher
-    (key kdef/ctx-launch?) true))
-
-
-(defn invoke-launcher
-  "Given context with config, read the value of config key \"bract.core.launcher\" as a fully qualified launcher fn
-  name and invoke it as (fn [context]) when the context key :bract.core/launch? has the value true."
-  [context]
-  (if (kdef/ctx-launch? context)
-    (let [launcher (kdef/ctx-launcher context)]
-      (echo/echo "Launcher name:" launcher)
-      (launcher context))
-    (do
-      (echo/echo "Launch not enabled, skipping launch.")
-      context)))
+(defn invoke-launchers
+  "Given context with key :bract.core/launchers read its value as a vector of launcher fns and invoke them like
+  inducers `(fn [context]) -> context` when the context key :bract.core/launch? has the value true."
+  ([context]
+    (if (kdef/ctx-launch? context)
+      (invoke-launchers context (kdef/ctx-launchers context))
+      (do
+        (echo/echo "Launch not enabled, skipping launch.")
+        context)))
+  ([context launchers]
+    (if (kdef/ctx-launch? context)
+      (do
+        (echo/echo "Launcher name:" launchers)
+        (induce context launchers))
+      (do
+        (echo/echo "Launch not enabled, skipping launch.")
+        context))))
 
 
 (defn invoke-deinit

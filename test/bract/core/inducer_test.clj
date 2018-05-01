@@ -176,19 +176,12 @@
   (vswap! volatile-holder #(inc ^long %)))
 
 
-(deftest test-prepare-launcher
-  (let [context (inducer/prepare-launcher {} #'launcher-inc)]
-    (is (= {:bract.core/config {"bract.core.launcher" #'launcher-inc}})))
-  (let [context (inducer/prepare-launcher {:bract.core/config {"bract.core.launcher" 'foo.bar/baz}} #'launcher-inc)]
-    (is (= {:bract.core/config {"bract.core.launcher" #'launcher-inc}}))))
-
-
-(deftest test-invoke-launcher
+(deftest test-invoke-launchers
   (vreset! volatile-holder 0)
-  (inducer/invoke-launcher {:bract.core/launch? false})
+  (inducer/invoke-launchers {:bract.core/launch? false})
   (is (zero? @volatile-holder))
-  (inducer/invoke-launcher {:bract.core/launch? true
-                            :bract.core/launcher 'bract.core.inducer-test/launcher-inc})
+  (inducer/invoke-launchers {:bract.core/launch? true
+                             :bract.core/launchers ['bract.core.inducer-test/launcher-inc]})
   (is (= 1 @volatile-holder)))
 
 

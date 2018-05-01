@@ -28,7 +28,7 @@
                                                      [bar.baz qux]]
                         :bract.core/deinit         '[foo bar]
                         :bract.core/launch?        true
-                        :bract.core/launcher       'bract.core.inducer/apply-inducer
+                        :bract.core/launchers      ['bract.core.inducer/apply-inducer]
                         :bract.core/stopper        (fn [] :stopped)
                         :bract.core/health-check   [(fn [] {:id :mysql :status :degraded})
                                                     (fn [] {:id :cache :status :healthy})]
@@ -46,7 +46,7 @@
       (is (= {"foo" "bar"}                (kdef/ctx-config         good-context)))
       (is (vector?                        (kdef/ctx-inducers       good-context)))
       (is (= true                         (kdef/ctx-launch?        good-context)))
-      (is (some?                          (kdef/ctx-launcher       good-context)))
+      (is (coll?                          (kdef/ctx-launchers      good-context)))
       (is (fn?                            (kdef/ctx-stopper        good-context)))
       (is (vector?                        (kdef/ctx-health-check   good-context)))
       (is (vector?                        (kdef/ctx-runtime-info   good-context)))
@@ -73,7 +73,7 @@
   (testing "missing values"
     (is (thrown? IllegalArgumentException (kdef/ctx-cli-args  {})))
     (is (thrown? IllegalArgumentException (kdef/ctx-config    {})))
-    (is (thrown? IllegalArgumentException (kdef/ctx-launcher {}))))
+    (is (thrown? IllegalArgumentException (kdef/ctx-launchers {}))))
   (testing "bad values"
     (let [bad-context {:bract.core/verbose?       10
                        :bract.core/context-file   10
@@ -83,7 +83,7 @@
                        :bract.core/inducers       10
                        :bract.core/deinit         10
                        :bract.core/launch?        10
-                       :bract.core/launcher       false
+                       :bract.core/launchers      false
                        :bract.core/stopper        10
                        :bract.core/health-check   10
                        :bract.core/runtime-info   10
@@ -99,7 +99,7 @@
       (is (thrown? IllegalArgumentException (kdef/ctx-inducers       bad-context)))
       (is (thrown? IllegalArgumentException (kdef/ctx-deinit         bad-context)))
       (is (thrown? IllegalArgumentException (kdef/ctx-launch?        bad-context)))
-      (is (thrown? IllegalArgumentException (kdef/ctx-launcher       bad-context)))
+      (is (thrown? IllegalArgumentException (kdef/ctx-launchers      bad-context)))
       (is (thrown? IllegalArgumentException (kdef/ctx-stopper        bad-context)))
       (is (thrown? IllegalArgumentException (kdef/ctx-health-check   bad-context)))
       (is (thrown? IllegalArgumentException (kdef/ctx-runtime-info   bad-context)))

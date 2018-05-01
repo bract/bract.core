@@ -55,7 +55,7 @@
   ctx-inducers       [:bract.core/inducers       vector? "Vector of inducer fns or fully qualified names" {:default []}]
   ctx-deinit         [:bract.core/deinit        fn-coll? "Functions [(fn []) ..] to deinitialize the app" {:default []}]
   ctx-launch?        [:bract.core/launch?   kputil/bool? "Whether invoke launcher fn" {:default false}]
-  ctx-launcher       [:bract.core/launcher       fn?     "Fully qualified launcher fn name" {:parser kputil/str->fn}]
+  ctx-launchers      [:bract.core/launchers      vector? "Fully qualified launcher fn names"]
   ctx-stopper        [:bract.core/stopper        fn?     "Function (fn []) to stop the started application"
                       {:default #(echo/echo "Application stopper is not configured, skipping stop.")}]
   ctx-health-check   [:bract.core/health-check  fn-coll? "Health check functions [(fn []) ..]" {:default []}]

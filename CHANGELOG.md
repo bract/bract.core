@@ -2,6 +2,8 @@
 
 ## Ideas and TODO
 
+- [Todo] Add Bract's own `defkey` that looks up config, followed by context
+- [Todo] Combined context/config lookup for variable substitution
 - [Idea] Dev triggers should accept an optional param
   - Init a sub-system
   - De-init a sub-system
@@ -29,6 +31,9 @@
 
 - Echo the inducer name and error message on exception in inducer
 - Echo inducer-list key in `run-context-inducers` and `run-config-inducers`
+- [BREAKING CHANGE] Change launcher key to `:bract.core/launchers` - a vector of launcher fns
+- [BREAKING CHANGE] Rename inducer `invoke-launcher` to `invoke-launchers`
+- [BREAKING CHANGE] Remove inducer `prepare-launcher`
 
 
 ## 0.6.0-beta1 / 2018-March-27
