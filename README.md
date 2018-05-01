@@ -5,7 +5,7 @@ Essential functionality for Bract and a common dependency for all other modules.
 
 ## Clojars coordinates
 
-`[bract/bract.core "0.6.0-beta2-SNAPSHOT"]`
+`[bract/bract.core "0.6.0-beta2"]`
 
 
 ## Documentation

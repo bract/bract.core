@@ -27,7 +27,7 @@
   - [Todo - BREAKING CHANGE] Drop inducer `run-config-inducers` in favor of dynamic/late variable substitution
 
 
-## [WIP] 0.6.0-beta2 / 2018-March-??
+## 0.6.0-beta2 / 2018-May-01
 
 - Echo the inducer name and error message on exception in inducer
 - Echo inducer-list key in `run-context-inducers` and `run-config-inducers`
