@@ -30,7 +30,7 @@
 ## [WIP] 0.6.0-beta3 / 2018-May-??
 
 - Development support
-  - [Todo] Add `bract.core.dev/context` to reveal or override the context file
+  - Add `bract.core.dev/context-file` to reveal or override the context file
   - [Todo] Add `bract.core.dev/seed-context` to expose or override the root-context
   - [Todo] Accept optional CLI args, e.g. `"-c" "run" "-vf" "config/config.edn"` in
     - [Todo] `bract.core.dev/start`

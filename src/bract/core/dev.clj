@@ -22,6 +22,24 @@
 ;; ----- overrides -----
 
 
+(defn context-file
+  "Set context file to specified argument (unless environment variable APP_CONTEXT is set):
+  string - set context file as override
+  nil    - clear context file override"
+  ([]
+    (when-let [context-file (System/getenv "APP_CONTEXT")]
+      (util/err-println (format "Environment variable APP_CONTEXT='%s' overrides context file" context-file)))
+    (System/getProperty "app.context"))
+  ([context-file-name]
+    (if-let [env-context-file (System/getenv "APP_CONTEXT")]
+      (util/err-println (format "Override failed due to environment variable APP_CONTEXT='%s'" env-context-file))
+      (cond
+        (nil? context-file-name)    (System/clearProperty "app.context")
+        (string? context-file-name) (System/setProperty "app.context" context-file-name)
+        :otherwise                  (throw (ex-info (str "Expected argument to be string or nil but found "
+                                                      (pr-str context-file-name)) {}))))))
+
+
 (defn verbose
   "Set verbose mode to specified status (unless environment variable APP_VERBOSE is set):
   true  - enable verbose mode
