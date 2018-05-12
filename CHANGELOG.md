@@ -27,7 +27,7 @@
   - [Todo - BREAKING CHANGE] Drop inducer `run-config-inducers` in favor of dynamic/late variable substitution
 
 
-## [WIP] 0.6.0-beta3 / 2018-May-??
+## 0.6.0-beta3 / 2018-May-12
 
 - Development support
   - Add `bract.core.dev/context-file` to reveal or override the context file
