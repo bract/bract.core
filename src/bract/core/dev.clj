@@ -10,6 +10,7 @@
 (ns bract.core.dev
   "Development and test support."
   (:require
+    [clojure.string     :as string]
     [bract.core.keydef  :as kdef]
     [bract.core.echo    :as echo]
     [bract.core.inducer :as inducer]
@@ -59,22 +60,34 @@
         (throw (ex-info (str "Expected argument to be true, false or nil but found " (pr-str status?)) {}))))))
 
 
-(defn config
+(defn config-files
   "Set config files to specified argument (unless environment variable APP_CONFIG is set):
-  string - set config files as override
-  nil    - clear config file override"
+  collection - set config files as override
+  string     - set config files as override
+  nil        - clear config file override"
   ([]
-    (when-let [config-file (System/getenv "APP_CONFIG")]
-      (util/err-println (format "Environment variable APP_CONFIG='%s' overrides config file" config-file)))
+    (when-let [config-filenames (System/getenv "APP_CONFIG")]
+      (util/err-println (format "Environment variable APP_CONFIG='%s' overrides config file" config-filenames)))
     (System/getProperty "app.config"))
-  ([config]
-    (if-let [config-file (System/getenv "APP_CONFIG")]
-      (util/err-println (format "Override failed due to environment variable APP_CONFIG='%s'" config-file))
+  ([config-filenames]
+    (if-let [env-config-filenames (System/getenv "APP_CONFIG")]
+      (util/err-println (format "Override failed due to environment variable APP_CONFIG='%s'" env-config-filenames))
       (cond
-        (nil? config)    (System/clearProperty "app.config")
-        (string? config) (System/setProperty "app.config" config)
-        :otherwise       (throw (ex-info (str "Expected argument to be string or nil but found " (pr-str config))
-                                  {}))))))
+        (nil? config-filenames)    (do
+                                     (System/clearProperty "app.config")
+                                     nil)
+        (and (coll? config-filenames)
+          (every? string?
+            config-filenames))     (let [filenames (string/join ", " config-filenames)]
+                                     (System/setProperty "app.config" filenames)
+                                     filenames)
+        (string? config-filenames) (do
+                                     (System/setProperty "app.config" config-filenames)
+                                     config-filenames)
+        :otherwise                 (-> "Expected argument to be collection of string, string or nil but found "
+                                     (str (pr-str config-filenames))
+                                     (ex-info {:config-filenames config-filenames})
+                                     throw)))))
 
 
 ;; ----- default -----

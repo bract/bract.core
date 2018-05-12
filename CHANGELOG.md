@@ -31,6 +31,9 @@
 
 - Development support
   - Add `bract.core.dev/context-file` to reveal or override the context file
+  - Refactor `bract.core.dev/config`
+    - [BREAKING CHANGE] Rename to `bract.core.dev/config-files`
+    - Accept a collection of config filenames as argument
   - [Todo] Add `bract.core.dev/seed-context` to expose or override the root-context
   - [Todo] Accept optional CLI args, e.g. `"-c" "run" "-vf" "config/config.edn"` in
     - [Todo] `bract.core.dev/start`
