@@ -31,14 +31,20 @@
     (when-let [context-file (System/getenv "APP_CONTEXT")]
       (util/err-println (format "Environment variable APP_CONTEXT='%s' overrides context file" context-file)))
     (System/getProperty "app.context"))
-  ([context-file-name]
+  ([context-filename]
     (if-let [env-context-file (System/getenv "APP_CONTEXT")]
       (util/err-println (format "Override failed due to environment variable APP_CONTEXT='%s'" env-context-file))
       (cond
-        (nil? context-file-name)    (System/clearProperty "app.context")
-        (string? context-file-name) (System/setProperty "app.context" context-file-name)
-        :otherwise                  (throw (ex-info (str "Expected argument to be string or nil but found "
-                                                      (pr-str context-file-name)) {}))))))
+        (nil? context-filename)    (do
+                                     (System/clearProperty "app.context")
+                                     nil)
+        (string? context-filename) (do
+                                     (System/setProperty "app.context" context-filename)
+                                     context-filename)
+        :otherwise                  (-> "Expected argument to be string or nil but found "
+                                      (str (pr-str context-filename))
+                                      (ex-info {:context-filename context-filename})
+                                      throw)))))
 
 
 (defn verbose
@@ -90,7 +96,7 @@
                                      throw)))))
 
 
-;; ----- default -----
+;; ----- initial context -----
 
 
 (def root-context {(key kdef/ctx-context-file) "bract-context.dev.edn"
@@ -98,13 +104,20 @@
                    (key kdef/ctx-launch?)      false})
 
 
+(defonce ^:redef seed-context {})
+
+
+;; ----- REPL helpers -----
+
+
 (defn init
   "Initialize app in DEV mode."
   []
   (try
-    (inducer/set-verbosity root-context)
-    (echo/with-latency-capture "Initializing app in DEV mode"
-      (inducer/induce inducer/apply-inducer root-context main/root-inducers))
+    (let [init-context (merge root-context seed-context)]
+      (inducer/set-verbosity init-context)
+      (echo/with-latency-capture "Initializing app in DEV mode"
+        (inducer/induce inducer/apply-inducer init-context main/root-inducers)))
     (catch Throwable e
       (util/pst-when-uncaught-handler e)
       (throw e))))
