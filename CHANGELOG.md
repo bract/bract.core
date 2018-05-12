@@ -27,6 +27,16 @@
   - [Todo - BREAKING CHANGE] Drop inducer `run-config-inducers` in favor of dynamic/late variable substitution
 
 
+## [WIP] 0.6.0-beta3 / 2018-May-??
+
+- Development support
+  - [Todo] Add `bract.core.dev/context` to reveal or override the context file
+  - [Todo] Add `bract.core.dev/seed-context` to expose or override the root-context
+  - [Todo] Accept optional CLI args, e.g. `"-c" "run" "-vf" "config/config.edn"` in
+    - [Todo] `bract.core.dev/start`
+    - [Todo] `bract.core.dev/restart`
+
+
 ## 0.6.0-beta2 / 2018-May-01
 
 - Echo the inducer name and error message on exception in inducer
