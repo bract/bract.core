@@ -12,7 +12,7 @@
   (:require
     [clojure.string :as string])
   (:import
-    [java.io PrintStream PrintWriter StringWriter]
+    [java.io FileNotFoundException PrintStream PrintWriter StringWriter]
     [java.util UUID]
     [java.util.concurrent ThreadLocalRandom]
     [clojure.lang IDeref IFn Named]))
@@ -209,6 +209,12 @@
                      (expected "java.io.PrintStream or java.io.PrintWriter instance" out))))))
 
 
+(defn invoke
+  "Invoke first argument as a function on the remaining arguments."
+  [f & args]
+  (apply f args))
+
+
 ;; conversion
 
 
@@ -260,3 +266,23 @@
       (> n b-to-mb) (format "%.2f MBytes" (double (/ n b-to-mb)))
       (> n b-to-kb) (format "%.2f KBytes" (double (/ n b-to-kb)))
       :otherwise (str n " Bytes"))))
+
+
+(defmacro let-var
+  "Given a binding vector where right-hand side is fully-qualified var name symbol and body of code, resolve the vars
+  and evaluate the body of code in the binding context."
+  [bindings & body]
+  (expected vector? "a binding vector" bindings)
+  (expected (comp even? count) "even number of binding forms" bindings)
+  (if (empty? bindings)
+    `(do ~@body)
+    (let [[left right] bindings]
+      `(let [right# (symbol ~right)
+             ns# (symbol (namespace right#))]
+         (try (require ns#)
+           (catch FileNotFoundException e#
+             (throw (ex-info (format "Error loading namespace %s when resolving var %s" ns# right#) {}))))
+         (if-let [~left (find-var right#)]
+           (let-var [~@(drop 2 bindings)]
+             ~@body)
+           (throw (ex-info (format "Cannot find fn '%s' in classpath." right#) {})))))))

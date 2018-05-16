@@ -2,6 +2,8 @@
 
 ## Ideas and TODO
 
+- [Todo] Add Bract's own `defkey` that looks up config, followed by context
+- [Todo] Combined context/config lookup for variable substitution
 - [Idea] Dev triggers should accept an optional param
   - Init a sub-system
   - De-init a sub-system
@@ -13,16 +15,52 @@
 - [Idea - Dev] Several tasks should accept an optional env key, e.g. `(start :qa)` that looks up env from context
   - Requires env key/alias definition
   - Env key/alias should switch the config file(s)
-- [Todo - BREAKING CHANGE] Drop bract.core.type and bract.core.impl in favour of a multimethod (for flexibility)
-- [Todo - BREAKING CHANGE] Switch launcher from config to context value
-- [Todo - BREAKING CHANGE] Remove exports config keydef (use variable instead)
-- [Todo] Change launcher keydef from str->var to function-aware parser (any->fn)
-- [Todo] Introduce inducer-list key definition for
-  - pre-config 
-  - app-inducers
-- [Todo] Possibly drop the inducer-list key definition
-  - context-inducers (replaced by explicitly specified key)
-  - config-inducers (replaced by explicitly specified key)
+- Config
+  - [Todo] Add a context keydef (fn) to determine whether draining is over, for `add-shutdown-hook` times out
+  - [Todo] Make config and context entries accessible to each other for substitutions
+  - [Todo] Realize variables as extraction time (late, not early)
+  - [Todo - BREAKING CHANGE] Remove exports config keydef `"bract.core.exports"` (in favor of using variable instead)
+  - [Todo - BREAKING CHANGE] Have inducers dealing with system properties accept export-key/value arguments
+    - `export-as-sysprops`
+    - `unexport-sysprops`
+  - [Todo - BREAKING CHANGE] Drop inducer `run-context-inducers` in favor of dynamic/late variable substitution
+  - [Todo - BREAKING CHANGE] Drop inducer `run-config-inducers` in favor of dynamic/late variable substitution
+
+
+## [WIP] 0.6.0 / 2018-May-??
+
+- Config
+  - Upgrade Keypin dependency to version `0.7.4`
+    - For parser function `keypin.util/str->fn`
+- Key definitions
+  - [BREAKING CHANGE] Change launcher key from config `"bract.core.launcher"` to context `:bract.core/launchers`
+    - Vector of launcher fns
+  - [BREAKING CHANGE] Set default context file to `bract-context.edn`
+  - Set default value for config key `config-inducers` to `[]`
+  - Change launcher parser from `str->var` to `any->fn`
+  - Add context utility fn `bract.core.keydef/induce-exit`
+  - Change exit-code constraint from 'zero or +ve int' to 'int'
+- Inducers
+  - Fix issue where vector and map arguments are misinterpreted as functions upon parsing
+  - [BREAKING CHANGE] Remove inducer `bract.core.inducer/fallback-config-files`
+  - [BREAKING CHANGE] Rename inducer `invoke-launcher` to `invoke-launchers`
+  - [BREAKING CHANGE] Remove inducer `prepare-launcher`
+  - Output important messages to STDERR when echo is disabled
+  - Echo the inducer name and error message on exception in inducer
+  - Echo inducer-list key in `run-context-inducers` and `run-config-inducers`
+- CLI entrypoint
+  - Add `bract.core.main` namespace for CLI entry point
+    - Define root inducers
+- Development support
+  - [BREAKING CHANGE] Drop dev root inducers in favour of `bract.core.main` root inducers
+  - [BREAKING CHANGE] Rename `bract.core.dev/default-root-context` to `bract.core.dev/root-context`
+  - Add `bract.core.dev/context-file` to reveal or override the context file
+  - Refactor `bract.core.dev/config`
+    - [BREAKING CHANGE] Rename to `bract.core.dev/config-files`
+    - Accept a collection of config filenames as argument
+  - Add `bract.core.dev/seed-context` to potentially override the root-context
+- Utility
+  - Add `let-var` utility macro
 
 
 ## 0.5.1 / 2018-March-05

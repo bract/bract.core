@@ -42,7 +42,7 @@
                                                                                     :envvar  "APP_VERBOSE"
                                                                                     :sysprop "app.verbose"}]
   ctx-context-file   [:bract.core/context-file (some-fn string?
-                                                 nil?)   "Context file name"       {:default nil
+                                                 nil?)   "Context file name"       {:default "bract-context.edn"
                                                                                     :envvar  "APP_CONTEXT"
                                                                                     :sysprop "app.context"}]
   ctx-config-files   [:bract.core/config-files   vector? "Config file names"       {:parser  kputil/any->vec
@@ -55,26 +55,26 @@
   ctx-inducers       [:bract.core/inducers       vector? "Vector of inducer fns or fully qualified names" {:default []}]
   ctx-deinit         [:bract.core/deinit        fn-coll? "Functions [(fn []) ..] to deinitialize the app" {:default []}]
   ctx-launch?        [:bract.core/launch?   kputil/bool? "Whether invoke launcher fn" {:default false}]
+  ctx-launchers      [:bract.core/launchers      vector? "Fully qualified launcher fn names"]
   ctx-stopper        [:bract.core/stopper        fn?     "Function (fn []) to stop the started application"
                       {:default #(echo/echo "Application stopper is not configured, skipping stop.")}]
   ctx-health-check   [:bract.core/health-check  fn-coll? "Health check functions [(fn []) ..]" {:default []}]
   ctx-runtime-info   [:bract.core/runtime-info  fn-coll? "Runtime-info functions [(fn []) ..]" {:default []}]
   ctx-alive-tstamp   [:bract.core/alive-tstamp   ifn?    "Derefable (fn []): alive timestamp in milliseconds"
                       {:default (util/alive-millis)}]
-  ctx-app-exit-code  [:bract.core/app-exit-code  (some-fn (every-pred integer? (some-fn pos? zero?))
-                                                   nil?) "Application exit code (int, >= 0)" {:parser kputil/any->int
-                                                                                              :default nil}]
+  ctx-app-exit-code  [:bract.core/app-exit-code  (some-fn integer?
+                                                   nil?) "Application exit code (int)" {:parser kputil/any->int
+                                                                                        :default nil}]
   *ctx-shutdown-flag [:bract.core/*shutdown-flag volatile? "Volatile: Shutdown begun?" {:default (volatile! false)}]
   ctx-shutdown-hooks [:bract.core/shutdown-hooks vector? "Added shutdown hook threads" {:default []}])
 
 
 (keypin/defkey  ; config keys
   cfg-inducers       ["bract.core.inducers"      vector? "Vector of fully qualified inducer fn names"
-                      {:parser kputil/any->edn}]
+                      {:default []
+                       :parser kputil/any->edn}]
   cfg-exports        ["bract.core.exports"       vector? "Vector of config keys to export as system properties"
                       {:parser kputil/any->edn}]
-  cfg-launcher       ["bract.core.launcher"      var?    "Fully qualified launcher fn name"
-                      {:parser kputil/str->var}]
   cfg-drain-timeout  ["bract.core.drain.timeout" kputil/duration? "Workload drain timeout"
                       {:parser kputil/any->duration
                        :default [10000 :millis]}])
@@ -123,6 +123,17 @@
         (keypin/read-config keypin-opts)
         kputil/clojurize-data
         kputil/clojurize-subst))))
+
+
+(defn induce-exit
+  "Update given context with {:bract.core/exit? true} to bail out of the inducer-chain at all levels. Optionally, add
+  application exit code when exiting inducer chain."
+  ([context]
+    (assoc context (key ctx-exit?) true))
+  ([context ^long exit-code]
+    (-> context
+      (assoc (key ctx-app-exit-code) exit-code)
+      (assoc (key ctx-exit?) true))))
 
 
 (defn print-config

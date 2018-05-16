@@ -85,16 +85,6 @@
       context)))
 
 
-(defn fallback-config-files
-  "Set specified config filenames in the context if empty."
-  [context fallback-config-filenames]
-  (let [config-files (kdef/ctx-config-files context)]
-    (if (seq config-files)
-      context
-      (assoc context
-        (key kdef/ctx-config-files) (vec fallback-config-filenames)))))
-
-
 (defn read-config
   "Use config filenames in the context under key :bract.core/config-files to read and resolve config, and populate the
   context with it under the key :bract.core/config."
@@ -104,7 +94,9 @@
       (->> config-files
         (kdef/resolve-config context)
         (assoc context (key kdef/ctx-config)))
-      context)))
+      (do
+        (echo/echo (format "No config files specified at %s for reading, skipping" (key kdef/ctx-config-files)))
+        context))))
 
 
 (defn run-context-inducers
@@ -175,27 +167,23 @@
     context))
 
 
-(defn prepare-launcher
-  "Update launcher config with the specified one and enable launch."
-  [context launcher]
-  (-> context
-    (update (key kdef/ctx-config)
-      assoc (key kdef/cfg-launcher) launcher)
-    (assoc (key kdef/ctx-launch?) true)))
-
-
-(defn invoke-launcher
-  "Given context with config, read the value of config key \"bract.core.launcher\" as a fully qualified launcher fn
-  name and invoke it as (fn [context]) when the context key :bract.core/launch? has the value true."
-  [context]
-  (if (kdef/ctx-launch? context)
-    (let [launcher (-> (kdef/ctx-config context)
-                     kdef/cfg-launcher)]
-      (echo/echo "Launcher name:" launcher)
-      (launcher context))
-    (do
-      (echo/echo "Launch not enabled, skipping launch.")
-      context)))
+(defn invoke-launchers
+  "Given context with key :bract.core/launchers read its value as a vector of launcher fns and invoke them like
+  inducers `(fn [context]) -> context` when the context key :bract.core/launch? has the value true."
+  ([context]
+    (if (kdef/ctx-launch? context)
+      (invoke-launchers context (kdef/ctx-launchers context))
+      (do
+        (echo/echo "Launch not enabled, skipping launch.")
+        context)))
+  ([context launchers]
+    (if (kdef/ctx-launch? context)
+      (do
+        (echo/echo "Launcher name:" launchers)
+        (induce context launchers))
+      (do
+        (echo/echo "Launch not enabled, skipping launch.")
+        context))))
 
 
 (defn invoke-deinit
@@ -237,8 +225,11 @@
           timeout (-> (kdef/ctx-config context)
                     kdef/cfg-drain-timeout
                     kptype/millis)                   ; timeout in millis
+          t-messg "The JVM received a TERMINATE request, reached shutdown-hook"
           thread  (Thread. (fn []
-                             (echo/echo "JVM received a TERMINATE request, reached shutdown-hook")
+                             (if (Echo/isVerbose)
+                               (echo/echo t-messg)
+                               (util/err-println t-messg))
                              ;; set the flag
                              (when flag
                                (vswap! flag (fn [fval]
@@ -252,10 +243,13 @@
                                                        (unchecked-add last-alive-millis ^long timeout)
                                                        (unchecked-add (util/now-millis) ^long timeout))]
                                (while (< (util/now-millis) until-time-millis)
-                                 (let [nap-millis (unchecked-subtract until-time-millis (util/now-millis))]
+                                 (let [nap-millis  (unchecked-subtract until-time-millis (util/now-millis))
+                                       nap-message (format "Waiting for current workload to drain, time remaing: %d ms"
+                                                     nap-millis)]
                                    (when (pos? nap-millis)
-                                     (echo/echof "Waiting for current workload to drain, time remaing: %d ms"
-                                       nap-millis)
+                                     (if (Echo/isVerbose)
+                                       (echo/echo nap-message)
+                                       (util/err-println nap-message))
                                      (util/sleep-millis (min 500 nap-millis))))))
                              ;; invoke shutdown-hook inducer
                              (echo/echo "Workload draining timed out, executing shutdown-hook inducer now")

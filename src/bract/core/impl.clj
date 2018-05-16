@@ -15,7 +15,7 @@
     [bract.core.util :as util])
   (:import
     [java.util List Map]
-    [clojure.lang AFn Symbol Keyword Var]))
+    [clojure.lang Fn Symbol Keyword Var]))
 
 
 (def ^:dynamic *lookup-key* "no-key")
@@ -24,11 +24,12 @@
 (defmacro with-lookup-key
   [lookup-key & body]
   `(binding [*lookup-key* ~lookup-key]
+     (echo/echo "Looking up inducer-list at key" ~lookup-key)
      ~@body))
 
 
 (extend-protocol type/IFunction
-  AFn
+  Fn
   (ifunc [this] this)
   (iname [this] (str this))
   (iargs [this] [])

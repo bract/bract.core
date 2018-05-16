@@ -78,13 +78,6 @@
             (inducer/read-context context))))))
 
 
-(deftest test-fallback-config-files
-  (is (= {:bract.core/config-files ["foo"]}
-        (inducer/fallback-config-files {} ["foo"])))
-  (is (= {:bract.core/config-files ["foo"]}
-        (inducer/fallback-config-files {:bract.core/config-files ["foo"]} ["bar"]))))
-
-
 (deftest test-read-config
   (let [context {:bract.core/config-files "sample.edn"}]
     (is (= (assoc context
@@ -96,10 +89,12 @@
   (testing "arity 1"
     (let [verbosity? (Echo/isVerbose)
           context {:bract.core/verbose? true
-                   :bract.core/inducers ['bract.core.inducer/set-verbosity]}]
+                   :bract.core/inducers ['bract.core.inducer/set-verbosity
+                                         (fn [x] (throw (IllegalStateException. "test")))]}]
       (try
         (Echo/setVerbose false)
-        (inducer/run-context-inducers context)
+        (is (thrown? IllegalStateException
+              (inducer/run-context-inducers context)) "Verbose exception echo")
         (is (true? (Echo/isVerbose)) "Verbosity should be enabled after configuring it as true")
         (finally
           (Echo/setVerbose verbosity?)))))
@@ -181,19 +176,12 @@
   (vswap! volatile-holder #(inc ^long %)))
 
 
-(deftest test-prepare-launcher
-  (let [context (inducer/prepare-launcher {} #'launcher-inc)]
-    (is (= {:bract.core/config {"bract.core.launcher" #'launcher-inc}})))
-  (let [context (inducer/prepare-launcher {:bract.core/config {"bract.core.launcher" 'foo.bar/baz}} #'launcher-inc)]
-    (is (= {:bract.core/config {"bract.core.launcher" #'launcher-inc}}))))
-
-
-(deftest test-invoke-launcher
+(deftest test-invoke-launchers
   (vreset! volatile-holder 0)
-  (inducer/invoke-launcher {:bract.core/launch? false})
+  (inducer/invoke-launchers {:bract.core/launch? false})
   (is (zero? @volatile-holder))
-  (inducer/invoke-launcher {:bract.core/launch? true
-                            :bract.core/config {"bract.core.launcher" "bract.core.inducer-test/launcher-inc"}})
+  (inducer/invoke-launchers {:bract.core/launch? true
+                             :bract.core/launchers ['bract.core.inducer-test/launcher-inc]})
   (is (= 1 @volatile-holder)))
 
 

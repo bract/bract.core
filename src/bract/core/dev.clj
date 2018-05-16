@@ -10,15 +10,41 @@
 (ns bract.core.dev
   "Development and test support."
   (:require
+    [clojure.string     :as string]
     [bract.core.keydef  :as kdef]
     [bract.core.echo    :as echo]
     [bract.core.inducer :as inducer]
+    [bract.core.main    :as main]
     [bract.core.util    :as util])
   (:import
     [bract.core Echo]))
 
 
 ;; ----- overrides -----
+
+
+(defn context-file
+  "Set context file to specified argument (unless environment variable APP_CONTEXT is set):
+  string - set context file as override
+  nil    - clear context file override"
+  ([]
+    (when-let [context-file (System/getenv "APP_CONTEXT")]
+      (util/err-println (format "Environment variable APP_CONTEXT='%s' overrides context file" context-file)))
+    (System/getProperty "app.context"))
+  ([context-filename]
+    (if-let [env-context-file (System/getenv "APP_CONTEXT")]
+      (util/err-println (format "Override failed due to environment variable APP_CONTEXT='%s'" env-context-file))
+      (cond
+        (nil? context-filename)    (do
+                                     (System/clearProperty "app.context")
+                                     nil)
+        (string? context-filename) (do
+                                     (System/setProperty "app.context" context-filename)
+                                     context-filename)
+        :otherwise                  (-> "Expected argument to be string or nil but found "
+                                      (str (pr-str context-filename))
+                                      (ex-info {:context-filename context-filename})
+                                      throw)))))
 
 
 (defn verbose
@@ -40,46 +66,58 @@
         (throw (ex-info (str "Expected argument to be true, false or nil but found " (pr-str status?)) {}))))))
 
 
-(defn config
+(defn config-files
   "Set config files to specified argument (unless environment variable APP_CONFIG is set):
-  string - set config files as override
-  nil    - clear config file override"
+  collection - set config files as override
+  string     - set config files as override
+  nil        - clear config file override"
   ([]
-    (when-let [config-file (System/getenv "APP_CONFIG")]
-      (util/err-println (format "Environment variable APP_CONFIG='%s' overrides config file" config-file)))
+    (when-let [config-filenames (System/getenv "APP_CONFIG")]
+      (util/err-println (format "Environment variable APP_CONFIG='%s' overrides config file" config-filenames)))
     (System/getProperty "app.config"))
-  ([config]
-    (if-let [config-file (System/getenv "APP_CONFIG")]
-      (util/err-println (format "Override failed due to environment variable APP_CONFIG='%s'" config-file))
+  ([config-filenames]
+    (if-let [env-config-filenames (System/getenv "APP_CONFIG")]
+      (util/err-println (format "Override failed due to environment variable APP_CONFIG='%s'" env-config-filenames))
       (cond
-        (nil? config)    (System/clearProperty "app.config")
-        (string? config) (System/setProperty "app.config" config)
-        :otherwise       (throw (ex-info (str "Expected argument to be string or nil but found " (pr-str config))
-                                  {}))))))
+        (nil? config-filenames)    (do
+                                     (System/clearProperty "app.config")
+                                     nil)
+        (and (coll? config-filenames)
+          (every? string?
+            config-filenames))     (let [filenames (string/join ", " config-filenames)]
+                                     (System/setProperty "app.config" filenames)
+                                     filenames)
+        (string? config-filenames) (do
+                                     (System/setProperty "app.config" config-filenames)
+                                     config-filenames)
+        :otherwise                 (-> "Expected argument to be collection of string, string or nil but found "
+                                     (str (pr-str config-filenames))
+                                     (ex-info {:config-filenames config-filenames})
+                                     throw)))))
 
 
-;; ----- default -----
+;; ----- initial context -----
 
 
-(def default-root-context {(key kdef/ctx-context-file) "bract-context.dev.edn"
-                           (key kdef/ctx-config-files) ["config/config.dev.edn"]
-                           (key kdef/ctx-launch?)      false})
+(def root-context {(key kdef/ctx-context-file) "bract-context.dev.edn"
+                   (key kdef/ctx-config-files) ["config/config.dev.edn"]
+                   (key kdef/ctx-launch?)      false})
 
 
-(def default-root-inducers [inducer/set-verbosity
-                            inducer/read-context
-                            inducer/run-context-inducers
-                            inducer/read-config
-                            inducer/run-config-inducers])
+(defonce ^:redef seed-context {})
+
+
+;; ----- REPL helpers -----
 
 
 (defn init
   "Initialize app in DEV mode."
   []
   (try
-    (inducer/set-verbosity default-root-context)
-    (echo/with-latency-capture "Initializing app in DEV mode"
-      (inducer/induce inducer/apply-inducer default-root-context default-root-inducers))
+    (let [init-context (merge root-context seed-context)]
+      (inducer/set-verbosity init-context)
+      (echo/with-latency-capture "Initializing app in DEV mode"
+        (inducer/induce inducer/apply-inducer init-context main/root-inducers)))
     (catch Throwable e
       (util/pst-when-uncaught-handler e)
       (throw e))))
@@ -137,7 +175,7 @@
   (echo/with-latency-capture "Launching application"
     (-> app-context
       (assoc (key kdef/ctx-launch?) true)
-      inducer/invoke-launcher
+      inducer/invoke-launchers
       record-context!))
   nil)
 
