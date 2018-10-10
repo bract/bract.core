@@ -30,7 +30,7 @@
 ## [WIP] 0.6.1 / 2018-October-??
 
 - Config
-  - [Todo] Upgrade Keypin dependency to version `0.7.6`
+  - Upgrade Keypin dependency to version `0.7.6`
     - For `:source` option in key definitions
 
 
