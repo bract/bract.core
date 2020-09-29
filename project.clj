@@ -1,4 +1,4 @@
-(defproject bract/bract.core "0.6.1"
+(defproject bract/bract.core "0.6.2-SNAPSHOT"
   :description "Multi-purpose, modular Clojure application initialization framework"
   :url "https://github.com/bract/bract.core"
   :license {:name "Eclipse Public License"
@@ -16,5 +16,6 @@
              :c07 {:dependencies [[org.clojure/clojure "1.7.0"]]}
              :c08 {:dependencies [[org.clojure/clojure "1.8.0"]]}
              :c09 {:dependencies [[org.clojure/clojure "1.9.0"]]}
-             :c10 {:dependencies [[org.clojure/clojure "1.10.0-beta2"]]}
-             :dln {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]}})
+             :c10 {:dependencies [[org.clojure/clojure "1.10.1"]]}
+             :dln {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]}}
+  :aliases {"test-all" ["with-profile" "c07:c08:c09:c10" "test"]})
