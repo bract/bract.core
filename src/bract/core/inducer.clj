@@ -107,7 +107,9 @@
         (induce context))))
   ([context lookup-key]
     (impl/with-lookup-key lookup-key
-      (as-> (keypin/make-key lookup-key vector? "Vector of inducer fns or their fully qualified names" {}) <>
+      (as-> (keypin/make-key {:the-key lookup-key
+                              :pred vector?
+                              :desc "Vector of inducer fns or their fully qualified names"}) <>
         (<> context)
         (induce context <>)))))
 
@@ -122,7 +124,9 @@
   ([context lookup-key]
     (impl/with-lookup-key lookup-key
       (->> (kdef/ctx-config context)
-        ((keypin/make-key lookup-key vector? "Vector of inducer fns or their fully qualified names" {}))
+        ((keypin/make-key {:the-key lookup-key
+                           :pred vector?
+                           :desc "Vector of inducer fns or their fully qualified names"}))
         (induce context)))))
 
 

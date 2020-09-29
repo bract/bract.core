@@ -30,7 +30,7 @@
 ## [WIP] 0.6.2 / 2020-September-??
 
 - Config
-  - [Todo] Upgrade Keypin to version `0.8.1` (for remote and cached config stores)
+  - Upgrade Keypin to version `0.8.1` (for remote and cached config stores)
 - Documentation
   - [Todo] Make namespace `bract.core.dev-init` safe for documentation by _cljdoc_
   - [Todo] Reformat docstring for _cljdoc_
