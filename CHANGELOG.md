@@ -32,9 +32,11 @@
 - Config
   - Upgrade Keypin to version `0.8.1` (for remote and cached config stores)
 - Documentation
-  - [Todo] Make namespace `bract.core.dev-init` safe for documentation by _cljdoc_
+  - Make namespace `bract.core.dev-init` safe for loading (e.g. by _cljdoc_)
   - [Todo] Reformat docstring for _cljdoc_
   - [Todo] Add _cljdoc_ badge
+  - [Todo] Add `sample.context.edn` to cover all context keys used by `bract.core`
+  - [Todo] Add `sample.config.edn` to cover all config keys used by `bract.core`
 
 
 ## 0.6.1 / 2018-October-10
