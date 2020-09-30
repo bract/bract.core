@@ -31,8 +31,10 @@
 
 - Config
   - Upgrade Keypin to version `0.8.1` (for remote and cached config stores)
-- Documentation
+- Development support
+  - Add function `bract.core.dev/initial-context` to resolve DEV mode initial context
   - Make namespace `bract.core.dev-init` safe for loading (e.g. by _cljdoc_)
+- Documentation
   - [Todo] Reformat docstring for _cljdoc_
   - [Todo] Add _cljdoc_ badge
   - [Todo] Add `sample.context.edn` to cover all context keys used by `bract.core`

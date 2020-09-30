@@ -107,6 +107,12 @@
 (defonce ^:redef seed-context {})
 
 
+(defn initial-context
+  "Resolve and return the initial context to trigger the application in DEV mode."
+  []
+  (merge root-context seed-context))
+
+
 ;; ----- REPL helpers -----
 
 
@@ -114,7 +120,7 @@
   "Initialize app in DEV mode."
   []
   (try
-    (let [init-context (merge root-context seed-context)]
+    (let [init-context (initial-context)]
       (inducer/set-verbosity init-context)
       (echo/with-latency-capture "Initializing app in DEV mode"
         (inducer/induce inducer/apply-inducer init-context main/root-inducers)))

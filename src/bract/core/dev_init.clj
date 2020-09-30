@@ -34,13 +34,11 @@
     [bract.core.util   :as util]))
 
 
-(let [context-file (-> core-dev/root-context
-                       (merge core-dev/seed-context)
-                       kdef/ctx-context-file)]
-    (if (and (string? context-file)
-          (or (io/resource context-file)
-            (.exists (io/file context-file))))
-      (core-dev/ensure-init)
-      (util/err-println
-        "*** ERROR *** Context file" (pr-str context-file)
-        "not found in classpath or filesystem - ignoring DEV initialization")))
+(let [context-file (kdef/ctx-context-file (core-dev/initial-context))]
+  (if (and (string? context-file)
+        (or (io/resource context-file)
+          (.exists (io/file context-file))))
+    (core-dev/ensure-init)
+    (util/err-println
+      "*** ERROR *** Context file" (pr-str context-file)
+      "not found in classpath or filesystem - ignoring DEV initialization")))
