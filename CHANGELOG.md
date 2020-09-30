@@ -36,8 +36,8 @@
   - Make namespace `bract.core.dev-init` safe for loading (e.g. by _cljdoc_)
   - Add `bract.core.util/err-print-banner` for printing banner messages to `*err*`
 - Documentation
-  - [Todo] Reformat docstring for _cljdoc_
-  - [Todo] Add _cljdoc_ badge
+  - Reformat docstring for _cljdoc_
+  - Add _cljdoc_ badge
   - [Todo] Add `sample.context.edn` to cover all context keys used by `bract.core`
   - [Todo] Add `sample.config.edn` to cover all config keys used by `bract.core`
 

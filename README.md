@@ -1,5 +1,7 @@
 # bract.core
 
+[![cljdoc badge](https://cljdoc.org/badge/keypin/keypin)](https://cljdoc.org/d/keypin/keypin)
+
 Essential functionality for Bract and a common dependency for all other modules.
 
 
