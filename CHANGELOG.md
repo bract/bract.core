@@ -27,7 +27,7 @@
   - [Todo - BREAKING CHANGE] Drop inducer `run-config-inducers` in favor of dynamic/late variable substitution
 
 
-## [WIP] 0.6.2 / 2020-September-??
+## 0.6.2-alpha1 / 2020-September-30
 
 - Config
   - Upgrade Keypin to version `0.8.1` (for remote and cached config stores)
