@@ -36,6 +36,16 @@
     (apply println x more)))
 
 
+(defn err-print-banner
+  "Print a banner to *err*."
+  [x & more]
+  (err-println "\n**********")
+  (err-println "**")
+  (apply err-println "**" x more)
+  (err-println "**")
+  (err-println "**"))
+
+
 (defn shorten-name
   "Shorten a stringable name, e.g. foo.bar.baz.qux/fred to f.b.baz.qux/fred, leaving only the last two tokens intact."
   ([any-name]

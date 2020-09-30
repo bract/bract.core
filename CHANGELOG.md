@@ -34,6 +34,7 @@
 - Development support
   - Add function `bract.core.dev/initial-context` to resolve DEV mode initial context
   - Make namespace `bract.core.dev-init` safe for loading (e.g. by _cljdoc_)
+  - Add `bract.core.util/err-print-banner` for printing banner messages to `*err*`
 - Documentation
   - [Todo] Reformat docstring for _cljdoc_
   - [Todo] Add _cljdoc_ badge

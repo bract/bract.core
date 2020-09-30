@@ -39,6 +39,6 @@
         (or (io/resource context-file)
           (.exists (io/file context-file))))
     (core-dev/ensure-init)
-    (util/err-println
-      "*** ERROR *** Context file" (pr-str context-file)
+    (util/err-print-banner
+      "ERROR: Context file" (pr-str context-file)
       "not found in classpath or filesystem - ignoring DEV initialization")))
