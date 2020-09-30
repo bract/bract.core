@@ -27,7 +27,7 @@
 
 
 (defn delegate-main
-  "Delegate the calling of `main` fn."
+  "Delegate the calling of [[main]] fn."
   [context root-inducers]
   (try
     (when-let [exit-code (-> context

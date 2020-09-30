@@ -8,6 +8,7 @@
 
 
 (ns bract.core.util.runtime
+  "Discover runtime stats."
   (:require
     [bract.core.util :as u])
   (:import
@@ -84,7 +85,7 @@
 
 
 (defn runtime-info
-  "Return system info merged with information gathered from info generator fns, each being (fn [])."
+  "Return system info merged with information gathered from info generator fns, each being `(fn [])`."
   [info-fns]
   (reduce (fn [m f]
             (let [r (try (f)

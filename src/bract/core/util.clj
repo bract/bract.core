@@ -19,8 +19,8 @@
 
 
 (defn expected
-  "Throw illegal input exception citing `expectation` and what was `found` did not match. Optionally accept a predicate
-  fn to test `found` before throwing the exception."
+  "Throw illegal input exception citing _expectation_ and what was _found_ did not match. Optionally accept a predicate
+  fn to test _found_ before throwing the exception."
   ([expectation found]
     (throw (IllegalArgumentException.
              (format "Expected %s, but found (%s) %s" expectation (class found) (pr-str found)))))
@@ -30,14 +30,14 @@
 
 
 (defn err-println
-  "Same as clojure.core/println for *err*."
+  "Same as `clojure.core/println` for `*err*`."
   [x & more]
   (binding [*out* *err*]
     (apply println x more)))
 
 
 (defn err-print-banner
-  "Print a banner to *err*."
+  "Print a banner to `*err*`."
   [x & more]
   (err-println "\n**********")
   (err-println "**")
@@ -47,7 +47,8 @@
 
 
 (defn shorten-name
-  "Shorten a stringable name, e.g. foo.bar.baz.qux/fred to f.b.baz.qux/fred, leaving only the last two tokens intact."
+  "Shorten a stringable name, e.g. `foo.bar.baz.qux/fred` to `f.b.baz.qux/fred`, leaving only the last two tokens
+  intact."
   ([any-name]
     (shorten-name #"\." any-name))
   ([split-regex any-name]
@@ -63,7 +64,8 @@
 
 
 (defmacro exec-once!
-  "Given a redefinable var e.g. (defonce a-var nil) having logical false value, set it to `true` and evaluate the body."
+  "Given a redefinable var e.g. `(defonce a-var nil)` having logical false value, set it to `true` and evaluate the
+  body."
   [a-var & body]
   `(let [var# ~a-var
          old# (volatile! true)]
@@ -119,8 +121,8 @@
 
 
 (defn alive-millis
-  "Return a function (fn []) that when invoked, records the current time as when was the application last alive. You
-  may deref the same function as (deref f) to find out the time the application was last alive. Optimized for
+  "Return a function `(fn [])` that when invoked, records the current time as when was the application last alive. You
+  may deref the same function as `(deref f)` to find out the time the application was last alive. Optimized for
   concurrent updates; eventually consistent."
   ([]
     (alive-millis (.availableProcessors ^Runtime (Runtime/getRuntime))))
@@ -137,19 +139,23 @@
 
 
 (defn health-status
-  "Given a collection of health status maps (with keys :status and :impact) of zero or more components, derive overall
-  health status and return status map {:status status :components components} based on the following rules:
-  0. Health status :critical > :degraded > :healthy (high to low)
+  "Given a collection of health status maps (with keys `:status` and `:impact`) of zero or more components, derive
+  overall health status and return status map `{:status status :components components}` based on the following rules:
+
+  0. Health status `:critical` > `:degraded` > `:healthy` (high to low)
   1. Higher old-status always overrides lower new-status.
   2. Same old-status and new-status are considered unchanged.
   3. A higher new-status is interpreted as follows:
-     Old status|New status|Impact :direct|Impact :indirect|Impact :noimpact
-     ----------|----------|--------------|----------------|----------------
-      degraded | critical |   critical   |    degraded    |    degraded
-      healthy  | critical |   critical   |    degraded    |    healthy
-      healthy  | degraded |   degraded   |    degraded    |    healthy
+
+     |Old status|New status|Impact :direct|Impact :indirect|Impact :noimpact|
+     |----------|----------|--------------|----------------|----------------|
+     | degraded | critical |   critical   |    degraded    |    degraded    |
+     | healthy  | critical |   critical   |    degraded    |    healthy     |
+     | healthy  | degraded |   degraded   |    degraded    |    healthy     |
 
   Example of returned status:
+
+  ```edn
   {:status :degraded  ; derived from components - :critical, :degraded, :healthy (default), :unknown
    :components [{:id     :mysql
                  :status :degraded
@@ -162,7 +168,8 @@
                 {:id     :disk
                  :status :healthy
                  :impact :none
-                 :free-gb 39.42}]}"
+                 :free-gb 39.42}]}
+  ```"
   [components]
   (let [critical  2
         degraded  1
@@ -191,7 +198,7 @@
 
 
 (defn set-default-uncaught-exception-handler
-  "Set specified function (fn [thread throwable]) as default uncaught exception handler."
+  "Set specified function `(fn [thread throwable])` as default uncaught exception handler."
   [f]
   (cond
     (nil? f) (Thread/setDefaultUncaughtExceptionHandler nil)

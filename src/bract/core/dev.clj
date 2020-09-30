@@ -25,8 +25,11 @@
 
 (defn context-file
   "Set context file to specified argument (unless environment variable APP_CONTEXT is set):
-  string - set context file as override
-  nil    - clear context file override"
+
+  | Value | Effect                       |
+  |-------|------------------------------|
+  |string | set context file as override |
+  |`nil`  | clear context file override  |"
   ([]
     (when-let [context-file (System/getenv "APP_CONTEXT")]
       (util/err-println (format "Environment variable APP_CONTEXT='%s' overrides context file" context-file)))
@@ -49,9 +52,12 @@
 
 (defn verbose
   "Set verbose mode to specified status (unless environment variable APP_VERBOSE is set):
-  true  - enable verbose mode
-  false - disable verbose mode
-  nil   - clear verbose mode override"
+
+  | Value | Effect                      |
+  |-------|-----------------------------|
+  |`true` | enable verbose mode         |
+  |`false`| disable verbose mode        |
+  |`nil`  | clear verbose mode override |"
   ([]
     (when-let [verbose (System/getenv "APP_VERBOSE")]
       (util/err-println (format "Environment variable APP_VERBOSE='%s' overrides verbosity" verbose)))
@@ -68,9 +74,12 @@
 
 (defn config-files
   "Set config files to specified argument (unless environment variable APP_CONFIG is set):
-  collection - set config files as override
-  string     - set config files as override
-  nil        - clear config file override"
+
+  | Value    | Effect                       |
+  |----------|------------------------------|
+  |collection| set config files as override |
+  |string    | set config files as override |
+  |`nil`     | clear config file override   |"
   ([]
     (when-let [config-filenames (System/getenv "APP_CONFIG")]
       (util/err-println (format "Environment variable APP_CONFIG='%s' overrides config file" config-filenames)))
@@ -145,7 +154,7 @@
 
 
 (defn ensure-init
-  "Ensure that app-context is initialized."
+  "Ensure that [[app-context]] is initialized."
   []
   (when (string? app-context)
     (init))
@@ -155,14 +164,14 @@
 
 
 (defn record-context!
-  "Rebind var bract.core.dev/app-context to the given context."
+  "Rebind var [[app-context]] to the given context."
   [context]
   (alter-var-root #'app-context (constantly context))
   context)
 
 
 (defn deinit
-  "De-initialize application. Throw error if app-context is not initialized."
+  "De-initialize application. Throw error if [[app-context]] is not initialized."
   []
   (ensure-init)
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
@@ -174,7 +183,7 @@
 
 
 (defn start
-  "Launch application. Throw error if app-context is not initialized."
+  "Launch application. Throw error if [[app-context]]` is not initialized."
   []
   (ensure-init)
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
