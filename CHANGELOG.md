@@ -38,8 +38,7 @@
 - Documentation
   - Reformat docstring for _cljdoc_
   - Add _cljdoc_ badge
-  - [Todo] Add `sample.context.edn` to cover all context keys used by `bract.core`
-  - [Todo] Add `sample.config.edn` to cover all config keys used by `bract.core`
+  - Add documentation page covering context and config keys
 
 
 ## 0.6.1 / 2018-October-10
