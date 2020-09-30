@@ -2,7 +2,7 @@
 
 [![cljdoc badge](https://cljdoc.org/badge/bract/bract.core)](https://cljdoc.org/d/bract/bract.core)
 
-Essential functionality for Bract and a common dependency for all other modules.
+Essential functionality for Bract and a common dependency for all other Bract modules.
 
 
 ## Clojars coordinates

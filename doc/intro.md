@@ -66,7 +66,7 @@ Legend:
     - FNable: Function or FQFN
     - FNable-0: Zero arity function or FQFN
 
-| Context key                | Type              | Description                                               |
+| Context key                | Value type        | Description                                               |
 |----------------------------|-------------------|-----------------------------------------------------------|
 |`:bract.core/verbose?`      |boolean            | controls verbosity, value could be `true` or `false`      |
 |`:bract.core/context-file`  |string             | EDN filename containing context map                       |
@@ -92,7 +92,7 @@ Legend:
 The config keys defined by _bract.core_ are listed below. Note that these may
 be referred to and used by other modules too.
 
-| Config key                 | Type           | Description                                           |
+| Config key                 | Value type     | Description                                           |
 |----------------------------|----------------|-------------------------------------------------------|
 |`"bract.core.inducers"`     |vector of FQFNs |vector of fully qualified inducer fn names             |
 |`"bract.core.exports"`      |vector of string|vector of config keys to export as system properties   |
