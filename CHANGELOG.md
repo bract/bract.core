@@ -27,7 +27,7 @@
   - [Todo - BREAKING CHANGE] Drop inducer `run-config-inducers` in favor of dynamic/late variable substitution
 
 
-## [WIP] 0.6.2 / 2020-October-??
+## 0.6.2-alpha2 / 2020-October-05
 
 - Add inducer `bract.core.inducer/abort` (moved from `gossamer.core.inducer/abort`)
 - Documentation
