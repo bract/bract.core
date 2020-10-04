@@ -29,7 +29,7 @@
 
 ## [WIP] 0.6.2 / 2020-October-??
 
-- [Todo] Add abort inducer (move inducer `gossamer.core.inducer/abort` here)
+- Add inducer `bract.core.inducer/abort` (moved from `gossamer.core.inducer/abort`)
 - Documentation
   - Add quickstart 'Greeting' example app
 

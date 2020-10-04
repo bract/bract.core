@@ -58,6 +58,17 @@
 ;; ----- inducers -----
 
 
+(defn abort
+  "Abort the entire inducer chain."
+  ([context]
+    (assoc context
+      (key kdef/ctx-exit?) true))
+  ([context message]
+    (echo/abort message)
+    (util/err-println "ERROR:" message)
+    (abort context)))
+
+
 (defn set-verbosity
   "Set Bract verbosity flag and return context."
   [context]
