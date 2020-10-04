@@ -27,6 +27,13 @@
   - [Todo - BREAKING CHANGE] Drop inducer `run-config-inducers` in favor of dynamic/late variable substitution
 
 
+## [WIP] 0.6.2 / 2020-October-??
+
+- [Todo] Add abort inducer (move inducer `gossamer.core.inducer/abort` here)
+- Documentation
+  - [Todo] Add quickstart 'Greeting' example app
+
+
 ## 0.6.2-alpha1 / 2020-September-30
 
 - Config
