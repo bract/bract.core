@@ -1,4 +1,4 @@
-# Documentation for bract.core
+# Introduction to bract.core
 
 Bract is a functional application initialization and de-initilizaion framework
 based around the idea of context and inducers, explained in the sections below.
@@ -97,3 +97,128 @@ be referred to and used by other modules too.
 |`"bract.core.inducers"`     |vector of FQFNs |vector of fully qualified inducer fn names             |
 |`"bract.core.exports"`      |vector of string|vector of config keys to export as system properties   |
 |`"bract.core.drain.timeout"`|Keypin duration |workload drain timeout duration, e.g. `[10000 :millis]`|
+
+
+## Creating a simple demo application
+
+In this quickstart example, we will setup a "Greeting" demo application that simply prints "Hello, world!"
+using a configured greeting word ("Hello"). Let us create this application using the _bract.core_ module.
+
+The instructions below are for [Leiningen](https://leiningen.org/) users.
+
+
+### Create the application skeleton
+
+```
+lein new app greeting
+cd greeting
+```
+
+Now, you need to make some changes to the `project.clj` file:
+
+1. The key `:dependencies` lists `org.clojure/clojure` as the only dependency. Add _bract.core_ to it.
+2. Update the two keys (`:main` and `:profiles`) to reflect our application entry point as follows:
+
+```clojure
+  :main ^:skip-aot bract.core.main
+  :profiles {:uberjar {:aot [bract.core.main]}}
+```
+
+
+### Setup Bract context
+
+Create a file `resources/bract-context.edn` with following content:
+
+```edn
+{:bract.core/inducers  [(bract.core.inducer/run-context-inducers :app/main-inducers)
+                        (bract.core.inducer/run-context-inducers :app/dev-inducers)]
+
+ :app/main-inducers    [(clojure.core/assoc :bract.core/launch? true)]
+ :app/dev-inducers     []
+
+ :bract.core/launchers [greeting.core/main]
+
+ ;; configuration
+ :greeting-word        "Namaste"
+ }
+```
+
+
+### Write the main code
+
+Open the file `src/greeting/core.clj` and edit as follows:
+
+```clojure
+(ns greeting.core)
+
+(defn main [context]
+  (let [gw (:greeting-word context)]
+    (printf "%s, world!\n" gw))
+  (flush)
+  context)
+```
+
+Notice that the `(:gen-class)` directive is removed from the `ns` block, and the `-main` function is removed too.
+Because this namespace is no more the application entry point, though Bract calls `greeting.core/main` as a launcher.
+
+At this point you can run the application using `lein run` or `APP_VERBOSE=true lein run` command. The latter enables
+a verbose output of what Bract is doing under the hood.
+
+
+### Setup DEV mode
+
+Let us try to setup unit testing for this app. For DEV mode, create a file `test/bract-context.dev.edn` with the
+following content:
+
+```edn
+{;; inherit everything from bract-context.edn
+ "parent.filenames" "bract-context.edn"
+
+ ;; override entries for DEV mode
+ :app/main-inducers []
+ :app/dev-inducers  [bract.core.dev/record-context!]
+ }
+```
+
+
+### Write a unit test
+
+Edit the test file `test/greeting/core_test.clj` as follows:
+
+```clojure
+(ns greeting.core-test
+  (:require [clojure.test :refer :all]
+            [greeting.core :refer :all]
+            [bract.core.dev :as dev]
+            bract.core.dev-init))
+
+(deftest a-test
+  (is (= "Namaste, world!\n"
+        (with-out-str (main dev/app-context)))))
+```
+
+You can run the test with `lein do clean, test` or `APP_VERBOSE=true lein do clean, test`.
+
+
+### Working at the REPL
+
+Update the REPL options in `project.clj` as follows:
+
+```clojure
+  :repl-options {:init-ns bract.core.dev}
+```
+
+Run `lein repl` to start a REPL:
+
+```clojure
+(start)  ; launch the application
+;; bract.core.dev/app-context is now bound to initialized context
+```
+
+
+### Package and run application as an UberJAR
+
+```shell
+lein do clean, uberjar
+java -jar target/uberjar/greeting-0.1.0-SNAPSHOT-standalone.jar
+```

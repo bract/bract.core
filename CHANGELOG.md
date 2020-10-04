@@ -31,7 +31,7 @@
 
 - [Todo] Add abort inducer (move inducer `gossamer.core.inducer/abort` here)
 - Documentation
-  - [Todo] Add quickstart 'Greeting' example app
+  - Add quickstart 'Greeting' example app
 
 
 ## 0.6.2-alpha1 / 2020-September-30
