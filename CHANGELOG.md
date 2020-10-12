@@ -47,13 +47,12 @@
 
 ## Releases
 
-### [WIP] 0.6.2 / 2020-October-??
+### 0.6.2-alpha3 / 2020-October-12
 
 - Improve `bract.core.dev` namespace
   - Make `bract.core.dev` usable for REPL - require/refer useful vars
   - Add `bract.core.dev/-main` for running application in DEV mode
 - Documentation
-  - [Todo] Update doc on demo application section (using Leiningen template)
   - Reformat docstring in `bract.core.dev` for environment variables
 
 
