@@ -116,12 +116,14 @@ cd greeting
 
 Now, you need to make some changes to the `project.clj` file:
 
-1. The key `:dependencies` lists `org.clojure/clojure` as the only dependency. Add _bract.core_ to it.
-2. Update the two keys (`:main` and `:profiles`) to reflect our application entry point as follows:
+1. The key `:dependencies` lists `org.clojure/clojure` as the only dependency. Add `bract/bract.core` to it.
+2. Update the `:profiles` entry to reflect the application entry point as follows:
 
 ```clojure
-  :main ^:skip-aot bract.core.main
-  :profiles {:uberjar {:aot [bract.core.main]}}
+  :profiles {:dev {:main ^:skip-aot bract.core.dev
+                   :repl-options {:init-ns bract.core.dev}}
+             :uberjar {:aot [bract.core.main]
+                       :main ^:skip-aot bract.core.main}}
 ```
 
 
@@ -201,12 +203,6 @@ You can run the test with `lein do clean, test` or `APP_VERBOSE=true lein do cle
 
 
 ### Working at the REPL
-
-Update the REPL options in `project.clj` as follows:
-
-```clojure
-  :repl-options {:init-ns bract.core.dev}
-```
 
 Run `lein repl` to start a REPL:
 
