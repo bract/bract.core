@@ -206,3 +206,14 @@
   (echo/with-latency-capture "Stopping the started application"
     (inducer/invoke-stopper app-context))
   nil)
+
+
+(defn -main
+  "Java main() method entry point for DEV mode."
+  [& args]
+  (let [init-context (-> (initial-context)
+                       inducer/set-verbosity
+                       (merge {(key kdef/ctx-cli-args) (vec args)})
+                       (assoc (key kdef/ctx-launch?) true))]
+    (echo/with-latency-capture "Initializing app in DEV mode"
+      (main/delegate-main init-context main/root-inducers))))

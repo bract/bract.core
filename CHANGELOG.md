@@ -51,7 +51,7 @@
 
 - Improve `bract.core.dev` namespace
   - Make `bract.core.dev` usable for REPL - require/refer useful vars
-  - [Todo] Add `-main` to `bract.core.dev` so that it can be used to run app in DEV mode
+  - Add `bract.core.dev/-main` for running application in DEV mode
 - Documentation
   - [Todo] Update doc on demo application section (using Leiningen template)
   - Reformat docstring in `bract.core.dev` for environment variables
