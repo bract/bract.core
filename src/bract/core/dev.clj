@@ -27,7 +27,7 @@
 
 
 (defn context-file
-  "Set context file to specified argument (unless environment variable APP_CONTEXT is set):
+  "Set context file to specified argument (unless environment variable `APP_CONTEXT` is set):
 
   | Value | Effect                       |
   |-------|------------------------------|
@@ -54,7 +54,7 @@
 
 
 (defn verbose
-  "Set verbose mode to specified status (unless environment variable APP_VERBOSE is set):
+  "Set verbose mode to specified status (unless environment variable `APP_VERBOSE` is set):
 
   | Value | Effect                      |
   |-------|-----------------------------|
@@ -76,7 +76,7 @@
 
 
 (defn config-files
-  "Set config files to specified argument (unless environment variable APP_CONFIG is set):
+  "Set config files to specified argument (unless environment variable `APP_CONFIG` is set):
 
   | Value    | Effect                       |
   |----------|------------------------------|

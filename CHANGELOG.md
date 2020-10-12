@@ -54,7 +54,7 @@
   - [Todo] Add `-main` to `bract.core.dev` so that it can be used to run app in DEV mode
 - Documentation
   - [Todo] Update doc on demo application section (using Leiningen template)
-  - [Todo] Reformat docstring in `bract.core.dev` for environment variables
+  - Reformat docstring in `bract.core.dev` for environment variables
 
 
 ### 0.6.2-alpha2 / 2020-October-05
