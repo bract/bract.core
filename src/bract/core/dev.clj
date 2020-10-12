@@ -10,6 +10,9 @@
 (ns bract.core.dev
   "Development and test support."
   (:require
+    [clojure.java.javadoc :refer [javadoc]]
+    [clojure.pprint       :refer [pprint]]
+    [clojure.repl         :refer :all]
     [clojure.string     :as string]
     [bract.core.keydef  :as kdef]
     [bract.core.echo    :as echo]

@@ -50,7 +50,7 @@
 ### [WIP] 0.6.2 / 2020-October-??
 
 - Improve `bract.core.dev` namespace
-  - [Todo] Make `bract.core.dev` as usable as `bract.dev.repl` namespace except reload
+  - Make `bract.core.dev` usable for REPL - require/refer useful vars
   - [Todo] Add `-main` to `bract.core.dev` so that it can be used to run app in DEV mode
 - Documentation
   - [Todo] Update doc on demo application section (using Leiningen template)
