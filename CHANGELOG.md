@@ -43,9 +43,18 @@
     - `unexport-sysprops`
   - [Todo - BREAKING CHANGE] Drop inducer `run-context-inducers` in favor of dynamic/late variable substitution
   - [Todo - BREAKING CHANGE] Drop inducer `run-config-inducers` in favor of dynamic/late variable substitution
+  - [Todo] Add inducers
+    - (push-context [context :key])
+    - (pull-context [context :key])
+    - (pop-context [context :key])
 
 
 ## Releases
+
+### [WIP] 0.6.2-beta1 / 2020-December-??
+
+- [Todo] Demunge function names displayed in verbose/echo mode
+
 
 ### 0.6.2-alpha3 / 2020-October-12
 
