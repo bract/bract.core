@@ -53,7 +53,7 @@
 
 ### [WIP] 0.6.2-beta1 / 2020-December-??
 
-- [Todo] Demunge function names displayed in verbose/echo mode
+- Demunge function names displayed in verbose/echo mode
 
 
 ### 0.6.2-alpha3 / 2020-October-12

@@ -9,6 +9,7 @@
 
 (ns bract.core.impl
   (:require
+    [clojure.main :refer [demunge]]
     [keypin.util :as kputil]
     [bract.core.echo :as echo]
     [bract.core.type :as type]
@@ -31,7 +32,10 @@
 (extend-protocol type/IFunction
   Fn
   (ifunc [this] this)
-  (iname [this] (str this))
+  (iname [this] (let [fname (str this)]
+                  (if-some [tokens (re-matches #"([A-Za-z\.\_]+\$[A-Za-z\.\_]+)@[0-9a-f]+" fname)]
+                    (demunge (last tokens))
+                    fname)))
   (iargs [this] [])
   String
   (ifunc [this] (do
