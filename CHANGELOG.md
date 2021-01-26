@@ -51,7 +51,7 @@
 
 ## Releases
 
-### [WIP] 0.6.2-beta1 / 2020-December-??
+### 0.6.2-beta1 / 2021-January-27
 
 - Demunge function names displayed in verbose/echo mode
 
