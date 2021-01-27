@@ -217,3 +217,23 @@
                        (assoc (key kdef/ctx-launch?) true))]
     (echo/with-latency-capture "Initializing app in DEV mode"
       (main/delegate-main init-context main/root-inducers))))
+
+
+(defn help
+  "Print help text for this namespace"
+  []
+  (println "
+REPL helpers available in bract.core.dev:
+
+             See this help: (help)
+                 Start app: (start)
+                  Stop app: (stop)
+
+        Set verbosity mode: (verbose true-or-false)
+          Set context-file: (context-file \"context-filename\")
+   See initialized context: app-context
+          Set config files: (config-files [\"file1\" \"file2\"])
+
+Initialize app (no launch): (init)
+Deinitialize app (no stop): (deinit)
+"))

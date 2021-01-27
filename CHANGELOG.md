@@ -51,6 +51,11 @@
 
 ## Releases
 
+### [WIP] 0.6.2-beta2 / 2021-January-??
+
+- Add `bract.core.dev/help` fn for REPL help text
+
+
 ### 0.6.2-beta1 / 2021-January-27
 
 - Demunge function names displayed in verbose/echo mode
