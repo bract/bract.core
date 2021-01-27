@@ -51,7 +51,7 @@
 
 ## Releases
 
-### [WIP] 0.6.2-beta2 / 2021-January-??
+### 0.6.2-beta2 / 2021-January-28
 
 - Add `bract.core.dev/help` fn for REPL help text
 

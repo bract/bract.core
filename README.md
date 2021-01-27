@@ -7,7 +7,7 @@ Essential functionality for Bract and a common dependency for all other Bract mo
 
 ## Clojars coordinates
 
-`[bract/bract.core "0.6.2-beta1"]`
+`[bract/bract.core "0.6.2-beta2"]`
 
 
 ## Documentation
