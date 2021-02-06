@@ -56,7 +56,7 @@
 
 ### [WIP] 0.6.2-SNAPSHOT / 2021-February-??
 
-- [Todo] Upgrade Keypin to version `0.8.2` (for new predicate and DIME compatibility)
+- Upgrade Keypin to version `0.8.2` (for new predicate and var metadata)
 
 
 ### 0.6.2-beta2 / 2021-January-28
