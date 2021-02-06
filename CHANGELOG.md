@@ -47,9 +47,17 @@
     - (push-context [context :key])
     - (pull-context [context :key])
     - (pop-context [context :key])
+- [Todo - BREAKING CHANGE] Echo overhaul
+  - Accommodate structured-format output
+  - Tag print fns with `^:redef` so that they can emit coloured, formatted output
 
 
 ## Releases
+
+### [WIP] 0.6.2-SNAPSHOT / 2021-February-??
+
+- [Todo] Upgrade Keypin to version `0.8.2` (for new predicate and DIME compatibility)
+
 
 ### 0.6.2-beta2 / 2021-January-28
 
