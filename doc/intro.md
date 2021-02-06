@@ -207,6 +207,7 @@ You can run the test with `lein do clean, test` or `APP_VERBOSE=true lein do cle
 Run `lein repl` to start a REPL:
 
 ```clojure
+(help)   ; show REPL help text
 (start)  ; launch the application
 ;; bract.core.dev/app-context is now bound to initialized context
 ```
