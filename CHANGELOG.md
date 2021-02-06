@@ -54,7 +54,7 @@
 
 ## Releases
 
-### [WIP] 0.6.2-SNAPSHOT / 2021-February-??
+### 0.6.2-beta3 / 2021-February-06
 
 - Upgrade Keypin to version `0.8.2` (for new predicate and var metadata)
 
