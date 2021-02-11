@@ -34,6 +34,9 @@
   - [Todo - BREAKING] Context reader should follow the cascading chain
   - [Todo] Make `bract-context.edn` a cascading choice (after `bract-context.run.edn`)
   - [Todo - BREAKING] When neither is found, throw exception
+- [Idea] Tagged literal support for context and config
+  - Internal reference (self-context reference)
+  - Cross reference
 - [Idea] Create echo functions for success, failure, latency, open-close fragments, exception stack trace
   - [Idea] Could be replaced by colored printers in DEV mode
 - [Idea] Find a way to resolve variables at runtime (dynamic + late)
@@ -50,9 +53,21 @@
 - [Todo - BREAKING CHANGE] Echo overhaul
   - Accommodate structured-format output
   - Tag print fns with `^:redef` so that they can emit coloured, formatted output
+- [Todo] Registry of key definitions, so that values can be validated when added to context
 
 
 ## Releases
+
+### [WIP] 0.6.2-beta4 / 2021-February-??
+
+- [Todo] Verbose-mode `bract.core.inducer/induce` - print an induction report (table)
+  - Inducers executed
+  - Keys added/removed/updated in app-context
+  - Time taken for each inducer
+- [Todo] Metrics event emitter, no-op by default
+  - [Todo] Internal event-name
+  - [Todo] Overridable by user
+
 
 ### 0.6.2-beta3 / 2021-February-06
 
