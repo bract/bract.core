@@ -60,7 +60,7 @@
 
 ### [WIP] 0.6.2-beta4 / 2021-February-??
 
-- [Todo] Verbose-mode `bract.core.inducer/induce` - print an induction report (table)
+- Verbose-mode `bract.core.inducer/induce` - print an induction report (table)
   - Inducers executed
   - Keys added/removed/updated in app-context
   - Time taken for each inducer

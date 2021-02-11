@@ -182,7 +182,8 @@
 
 (defn launcher-inc
   [context]
-  (vswap! volatile-holder #(inc ^long %)))
+  (vswap! volatile-holder #(inc ^long %))
+  context)
 
 
 (deftest test-invoke-launchers

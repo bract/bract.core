@@ -28,17 +28,49 @@
 ;; ----- utility for applying inducers -----
 
 
+(def ^:dynamic *inducer-log*
+  "Inducer log holder - :execs is expected to be bound to an `(atom [])`."
+  {:level 0
+   :execs nil})
+
+
+(defmacro with-inducer-log
+  [& body]
+  `(if (:execs *inducer-log*)
+     (do ~@body)
+     (let [execs# (atom [])]
+       (try
+         (binding [*inducer-log* {:level (inc (:level *inducer-log*))
+                                  :execs execs#}]
+           ~@body)
+         (finally
+           (echo/echo (str "Induction report:\n" (impl/make-report @execs#))))))))
+
+
 (defn apply-inducer
   "Given a context and inducer-spec, apply the inducer to the context (and args if any) returning updated context."
   ([context inducer]
     (apply-inducer "inducer" context inducer))
   ([inducer-type context inducer]
-    (let [f (type/ifunc inducer)
+    (let [s (util/now-millis)
+          f (type/ifunc inducer)
           n (type/iname inducer)
-          a (type/iargs inducer)]
-      (echo/with-latency-capture (format "Executing %s `%s`" inducer-type n)
-        (echo/with-inducer-name n
-          (apply f context a))))))
+          a (type/iargs inducer)
+          e (fn [log] (when-let [execs (:execs *inducer-log*)]
+                        (swap! execs conj log)))]
+      (try
+        (let [new-context (echo/with-latency-capture (format "Executing %s `%s`" inducer-type n)
+                            (echo/with-inducer-name n
+                              (apply f context a)))]
+          (e (impl/inducer-success
+               (:level *inducer-log*)
+               inducer-type (cons (symbol n) a) context (unreduced new-context) (util/now-millis s)))
+          new-context)
+        (catch Exception ex
+          (e (impl/inducer-failure
+               (:level *inducer-log*)
+               inducer-type (cons (symbol n) a) (util/now-millis s) (.getName (class ex))))
+          (throw ex))))))
 
 
 (defn induce
@@ -48,11 +80,12 @@
   ([context coll]
     (induce apply-inducer context coll))
   ([f context coll]
-    (reduce (fn [context inducer-candidate]
-              (if (kdef/ctx-exit? context)
-                (reduced context)
-                (f context inducer-candidate)))
-      context coll)))
+    (with-inducer-log
+      (reduce (fn [context inducer-candidate]
+                (if (kdef/ctx-exit? context)
+                  (reduced context)
+                  (f context inducer-candidate)))
+        context coll))))
 
 
 ;; ----- inducers -----
