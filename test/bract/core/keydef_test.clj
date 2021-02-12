@@ -58,6 +58,8 @@
     (is (false?       (kdef/ctx-verbose?       {})))
     (is (string?      (kdef/ctx-context-file   {})))
     (is (= []         (kdef/ctx-config-files   {})))
+    (is (= false      (kdef/ctx-dev-mode?      {})))
+    (is (some?        (kdef/ctx-event-logger   {})))
     (is (= []         (kdef/ctx-inducers       {})))
     (is (false?       (kdef/ctx-exit?          {})))
     (is (= []         (kdef/ctx-deinit         {})))

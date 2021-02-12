@@ -71,6 +71,7 @@ Legend:
 |`:bract.core/verbose?`      |boolean            | controls verbosity, value could be `true` or `false`      |
 |`:bract.core/context-file`  |string             | EDN filename containing context map                       |
 |`:bract.core/config-files`  |vector of string   | vector of (or comma separated) config file names          |
+|`:bract.core/dev-mode?`     |boolean            | whether initialization is in DEV mode, default `false`    |
 |`:bract.core/event-logger`  |`(fn [name] [name data] [name data exception])`|event logger, default to STDOUT|
 |`:bract.core/exit?`         |boolean            | whether break out of all inducer levels                   |
 |`:bract.core/cli-args`      |vector of string   | collection of CLI arguments                               |

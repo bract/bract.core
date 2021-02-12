@@ -49,6 +49,7 @@
                                                                                     :default []
                                                                                     :envvar  "APP_CONFIG"
                                                                                     :sysprop "app.config"}]
+  ctx-dev-mode?      [:bract.core/dev-mode? kputil/bool? "Whether initialization is in DEV mode" {:default false}]
   ctx-event-logger   [:bract.core/event-logger   fn?     "Event logger `(fn [name] [name data] [name data exception])`"
                       {:default (fn [name & more] (apply println (format ":::[Event] [%s]" (pr-str name)) more))}]
   ctx-exit?          [:bract.core/exit?     kputil/any?  "Whether break out of all inducer levels" {:default false}]

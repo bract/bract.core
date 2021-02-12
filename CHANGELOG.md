@@ -69,8 +69,8 @@
   - Context key `:bract.core/event-logger`
   - Config keys `"bract.core.eventlog.(enable, allow, block)"`
   - Utility fn `bract.core.keydef/resolve-context`
-- [Todo] Dev mode key definition
-  - Populated by DEV entry points
+- Dev mode context key `:bract.core/dev-mode?`
+  - Populated as `true` by DEV entry points
 
 
 ### 0.6.2-beta3 / 2021-February-06
