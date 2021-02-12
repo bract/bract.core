@@ -303,3 +303,8 @@
            (let-var [~@(drop 2 bindings)]
              ~@body)
            (throw (ex-info (format "Cannot find fn '%s' in classpath." right#) {})))))))
+
+
+(defn nop
+  "Do nothing, return `nil`."
+  [& args])

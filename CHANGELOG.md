@@ -64,9 +64,16 @@
   - Inducers executed
   - Keys added/removed/updated in app-context
   - Time taken for each inducer
-- [Todo] Metrics event emitter, no-op by default
-  - [Todo] Internal event-name
-  - [Todo] Overridable by user
+- Add utility fn `bract.core.util/nop` that does nothing
+- [Todo] Metrics event logging mechanism, no-op by default
+  - Context key `:bract.core/event-logger`
+  - Config keys
+    - `bract.core.eventlog.enable`
+    - `bract.core.eventlog.allow`
+    - `bract.core.eventlog.block`
+  - Utility fn `bract.core.keydef/resolve-context`
+- [Todo] Dev mode key definition
+  - Populated by DEV entry points
 
 
 ### 0.6.2-beta3 / 2021-February-06
