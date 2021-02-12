@@ -9,7 +9,7 @@
 
 (ns bract.core.keydef-test
   (:require
-    [clojure.test :refer :all]
+    [clojure.test :refer [deftest is testing]]
     [keypin.type       :as kptype]
     [keypin.util       :as kputil]
     [bract.core.keydef :as kdef]
@@ -136,3 +136,33 @@
                       "bract.core.exports"      20}]
       (is (thrown? IllegalArgumentException (kdef/cfg-inducers bad-config)))
       (is (thrown? IllegalArgumentException (kdef/cfg-exports  bad-config))))))
+
+
+(deftest test-event-logger
+  (testing "default event logger"
+    (let [el (kdef/ctx-event-logger {})]
+      (el :event1)
+      (el :event2 {:data 20})
+      (el "event3" {:foo 40} (Exception. "text"))))
+  (testing "custom event logger"
+    (let [store   (volatile! {:a1 0 :a2 0 :a3 0})
+          context {:bract.core/event-logger (fn
+                                              ([name] (vswap! store update :a1 inc))
+                                              ([name data] (vswap! store update :a2 inc))
+                                              ([name data ex] (vswap! store update :a3 inc)))
+                   :bract.core/config {"bract.core.eventlog.enable" true}}
+          elogger (kdef/resolve-event-logger context :foo)]
+      (elogger :foo)
+      (elogger :foo {:bar 20})
+      (elogger :foo {:bar 30} (Exception.))
+      (is (= {:a1 1 :a2 1 :a3 1}
+            @store))))
+  (testing "allow and block"
+    (let [context1 {:bract.core/config {"bract.core.eventlog.enable" true
+                                        "bract.core.eventlog.block"  #{:foo :bar}}}
+          context2 {:bract.core/config {"bract.core.eventlog.enable" false
+                                        "bract.core.eventlog.allow"  #{:baz}}}]
+      (is (= util/nop (kdef/resolve-event-logger context1 :foo)))
+      (is (not= util/nop (kdef/resolve-event-logger context1 :baz)))
+      (is (= util/nop (kdef/resolve-event-logger context2 :foo)))
+      (is (not= util/nop (kdef/resolve-event-logger context2 :baz))))))

@@ -71,6 +71,7 @@ Legend:
 |`:bract.core/verbose?`      |boolean            | controls verbosity, value could be `true` or `false`      |
 |`:bract.core/context-file`  |string             | EDN filename containing context map                       |
 |`:bract.core/config-files`  |vector of string   | vector of (or comma separated) config file names          |
+|`:bract.core/event-logger`  |`(fn [name] [name data] [name data exception])`|event logger, default to STDOUT|
 |`:bract.core/exit?`         |boolean            | whether break out of all inducer levels                   |
 |`:bract.core/cli-args`      |vector of string   | collection of CLI arguments                               |
 |`:bract.core/config`        |app config map     | application configuraton map                              |
@@ -92,11 +93,14 @@ Legend:
 The config keys defined by _bract.core_ are listed below. Note that these may
 be referred to and used by other modules too.
 
-| Config key                 | Value type     | Description                                           |
-|----------------------------|----------------|-------------------------------------------------------|
-|`"bract.core.inducers"`     |vector of FQFNs |vector of fully qualified inducer fn names             |
-|`"bract.core.exports"`      |vector of string|vector of config keys to export as system properties   |
-|`"bract.core.drain.timeout"`|Keypin duration |workload drain timeout duration, e.g. `[10000 :millis]`|
+| Config key                   | Value type     | Description                                                  |
+|------------------------------|----------------|--------------------------------------------------------------|
+|`"bract.core.inducers"`       |vector of FQFNs |vector of fully qualified inducer fn names                    |
+|`"bract.core.exports"`        |vector of string|vector of config keys to export as system properties          |
+|`"bract.core.drain.timeout"`  |Keypin duration |workload drain timeout duration, e.g. `[10000 :millis]`       |
+|`"bract.core.eventlog.enable"`|boolean         |whether event logging is enabled, `true` or `false` (default) |
+|`"bract.core.eventlog.allow"` |set of names    |events to allow when `"bract.core.eventlog.enable"` is `false`|
+|`"bract.core.eventlog.block"` |set of names    |events to block when `"bract.core.eventlog.enable"` is `true` |
 
 
 ## Creating a simple demo application

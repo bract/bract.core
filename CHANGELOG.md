@@ -65,12 +65,9 @@
   - Keys added/removed/updated in app-context
   - Time taken for each inducer
 - Add utility fn `bract.core.util/nop` that does nothing
-- [Todo] Metrics event logging mechanism, no-op by default
+- Metrics event logging mechanism, no-op by default
   - Context key `:bract.core/event-logger`
-  - Config keys
-    - `bract.core.eventlog.enable`
-    - `bract.core.eventlog.allow`
-    - `bract.core.eventlog.block`
+  - Config keys `"bract.core.eventlog.(enable, allow, block)"`
   - Utility fn `bract.core.keydef/resolve-context`
 - [Todo] Dev mode key definition
   - Populated by DEV entry points

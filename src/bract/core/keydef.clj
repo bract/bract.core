@@ -49,6 +49,8 @@
                                                                                     :default []
                                                                                     :envvar  "APP_CONFIG"
                                                                                     :sysprop "app.config"}]
+  ctx-event-logger   [:bract.core/event-logger   fn?     "Event logger `(fn [name] [name data] [name data exception])`"
+                      {:default (fn [name & more] (apply println (format ":::[Event] [%s]" (pr-str name)) more))}]
   ctx-exit?          [:bract.core/exit?     kputil/any?  "Whether break out of all inducer levels" {:default false}]
   ctx-cli-args       [:bract.core/cli-args       coll?   "Collection of CLI arguments"]
   ctx-config         [:bract.core/config         map?    "Application config"]
@@ -78,6 +80,12 @@
   cfg-drain-timeout  ["bract.core.drain.timeout" kputil/duration? "Workload drain timeout"
                       {:parser kputil/any->duration
                        :default [10000 :millis]}])
+
+
+(keypin/defkey  ; event-logging config keys
+  cfg-eventlog?      ["bract.core.eventlog.enable" kputil/bool? "Whether event logging is enabled"    {:default false}]
+  cfg-eventlog-allow ["bract.core.eventlog.allow"      set? "Allow-list when event logging is disabled" {:default #{}}]
+  cfg-eventlog-block ["bract.core.eventlog.block"      set? "Block-list when event logging is enabled"  {:default #{}}])
 
 
 ;; ----- utility fns -----
@@ -160,3 +168,14 @@
           (pr-str found))
         context)
       (f discovery-key-path))))
+
+
+(defn resolve-event-logger
+  "Resolve event logger `(fn [name] [name data] [name data exception])` for given context and event-name."
+  [context event-name]
+  (let [config (ctx-config context)]
+    (if (if (cfg-eventlog? config)
+          (not (contains? (cfg-eventlog-block config) event-name))
+          (contains? (cfg-eventlog-allow config) event-name))
+      (ctx-event-logger context)
+      util/nop)))
