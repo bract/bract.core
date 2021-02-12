@@ -40,7 +40,7 @@
      (do ~@body)
      (let [execs# (atom [])]
        (try
-         (binding [*inducer-log* {:level (inc (:level *inducer-log*))
+         (binding [*inducer-log* {:level (inc (long (:level *inducer-log*)))
                                   :execs execs#}]
            ~@body)
          (finally

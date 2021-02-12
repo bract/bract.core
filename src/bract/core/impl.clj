@@ -127,7 +127,7 @@
            thrown]
     :as row}]
   (let [vmax (volatile! 0)
-        umax (fn [tokens] (vswap! vmax max (count tokens)))
+        umax (fn [tokens] (vswap! vmax (fn [^long n] (max n (count tokens)))))
         cols (fn [each] (-> (str each)
                           (string/split #"\s")
                           (doto umax)))
@@ -139,7 +139,7 @@
         cols-keys-updated  (cols keys-updated)
         cols-millis-taken  (cols millis-taken)
         cols-thrown        (cols thrown)
-        max-width (fn [tokens] (reduce (fn [n each]
+        max-width (fn [tokens] (reduce (fn [^long n each]
                                          (max n (count each)))
                                  0
                                  tokens))
