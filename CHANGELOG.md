@@ -58,7 +58,7 @@
 
 ## Releases
 
-### [WIP] 0.6.2-beta4 / 2021-February-??
+### 0.6.2-alpha4 / 2021-February-13
 
 - Verbose-mode `bract.core.inducer/induce` - print an induction report (table)
   - Inducers executed
