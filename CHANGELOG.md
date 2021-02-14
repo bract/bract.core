@@ -58,7 +58,7 @@
 
 ## Releases
 
-### [WIP] 0.6.2-beta4 / 2021-February-??
+### 0.6.2-beta4 / 2021-February-14
 
 - Utility macros
   - `bract.core.util/thrown->val`
