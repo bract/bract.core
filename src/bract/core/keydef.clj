@@ -178,5 +178,9 @@
     (if (if (cfg-eventlog? config)
           (not (contains? (cfg-eventlog-block config) event-name))
           (contains? (cfg-eventlog-allow config) event-name))
-      (ctx-event-logger context)
+      (let [f (ctx-event-logger context)]
+        (fn
+          ([name]             (util/thrown->val [Exception nil] (f name)))
+          ([name data]        (util/thrown->val [Exception nil] (f name data)))
+          ([name data thrown] (util/thrown->val [Exception nil] (f name data thrown)))))
       util/nop)))

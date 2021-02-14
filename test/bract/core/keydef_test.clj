@@ -167,4 +167,13 @@
       (is (= util/nop (kdef/resolve-event-logger context1 :foo)))
       (is (not= util/nop (kdef/resolve-event-logger context1 :baz)))
       (is (= util/nop (kdef/resolve-event-logger context2 :foo)))
-      (is (not= util/nop (kdef/resolve-event-logger context2 :baz))))))
+      (is (not= util/nop (kdef/resolve-event-logger context2 :baz)))))
+  (testing "event-logger that throws"
+    (let [context-throws {:bract.core/event-logger (fn [& args] (throw (ex-info "Bad event logger")))
+                          :bract.core/config {"bract.core.eventlog.enable" true}}
+          context-normal {:bract.core/event-logger println
+                          :bract.core/config {"bract.core.eventlog.enable" true}}
+          el-throws (kdef/resolve-event-logger context-throws :foo)
+          el-normal (kdef/resolve-event-logger context-normal :foo)]
+      (is (nil? (el-throws :foo)))
+      (is (nil? (el-normal :foo))))))
