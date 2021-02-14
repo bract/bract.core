@@ -58,6 +58,15 @@
 
 ## Releases
 
+### [WIP] 0.6.2-beta4 / 2021-February-??
+
+- [Todo] Utility macros
+  - `bract.core.util/thrown->val`
+  - `bract.core.util/after`
+  - `bract.core.util/doafter`
+- [Todo] Wrap fn returned by `bract.core.keydef/resolve-context` to ignore event-logging exceptions
+
+
 ### 0.6.2-alpha4 / 2021-February-13
 
 - Verbose-mode `bract.core.inducer/induce` - print an induction report (table)
