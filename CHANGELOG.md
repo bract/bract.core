@@ -60,7 +60,7 @@
 
 ### [WIP] 0.6.2-beta4 / 2021-February-??
 
-- [Todo] Utility macros
+- Utility macros
   - `bract.core.util/thrown->val`
   - `bract.core.util/after`
   - `bract.core.util/doafter`

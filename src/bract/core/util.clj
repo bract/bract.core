@@ -308,3 +308,34 @@
 (defn nop
   "Do nothing, return `nil`."
   [& args])
+
+
+(defmacro thrown->val
+  "Execute `body` of code in a `try` block, returning `value` when an exception of type `klass` is caught.
+  There may be one of more klass/value pairs, laid out as `catch` expressions in the same order as specified."
+  [[klass value & more] & body]
+  (let [catches (->> (partition 2 more)
+                  (cons [klass value])
+                  (reduce (fn [exprs [k v]]
+                            (conj exprs `(catch ~k ex#
+                                           ~v)))
+                    []))]
+    `(try
+       ~@body
+       ~@catches)))
+
+
+(defmacro after
+  "Create a function `(fn [arg]) -> arg` that returns the supplied argument after evaluating body of code."
+  [& body]
+  `(fn [result#]
+     ~@body
+     result#))
+
+
+(defmacro doafter
+  "Evaluate supplied expression and return it after evaluating body of code."
+  [expr & body]
+  `(let [result# ~expr]
+     ~@body
+     result#))
