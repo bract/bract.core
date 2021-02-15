@@ -312,12 +312,14 @@
 
 (defmacro thrown->val
   "Execute `body` of code in a `try` block, returning `value` when an exception of type `klass` is caught.
-  There may be one of more klass/value pairs, laid out as `catch` expressions in the same order as specified."
+  There may be one of more klass/value pairs, laid out as `catch` expressions in the same order as specified.
+  The caught exceptions are rethrown using `clojure.core/future` - to be handled by uncaught-exception handler."
   [[klass value & more] & body]
   (let [catches (->> (partition 2 more)
                   (cons [klass value])
                   (reduce (fn [exprs [k v]]
                             (conj exprs `(catch ~k ex#
+                                           (future (throw ex#))  ; for uncaught-exception handler
                                            ~v)))
                     []))]
     `(try
