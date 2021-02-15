@@ -83,6 +83,18 @@
                        thrown])
 
 
+(defn induction-init [level context]
+  (->InducerLog
+    level
+    "initial"
+    "--initial-context--"
+    (vec (keys context))
+    nil
+    nil
+    0
+    nil))
+
+
 (defn inducer-success [level inducer-type invocation old-context new-context millis-taken]
   (let [old-keyset   (set (keys old-context))
         new-keyset   (set (keys new-context))

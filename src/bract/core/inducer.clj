@@ -35,12 +35,13 @@
 
 
 (defmacro with-inducer-log
-  [& body]
+  [context & body]
   `(if (:execs *inducer-log*)
      (do ~@body)
-     (let [execs# (atom [])]
+     (let [level# (:level *inducer-log*)
+           execs# (atom [(impl/induction-init level# ~context)])]
        (try
-         (binding [*inducer-log* {:level (inc (long (:level *inducer-log*)))
+         (binding [*inducer-log* {:level (inc (long level#))
                                   :execs execs#}]
            ~@body)
          (finally
@@ -80,7 +81,7 @@
   ([context coll]
     (induce apply-inducer context coll))
   ([f context coll]
-    (with-inducer-log
+    (with-inducer-log context
       (reduce (fn [context inducer-candidate]
                 (if (kdef/ctx-exit? context)
                   (reduced context)
