@@ -58,6 +58,14 @@
 
 ## Releases
 
+### [WIP] 0.6.2-beta5 / 2021-February-??
+
+- [Todo] Rethrow exception in `bract.core.util/thrown->val` using `clojure.core/future`
+- [Todo] Include initial context keys in verbose induction summary
+- [Todo] Include CLI-args in DEV root context
+  - Support for downstream modules to treat DEV CLI entry-point on equal footing as main
+
+
 ### 0.6.2-beta4 / 2021-February-14
 
 - Utility macros
