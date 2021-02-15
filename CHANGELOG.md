@@ -62,8 +62,8 @@
 
 - Rethrow exception in `bract.core.util/thrown->val` using `clojure.core/future`
 - Include initial context keys in verbose induction summary
-- [Todo] Include CLI-args in DEV root context
-  - Support for downstream modules to treat DEV CLI entry-point on equal footing as main
+- Include default empty CLI-args in DEV root context
+  - Support for modules to treat DEV default entry-point on equal footing as main
 
 
 ### 0.6.2-beta4 / 2021-February-14
