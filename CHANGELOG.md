@@ -58,7 +58,7 @@
 
 ## Releases
 
-### [WIP] 0.6.2-beta5 / 2021-February-??
+### 0.6.2-beta5 / 2021-February-18
 
 - Rethrow exception in `bract.core.util/thrown->val` using `clojure.core/future`
 - Include initial context keys in verbose induction summary
