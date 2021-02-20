@@ -58,7 +58,7 @@
 
 ## Releases
 
-### [WIP] 0.6.2-beta6 / 2021-February-??
+### 0.6.2-beta6 / 2021-February-21
 
 - Include context values preview in induction report
 - Do not set CLI-args in DEV root context
