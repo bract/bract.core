@@ -36,15 +36,16 @@
 
 (defmacro with-inducer-log
   [context & body]
-  `(if (:execs *inducer-log*)
-     (do ~@body)
-     (let [level# (:level *inducer-log*)
-           execs# (atom [(impl/induction-init level# ~context)])]
-       (try
-         (binding [*inducer-log* {:level (inc (long level#))
-                                  :execs execs#}]
-           ~@body)
-         (finally
+  `(let [level# (:level *inducer-log*)
+         oldex# (:execs *inducer-log*)
+         execs# (or oldex#
+                  (atom [(impl/induction-init level# ~context)]))]
+     (try
+       (binding [*inducer-log* {:level (inc (long level#))
+                                :execs execs#}]
+         ~@body)
+       (finally
+         (when (nil? oldex#)
            (echo/echo (str "Induction report:\n" (impl/make-report @execs#))))))))
 
 

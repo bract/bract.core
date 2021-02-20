@@ -83,12 +83,53 @@
                        thrown])
 
 
+(defn stringify
+  [v]
+  (let [scalar? (some-fn
+                  nil?
+                  number?
+                  kputil/bool?
+                  char?
+                  string?
+                  keyword?
+                  symbol?)]
+    (cond
+      (scalar? v)  (pr-str  v)
+      (coll? v)    (let [n (count v)] (format (cond
+                                                (map? v)    "{%s}"
+                                                (vector? v) "[%s]"
+                                                (set? v)    "#{%s}"
+                                                :else       "(%s)") (if (zero? n) "" n)))
+      (fn? v)      "fn"
+      :otherwise   (format "#%s" (.getName ^Class (class v))))))
+
+
+(defn maxlen
+  [v len]
+  (let [s (str v)]
+    (if (> (count s) len)
+      (-> (subs s 0 len)
+        (str "+"))
+      s)))
+
+
+(defn map->pairs
+  [m]
+  (let [ks (keys m)]
+    (->> ks
+      (map m)
+      (map (fn [k v] (format "%s=%s" k (-> (stringify v)
+                                         (maxlen 10))))
+        ks)
+      vec)))
+
+
 (defn induction-init [level context]
   (->InducerLog
     level
     "initial"
     "--initial-context--"
-    (vec (keys context))
+    (vec (map->pairs context))
     nil
     nil
     0
@@ -99,11 +140,19 @@
   (let [old-keyset   (set (keys old-context))
         new-keyset   (set (keys new-context))
         report-vec   (comp vec sort)
-        keys-added   (report-vec (set/difference new-keyset old-keyset))
-        keys-removed (report-vec (set/difference old-keyset new-keyset))
+        keys-added   (->> (set/difference new-keyset old-keyset)
+                       (select-keys new-context)
+                       map->pairs
+                       report-vec)
+        keys-removed (->> (set/difference old-keyset new-keyset)
+                       (select-keys old-context)
+                       map->pairs
+                       report-vec)
         keys-updated (->> (set/intersection old-keyset new-keyset)
                        (filter (fn [k]
                                  (not= (get old-context k) (get new-context k))))
+                       (select-keys new-context)
+                       map->pairs
                        report-vec)]
     (->InducerLog
       level
@@ -143,12 +192,13 @@
         cols (fn [each] (-> (str each)
                           (string/split #"\s")
                           (doto umax)))
+        dols (fn [each] (doto each umax))
         cols-inducer-level (cols inducer-level)
         cols-inducer-type  (cols inducer-type)
         cols-invocation    (cols invocation)
-        cols-keys-added    (cols keys-added)
-        cols-keys-removed  (cols keys-removed)
-        cols-keys-updated  (cols keys-updated)
+        cols-keys-added    (dols keys-added)
+        cols-keys-removed  (dols keys-removed)
+        cols-keys-updated  (dols keys-updated)
         cols-millis-taken  (cols millis-taken)
         cols-thrown        (cols thrown)
         max-width (fn [tokens] (reduce (fn [^long n each]
