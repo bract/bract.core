@@ -61,8 +61,8 @@
 ### [WIP] 0.6.2-beta6 / 2021-February-??
 
 - [Todo] Include context values preview in induction report
-- [Todo] Do not set CLI-args in DEV root context
-  - To disable CLI processing
+- Do not set CLI-args in DEV root context
+  - To disable CLI processing by default
 - [Todo] Add helper macro `bract.core.inducer/when-context-has-key` for conditional passthrough
 
 

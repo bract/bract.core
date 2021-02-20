@@ -112,7 +112,6 @@
 
 
 (def root-context {(key kdef/ctx-context-file) "bract-context.dev.edn"
-                   (key kdef/ctx-cli-args)     []
                    (key kdef/ctx-config-files) ["config/config.dev.edn"]
                    (key kdef/ctx-dev-mode?)    true
                    (key kdef/ctx-launch?)      false})
