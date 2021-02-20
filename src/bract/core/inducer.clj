@@ -90,6 +90,17 @@
         context coll))))
 
 
+(defmacro when-context-has-key
+  [[context context-key skipped-message] & body]
+  `(let [context# ~context
+         ctx-key# ~context-key]
+     (if (contains? context# ctx-key#)
+       (do ~@body)
+       (do
+         (echo/echof "Key %s not found in context, skipped %s" ctx-key# ~skipped-message)
+         context#))))
+
+
 ;; ----- inducers -----
 
 
