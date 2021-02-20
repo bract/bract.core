@@ -105,7 +105,7 @@
 
 
 (defn maxlen
-  [v len]
+  [v ^long len]
   (let [s (str v)]
     (if (> (count s) len)
       (-> (subs s 0 len)
