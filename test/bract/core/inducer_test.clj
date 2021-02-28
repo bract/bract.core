@@ -53,6 +53,15 @@
                                    assoc-foo-10]))))
 
 
+(deftest test-abort
+  (let [context {:foo 10}]
+    (is (= {:foo 11
+            :bract.core/exit? true}
+          (inducer/induce context [#(update % :foo inc)
+                                   inducer/abort
+                                   #(update % :foo inc)])))))
+
+
 (deftest test-set-verbosity
   (let [verbosity? (Echo/isVerbose)]
     (try
@@ -173,7 +182,8 @@
 
 (defn launcher-inc
   [context]
-  (vswap! volatile-holder #(inc ^long %)))
+  (vswap! volatile-holder #(inc ^long %))
+  context)
 
 
 (deftest test-invoke-launchers

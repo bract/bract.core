@@ -8,7 +8,7 @@
 
 
 (ns bract.core.inducer
-  "The inducer fns exposed by Bract-core."
+  "The inducer functions exposed by `bract.core` module."
   (:require
     [clojure.edn       :as edn]
     [clojure.java.io   :as io]
@@ -28,17 +28,51 @@
 ;; ----- utility for applying inducers -----
 
 
+(def ^:dynamic *inducer-log*
+  "Inducer log holder - :execs is expected to be bound to an `(atom [])`."
+  {:level 0
+   :execs nil})
+
+
+(defmacro with-inducer-log
+  [context & body]
+  `(let [level# (:level *inducer-log*)
+         oldex# (:execs *inducer-log*)
+         execs# (or oldex#
+                  (atom [(impl/induction-init level# ~context)]))]
+     (try
+       (binding [*inducer-log* {:level (inc (long level#))
+                                :execs execs#}]
+         ~@body)
+       (finally
+         (when (nil? oldex#)
+           (echo/echo (str "Induction report:\n" (impl/make-report @execs#))))))))
+
+
 (defn apply-inducer
   "Given a context and inducer-spec, apply the inducer to the context (and args if any) returning updated context."
   ([context inducer]
     (apply-inducer "inducer" context inducer))
   ([inducer-type context inducer]
-    (let [f (type/ifunc inducer)
+    (let [s (util/now-millis)
+          f (type/ifunc inducer)
           n (type/iname inducer)
-          a (type/iargs inducer)]
-      (echo/with-latency-capture (format "Executing %s `%s`" inducer-type n)
-        (echo/with-inducer-name n
-          (apply f context a))))))
+          a (type/iargs inducer)
+          e (fn [log] (when-let [execs (:execs *inducer-log*)]
+                        (swap! execs conj log)))]
+      (try
+        (let [new-context (echo/with-latency-capture (format "Executing %s `%s`" inducer-type n)
+                            (echo/with-inducer-name n
+                              (apply f context a)))]
+          (e (impl/inducer-success
+               (:level *inducer-log*)
+               inducer-type (cons (symbol n) a) context (unreduced new-context) (util/now-millis s)))
+          new-context)
+        (catch Exception ex
+          (e (impl/inducer-failure
+               (:level *inducer-log*)
+               inducer-type (cons (symbol n) a) (util/now-millis s) (.getName (class ex))))
+          (throw ex))))))
 
 
 (defn induce
@@ -48,14 +82,37 @@
   ([context coll]
     (induce apply-inducer context coll))
   ([f context coll]
-    (reduce (fn [context inducer-candidate]
-              (if (kdef/ctx-exit? context)
-                (reduced context)
-                (f context inducer-candidate)))
-      context coll)))
+    (with-inducer-log context
+      (reduce (fn [context inducer-candidate]
+                (if (kdef/ctx-exit? context)
+                  (reduced context)
+                  (f context inducer-candidate)))
+        context coll))))
+
+
+(defmacro when-context-has-key
+  [[context context-key skipped-message] & body]
+  `(let [context# ~context
+         ctx-key# ~context-key]
+     (if (contains? context# ctx-key#)
+       (do ~@body)
+       (do
+         (echo/echof "Key %s not found in context, skipped %s" ctx-key# ~skipped-message)
+         context#))))
 
 
 ;; ----- inducers -----
+
+
+(defn abort
+  "Abort the entire inducer chain."
+  ([context]
+    (assoc context
+      (key kdef/ctx-exit?) true))
+  ([context message]
+    (echo/abort message)
+    (util/err-println "ERROR:" message)
+    (abort context)))
 
 
 (defn set-verbosity
@@ -71,8 +128,8 @@
 
 
 (defn read-context
-  "Use context filename (when specified) in the context under key :bract.core/context-file to read from and merge into
-  the context."
+  "Use context filename (when specified) in the context under key `:bract.core/context-file` to read from and merge
+  into the context."
   [context]
   (if-let [context-file (kdef/ctx-context-file context)]
     (if (io/resource context-file)
@@ -86,8 +143,8 @@
 
 
 (defn read-config
-  "Use config filenames in the context under key :bract.core/config-files to read and resolve config, and populate the
-  context with it under the key :bract.core/config."
+  "Use config filenames in the context under key `:bract.core/config-files` to read and resolve config, and populate
+  the context with it under the key `:bract.core/config`."
   [context]
   (let [config-files (kdef/ctx-config-files context)]
     (if (seq config-files)
@@ -107,7 +164,9 @@
         (induce context))))
   ([context lookup-key]
     (impl/with-lookup-key lookup-key
-      (as-> (keypin/make-key lookup-key vector? "Vector of inducer fns or their fully qualified names" {}) <>
+      (as-> (keypin/make-key {:the-key lookup-key
+                              :pred vector?
+                              :desc "Vector of inducer fns or their fully qualified names"}) <>
         (<> context)
         (induce context <>)))))
 
@@ -122,7 +181,9 @@
   ([context lookup-key]
     (impl/with-lookup-key lookup-key
       (->> (kdef/ctx-config context)
-        ((keypin/make-key lookup-key vector? "Vector of inducer fns or their fully qualified names" {}))
+        ((keypin/make-key {:the-key lookup-key
+                           :pred vector?
+                           :desc "Vector of inducer fns or their fully qualified names"}))
         (induce context)))))
 
 
@@ -136,8 +197,8 @@
 
 
 (defn export-as-sysprops
-  "Given context with config, read the value of config key \"bract.core.exports\" as a vector of string config keys and
-  export the key-value pairs for those config keys as system properties."
+  "Given context with config, read the value of config key `\"bract.core.exports\"` as a vector of string config keys
+  and export the key-value pairs for those config keys as system properties."
   [context]
   (let [config (kdef/ctx-config context)
         exlist (-> (kdef/cfg-exports config)
@@ -152,8 +213,8 @@
 
 
 (defn unexport-sysprops
-  "Given context with config, read the value of config key \"bract.core.exports\" as a vector of string config keys and
-  remove them from system properties."
+  "Given context with config, read the value of config key `\"bract.core.exports\"` as a vector of string config keys
+  and remove them from system properties."
   [context]
   (let [config (kdef/ctx-config context)
         exlist (-> (kdef/cfg-exports config)
@@ -168,8 +229,8 @@
 
 
 (defn invoke-launchers
-  "Given context with key :bract.core/launchers read its value as a vector of launcher fns and invoke them like
-  inducers `(fn [context]) -> context` when the context key :bract.core/launch? has the value true."
+  "Given context with key `:bract.core/launchers` read its value as a vector of launcher fns and invoke them like
+  inducers `(fn [context]) -> context` when the context key `:bract.core/launch?` has the value `true`."
   ([context]
     (if (kdef/ctx-launch? context)
       (invoke-launchers context (kdef/ctx-launchers context))
@@ -187,8 +248,8 @@
 
 
 (defn invoke-deinit
-  "Given context with :bract.core/deinit key and corresponding collection of (fn []) de-init fns for the app, invoke
-  them in a sequence. Return context with empty deinit vector."
+  "Given context with `:bract.core/deinit` key and corresponding collection of `(fn [])` de-init functions for the app,
+  invoke them in a sequence. Return context with empty deinit vector."
   ([context]
     (invoke-deinit context true))
   ([context ignore-errors?]
@@ -207,7 +268,7 @@
 
 
 (defn invoke-stopper
-  "Given context with :bract.core/stopper key and corresponding (fn []) stopper fn for the app, invoke it."
+  "Given context with `:bract.core/stopper` key and corresponding `(fn [])` stopper function for the app, invoke it."
   [context]
   (let [f (kdef/ctx-stopper context)]
     (f))
@@ -215,8 +276,8 @@
 
 
 (defn add-shutdown-hook
-  "Given context with :bract.core/*shutdown-flag and :bract.core/shutdown-hooks keys related to app shutdown, and
-  config key \"bract.core.drain.timeout\", add an inducer as a shutdown hook. Specified inducer (invoke-deinit by
+  "Given context with `:bract.core/*shutdown-flag` and `:bract.core/shutdown-hooks` keys related to app shutdown, and
+  config key `\"bract.core.drain.timeout\"`, add an inducer as a shutdown hook. Specified inducer ([[invoke-deinit]] by
   default) may be a function or a fully-qualified function name."
   ([context]
     (add-shutdown-hook context invoke-deinit))
@@ -278,7 +339,10 @@
 (defn discover-hostname
   "Discover hostname and add to config if absent.
   Options:
-  :config-key - configuration key to update discovered hostname at, default: \"discovered.hostname\""
+
+  | Kwarg       | Description |
+  |-------------|-------------|
+  |`:config-key`| configuration key to update discovered hostname at, default: `\"discovered.hostname\"`|"
   ([context]
     (discover-hostname context {}))
   ([context {:keys [config-key]
@@ -298,8 +362,11 @@
 (defn discover-project-edn-version
   "Discover application version from project.edn file containing :version key, and add to config if absent.
   Options:
-  :config-key  - configuration key to update discovered version at, default: \"discovered.app.version\"
-  :project-edn - resource path to the project EDN file, default: \"project.edn\" (in classpath)"
+
+  | Kwarg        | Description |
+  |--------------|-------------|
+  |`:config-key` | configuration key to update discovered version at, default: `\"discovered.app.version\"`|
+  |`:project-edn`| resource path to the project EDN file, default: `\"project.edn\"` (in classpath)        |"
   ([context]
     (discover-project-edn-version context {}))
   ([context {:keys [config-key

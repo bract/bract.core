@@ -27,14 +27,82 @@
   - [Todo - BREAKING CHANGE] Drop inducer `run-config-inducers` in favor of dynamic/late variable substitution
 
 
-## 0.6.1 / 2018-October-10
+### [Ideas and Todo] 0.7.0 / 2020-October-??
+
+- [Todo - BREAKING] Make app-context key definition a vector of string
+  - String (env var, system property) to be parsed as comma separated tokens
+  - [Todo - BREAKING] Context reader should follow the cascading chain
+  - [Todo] Make `bract-context.edn` a cascading choice (after `bract-context.run.edn`)
+  - [Todo - BREAKING] When neither is found, throw exception
+- [Idea] Tagged literal support for context and config
+  - Internal reference (self-context reference)
+  - Cross reference
+- [Idea] Create echo functions for success, failure, latency, open-close fragments, exception stack trace
+  - [Idea] Could be replaced by colored printers in DEV mode
+- [Idea] Find a way to resolve variables at runtime (dynamic + late)
+  - [Todo - BREAKING CHANGE] Remove exports config keydef `"bract.core.exports"` (in favor of using variable instead)
+  - [Todo - BREAKING CHANGE] Have inducers dealing with system properties accept export-key/value arguments
+    - `export-as-sysprops`
+    - `unexport-sysprops`
+  - [Todo - BREAKING CHANGE] Drop inducer `run-context-inducers` in favor of dynamic/late variable substitution
+  - [Todo - BREAKING CHANGE] Drop inducer `run-config-inducers` in favor of dynamic/late variable substitution
+  - [Todo] Add inducers
+    - (push-context [context :key])
+    - (pull-context [context :key])
+    - (pop-context [context :key])
+- [Todo - BREAKING CHANGE] Echo overhaul
+  - Accommodate structured-format output
+  - Tag print fns with `^:redef` so that they can emit coloured, formatted output
+- [Todo] Registry of key definitions, so that values can be validated when added to context
+
+
+## Releases
+
+### [WIP] 0.6.2 / 2021-February-??
+
+- Dependency update
+  - Upgrade Keypin to version `0.8.2` (for remote/cached config store, var metadata, utility predicate)
+- New feature
+  - Metrics event logging mechanism, no-op by default
+    - Context key `:bract.core/event-logger`
+    - Config keys `"bract.core.eventlog.(enable, allow, block)"`
+    - Utility fn `bract.core.keydef/resolve-context`
+- New inducers
+  - `bract.core.inducer/abort` (moved from Gossamer:0.6.1-0.2.0 `gossamer.core.inducer/abort`)
+  - Helper macro `bract.core.inducer/when-context-has-key` for conditional passthrough
+- New functions/macros
+  - `bract.core.dev/initial-context` to resolve DEV mode initial context
+  - `bract.core.util/err-print-banner` for printing banner messages to `*err*`
+  - `bract.core.util/nop` that does nothing (for any arity)
+  - `bract.core.util/thrown->val` - macro to catch exception and return value
+  - `bract.core.util/after` - macro to do something after an activity, wrapped as fn
+  - `bract.core.util/doafter` - macro to do something after an activity
+  - `bract.core.keydef/resolve-event-logger` to resolve event-logger fn  
+- General Improvements
+  - Demunge function names displayed in verbose/echo mode
+  - Make `bract.core.inducer/induce` print an induction report (table) in verbose-mode
+- DEV-mode Improvements
+  - Make namespace `bract.core.dev-init` safe for loading (e.g. by _cljdoc_)
+  - Make `bract.core.dev` namespace usable for REPL - require/refer useful vars
+  - Add `bract.core.dev/-main` for running application in DEV mode
+    - Includes CLI-args in context
+  - Add `bract.core.dev/help` fn for REPL help text
+  - Add context key `:bract.core/dev-mode?` (set `true` by DEV entry points)
+- Documentation
+  - Reformat docstring for _cljdoc_
+  - Add _cljdoc_ badge
+  - Add documentation page covering context and config keys
+  - Add quickstart 'Greeting' example app
+
+
+### 0.6.1 / 2018-October-10
 
 - Config
   - Upgrade Keypin dependency to version `0.7.6`
     - For `:source` option in key definitions
 
 
-## 0.6.0 / 2018-May-16
+### 0.6.0 / 2018-May-16
 
 - Config
   - Upgrade Keypin dependency to version `0.7.4`
@@ -70,7 +138,7 @@
   - Add `let-var` utility macro
 
 
-## 0.5.1 / 2018-March-05
+### 0.5.1 / 2018-March-05
 
 - Add context key definition `:bract.core/app-exit-code` - app exit code (int, >= 0), default nil
 - Add namespace `bract.core.dev-init` to easily initialize test namespaces
@@ -82,7 +150,7 @@
 - Fix issue where resolving new config ignores existing config
 
 
-## 0.5.0 / 2018-February-18
+### 0.5.0 / 2018-February-18
 
 - Config
   - Upgrade Keypin dependency to version `0.7.2`
@@ -106,18 +174,18 @@
   - Add string and unit conversion functions
 
 
-## 0.4.1 / 2017-August-08
+### 0.4.1 / 2017-August-08
 
 - Make `bract.core.keydef/ctx-shutdown-flag :bract.core/shutdown-flag` volatile instead of atom
 - Fix reverse order of reporting remaining drain time
 
 
-## 0.4.0 / 2017-August-05
+### 0.4.0 / 2017-August-05
 
 - [BREAKING CHANGE] Remove inducer `bract.core.inducer/config-hook`
 
 
-## 0.4.0-alpha2 / 2017-August-01
+### 0.4.0-alpha2 / 2017-August-01
 
 - Merge context from `bract-context.dev.edn` in dev mode when available
 - Catch exception and print stack trace in dev mode (due to uncaught handler)
@@ -125,7 +193,7 @@
 - Add utility function `pst-when-uncaught-handler` for printing stack trace
 
 
-## 0.4.0-alpha1 / 2017-July-31
+### 0.4.0-alpha1 / 2017-July-31
 
 - Upgrade Keypin dependency to version `0.7.1`
   - Seamless 'duration' expression
@@ -140,7 +208,7 @@
 - Add `set-default-exception-handler` inducer to handle uncaught exceptions in threads
 
 
-## 0.3.1 / 2017-June-30
+### 0.3.1 / 2017-June-30
 
 - Do not abort on inducer exception in dev mode, just rethrow (useful for REPL/reload workflow)
 - Add `uuid-str` utility function - unique ID for various purposes
@@ -148,7 +216,7 @@
 - Add `invoke-stopper` inducer to stop a running application
 
 
-## 0.3.0 / 2017-June-11
+### 0.3.0 / 2017-June-11
 
 - Inducer short-circuit (escape hatch) mechanism
   - Break out of the current batch of inducers upon encountering reduced context
@@ -186,7 +254,7 @@
   - Functions `config` and `verbose` warn when environment variable will prevent any override
 
 
-## 0.2.0 / 2017-June-04
+### 0.2.0 / 2017-June-04
 
 - Factor out CLI handling into module `bract.cli`
   - [BREAKING CHANGE] Drop `bract.core.cli` namespace
@@ -208,9 +276,7 @@
   - Upgrade to Keypin `0.6.0`
 
 
-## 0.1.0 / 2017-April-25
-
-### Added
+### 0.1.0 / 2017-April-25
 
 - Features
   - CLI entry point

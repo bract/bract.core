@@ -38,7 +38,7 @@
 
 
 (defn echo
-  "Print all message tokens, returning nil."
+  "Print all message tokens, returning `nil`."
   [x & more]
   (->> (cons x more)
     (string/join \space)
@@ -47,14 +47,15 @@
 
 
 (defn echof
-  "Like clojure.core/format for echo messages."
+  "Like `clojure.core/format` for echo messages."
   [fmt & args]
   (-> (apply format (str fmt) args)
     echo))
 
 
 (defn ->echo
-  "Echo message and value in a -> form, returning the value. First arg is considered the value, rest as message tokens."
+  "Echo message and value in a `clojure.core/->` form, returning the value. First arg is considered the value, rest as
+  message tokens."
   [x & more]
   (->> [(pr-str x)]
     (concat (and (seq more) (concat more [\:])))
@@ -63,7 +64,8 @@
 
 
 (defn ->>echo
-  "Echo message and value in a ->> form, returning the value. Last arg is considered the value, rest as message tokens."
+  "Echo message and value in a `clojure.core/->>` form, returning the value. Last arg is considered the value, rest as
+  message tokens."
   [x & more]
   (let [all (concat [x] more)]
     (apply ->echo (last all) (butlast all))))
@@ -87,6 +89,7 @@
 
 
 (defmacro with-latency-capture
+  "Execute body of code and print the time (milliseconds) it took."
   [message & body]
   `(let [start# (System/currentTimeMillis)
          messg# ~message]

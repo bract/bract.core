@@ -10,6 +10,9 @@
 (ns bract.core.dev
   "Development and test support."
   (:require
+    [clojure.java.javadoc :refer [javadoc]]
+    [clojure.pprint       :refer [pprint]]
+    [clojure.repl         :refer :all]
     [clojure.string     :as string]
     [bract.core.keydef  :as kdef]
     [bract.core.echo    :as echo]
@@ -24,9 +27,12 @@
 
 
 (defn context-file
-  "Set context file to specified argument (unless environment variable APP_CONTEXT is set):
-  string - set context file as override
-  nil    - clear context file override"
+  "Set context file to specified argument (unless environment variable `APP_CONTEXT` is set):
+
+  | Value | Effect                       |
+  |-------|------------------------------|
+  |string | set context file as override |
+  |`nil`  | clear context file override  |"
   ([]
     (when-let [context-file (System/getenv "APP_CONTEXT")]
       (util/err-println (format "Environment variable APP_CONTEXT='%s' overrides context file" context-file)))
@@ -48,10 +54,13 @@
 
 
 (defn verbose
-  "Set verbose mode to specified status (unless environment variable APP_VERBOSE is set):
-  true  - enable verbose mode
-  false - disable verbose mode
-  nil   - clear verbose mode override"
+  "Set verbose mode to specified status (unless environment variable `APP_VERBOSE` is set):
+
+  | Value | Effect                      |
+  |-------|-----------------------------|
+  |`true` | enable verbose mode         |
+  |`false`| disable verbose mode        |
+  |`nil`  | clear verbose mode override |"
   ([]
     (when-let [verbose (System/getenv "APP_VERBOSE")]
       (util/err-println (format "Environment variable APP_VERBOSE='%s' overrides verbosity" verbose)))
@@ -67,10 +76,13 @@
 
 
 (defn config-files
-  "Set config files to specified argument (unless environment variable APP_CONFIG is set):
-  collection - set config files as override
-  string     - set config files as override
-  nil        - clear config file override"
+  "Set config files to specified argument (unless environment variable `APP_CONFIG` is set):
+
+  | Value    | Effect                       |
+  |----------|------------------------------|
+  |collection| set config files as override |
+  |string    | set config files as override |
+  |`nil`     | clear config file override   |"
   ([]
     (when-let [config-filenames (System/getenv "APP_CONFIG")]
       (util/err-println (format "Environment variable APP_CONFIG='%s' overrides config file" config-filenames)))
@@ -101,10 +113,17 @@
 
 (def root-context {(key kdef/ctx-context-file) "bract-context.dev.edn"
                    (key kdef/ctx-config-files) ["config/config.dev.edn"]
+                   (key kdef/ctx-dev-mode?)    true
                    (key kdef/ctx-launch?)      false})
 
 
 (defonce ^:redef seed-context {})
+
+
+(defn initial-context
+  "Resolve and return the initial context to trigger the application in DEV mode."
+  []
+  (merge root-context seed-context))
 
 
 ;; ----- REPL helpers -----
@@ -114,7 +133,7 @@
   "Initialize app in DEV mode."
   []
   (try
-    (let [init-context (merge root-context seed-context)]
+    (let [init-context (initial-context)]
       (inducer/set-verbosity init-context)
       (echo/with-latency-capture "Initializing app in DEV mode"
         (inducer/induce inducer/apply-inducer init-context main/root-inducers)))
@@ -139,7 +158,7 @@
 
 
 (defn ensure-init
-  "Ensure that app-context is initialized."
+  "Ensure that [[app-context]] is initialized."
   []
   (when (string? app-context)
     (init))
@@ -149,14 +168,14 @@
 
 
 (defn record-context!
-  "Rebind var bract.core.dev/app-context to the given context."
+  "Rebind var [[app-context]] to the given context."
   [context]
   (alter-var-root #'app-context (constantly context))
   context)
 
 
 (defn deinit
-  "De-initialize application. Throw error if app-context is not initialized."
+  "De-initialize application. Throw error if [[app-context]] is not initialized."
   []
   (ensure-init)
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
@@ -168,7 +187,7 @@
 
 
 (defn start
-  "Launch application. Throw error if app-context is not initialized."
+  "Launch application. Throw error if [[app-context]]` is not initialized."
   []
   (ensure-init)
   (util/expected map? "app-context to be initialized as map using inducer bract.core.dev/record-context!" app-context)
@@ -188,3 +207,34 @@
   (echo/with-latency-capture "Stopping the started application"
     (inducer/invoke-stopper app-context))
   nil)
+
+
+(defn -main
+  "Java main() method entry point for DEV mode."
+  [& args]
+  (let [init-context (-> (initial-context)
+                       inducer/set-verbosity
+                       (merge {(key kdef/ctx-cli-args) (vec args)})
+                       (assoc (key kdef/ctx-launch?) true))]
+    (echo/with-latency-capture "Initializing app in DEV mode"
+      (main/delegate-main init-context main/root-inducers))))
+
+
+(defn help
+  "Print help text for this namespace"
+  []
+  (println "
+REPL helpers available in bract.core.dev:
+
+             See this help: (help)
+                 Start app: (start)
+                  Stop app: (stop)
+
+        Set verbosity mode: (verbose true-or-false)
+          Set context-file: (context-file \"context-filename\")
+   See initialized context: app-context
+          Set config files: (config-files [\"file1\" \"file2\"])
+
+Initialize app (no launch): (init)
+Deinitialize app (no stop): (deinit)
+"))
