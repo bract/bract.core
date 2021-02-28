@@ -58,89 +58,41 @@
 
 ## Releases
 
-### 0.6.2-beta6 / 2021-February-21
+### [WIP] 0.6.2 / 2021-February-??
 
-- Include context values preview in induction report
-- Do not set CLI-args in DEV root context
-  - To disable CLI processing by default
-- Add helper macro `bract.core.inducer/when-context-has-key` for conditional passthrough
-
-
-### 0.6.2-beta5 / 2021-February-18
-
-- Rethrow exception in `bract.core.util/thrown->val` using `clojure.core/future`
-- Include initial context keys in verbose induction summary
-- Include default empty CLI-args in DEV root context
-  - Support for modules to treat DEV default entry-point on equal footing as main
-
-
-### 0.6.2-beta4 / 2021-February-14
-
-- Utility macros
-  - `bract.core.util/thrown->val`
-  - `bract.core.util/after`
-  - `bract.core.util/doafter`
-- Wrap fn returned by `bract.core.keydef/resolve-event-logger` to ignore event-logging exceptions
-
-
-### 0.6.2-alpha4 / 2021-February-13
-
-- Verbose-mode `bract.core.inducer/induce` - print an induction report (table)
-  - Inducers executed
-  - Keys added/removed/updated in app-context
-  - Time taken for each inducer
-- Add utility fn `bract.core.util/nop` that does nothing
-- Metrics event logging mechanism, no-op by default
-  - Context key `:bract.core/event-logger`
-  - Config keys `"bract.core.eventlog.(enable, allow, block)"`
-  - Utility fn `bract.core.keydef/resolve-context`
-- Dev mode context key `:bract.core/dev-mode?`
-  - Populated as `true` by DEV entry points
-
-
-### 0.6.2-beta3 / 2021-February-06
-
-- Upgrade Keypin to version `0.8.2` (for new predicate and var metadata)
-
-
-### 0.6.2-beta2 / 2021-January-28
-
-- Add `bract.core.dev/help` fn for REPL help text
-
-
-### 0.6.2-beta1 / 2021-January-27
-
-- Demunge function names displayed in verbose/echo mode
-
-
-### 0.6.2-alpha3 / 2020-October-12
-
-- Improve `bract.core.dev` namespace
-  - Make `bract.core.dev` usable for REPL - require/refer useful vars
-  - Add `bract.core.dev/-main` for running application in DEV mode
-- Documentation
-  - Reformat docstring in `bract.core.dev` for environment variables
-
-
-### 0.6.2-alpha2 / 2020-October-05
-
-- Add inducer `bract.core.inducer/abort` (moved from `gossamer.core.inducer/abort`)
-- Documentation
-  - Add quickstart 'Greeting' example app
-
-
-### 0.6.2-alpha1 / 2020-September-30
-
-- Config
-  - Upgrade Keypin to version `0.8.1` (for remote and cached config stores)
-- Development support
-  - Add function `bract.core.dev/initial-context` to resolve DEV mode initial context
+- Dependency update
+  - Upgrade Keypin to version `0.8.2` (for remote/cached config store, var metadata, utility predicate)
+- New feature
+  - Metrics event logging mechanism, no-op by default
+    - Context key `:bract.core/event-logger`
+    - Config keys `"bract.core.eventlog.(enable, allow, block)"`
+    - Utility fn `bract.core.keydef/resolve-context`
+- New inducers
+  - `bract.core.inducer/abort` (moved from Gossamer:0.6.1-0.2.0 `gossamer.core.inducer/abort`)
+  - Helper macro `bract.core.inducer/when-context-has-key` for conditional passthrough
+- New functions/macros
+  - `bract.core.dev/initial-context` to resolve DEV mode initial context
+  - `bract.core.util/err-print-banner` for printing banner messages to `*err*`
+  - `bract.core.util/nop` that does nothing (for any arity)
+  - `bract.core.util/thrown->val` - macro to catch exception and return value
+  - `bract.core.util/after` - macro to do something after an activity, wrapped as fn
+  - `bract.core.util/doafter` - macro to do something after an activity
+  - `bract.core.keydef/resolve-event-logger` to resolve event-logger fn  
+- General Improvements
+  - Demunge function names displayed in verbose/echo mode
+  - Make `bract.core.inducer/induce` print an induction report (table) in verbose-mode
+- DEV-mode Improvements
   - Make namespace `bract.core.dev-init` safe for loading (e.g. by _cljdoc_)
-  - Add `bract.core.util/err-print-banner` for printing banner messages to `*err*`
+  - Make `bract.core.dev` namespace usable for REPL - require/refer useful vars
+  - Add `bract.core.dev/-main` for running application in DEV mode
+    - Includes CLI-args in context
+  - Add `bract.core.dev/help` fn for REPL help text
+  - Add context key `:bract.core/dev-mode?` (set `true` by DEV entry points)
 - Documentation
   - Reformat docstring for _cljdoc_
   - Add _cljdoc_ badge
   - Add documentation page covering context and config keys
+  - Add quickstart 'Greeting' example app
 
 
 ### 0.6.1 / 2018-October-10
