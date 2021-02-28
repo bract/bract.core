@@ -58,7 +58,7 @@
 
 ## Releases
 
-### [WIP] 0.6.2 / 2021-February-??
+### 0.6.2 / 2021-February-28
 
 - Dependency update
   - Upgrade Keypin to version `0.8.2` (for remote/cached config store, var metadata, utility predicate)
